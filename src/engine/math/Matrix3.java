@@ -30,23 +30,18 @@ public class Matrix3 {
      */
     public static Matrix3 createTransMat(double x, double y)
     {
-        Matrix3 mat = new Matrix3(0.0);
-        mat._mat[2] = x;
-        mat._mat[5] = y;
-        mat._mat[8] = 1.0;
+        Matrix3 mat = new Matrix3(1.0);
+        mat.setTranslate(x, y);
         return mat;
     }
 
     /**
-     * Creates a matrix whose purpose is to scale objects uniformly
-     * in the x, y and z directions.
+     * Creates a matrix whose purpose is to scale objects in the x & y directions.
      */
-    public static Matrix3 createScaleMat(double scaleFactor)
+    public static Matrix3 createScaleMat(double scaleX, double scaleY)
     {
-        Matrix3 mat = new Matrix3(0.0);
-        mat._mat[0] = scaleFactor;
-        mat._mat[4] = scaleFactor;
-        mat._mat[8] = scaleFactor;
+        Matrix3 mat = new Matrix3(1.0);
+        mat.setScale(scaleX, scaleY);
         return mat;
     }
 
@@ -57,14 +52,8 @@ public class Matrix3 {
      */
     public static Matrix3 createRotXMatrix(double angleDeg)
     {
-        double degRad = Math.toRadians(angleDeg);
-        double cos0 = Math.cos(degRad);
-        double sin0 = Math.sin(degRad);
         Matrix3 mat = new Matrix3(1.0);
-        mat._mat[4] = cos0;
-        mat._mat[5] = -sin0;
-        mat._mat[7] = sin0;
-        mat._mat[8] = cos0;
+        mat.setRotXAngle(angleDeg);
         return mat;
     }
 
@@ -75,14 +64,8 @@ public class Matrix3 {
      */
     public static Matrix3 createRotYMatrix(double angleDeg)
     {
-        double degRad = Math.toRadians(angleDeg);
-        double cos0 = Math.cos(degRad);
-        double sin0 = Math.sin(degRad);
         Matrix3 mat = new Matrix3(1.0);
-        mat._mat[0] = cos0;
-        mat._mat[2] = sin0;
-        mat._mat[6] = -sin0;
-        mat._mat[8] = cos0;
+        mat.setRotYAngle(angleDeg);
         return mat;
     }
 
@@ -93,14 +76,8 @@ public class Matrix3 {
      */
     public static Matrix3 createRotZMatrix(double angleDeg)
     {
-        double degRad = Math.toRadians(angleDeg);
-        double cos0 = Math.cos(degRad);
-        double sin0 = Math.sin(degRad);
         Matrix3 mat = new Matrix3(1.0);
-        mat._mat[0] = cos0;
-        mat._mat[1] = -sin0;
-        mat._mat[3] = sin0;
-        mat._mat[4] = cos0;
+        mat.setRotZAngle(angleDeg);
         return mat;
     }
 
@@ -137,6 +114,85 @@ public class Matrix3 {
     public Matrix3(Matrix3 other)
     {
         set(other);
+    }
+
+    /**
+     * Transforms this matrix into a rotation matrix - overwrites
+     * whatever system is already in place
+     * @param angleDeg angle in degrees
+     */
+    public void setRotXAngle(double angleDeg)
+    {
+        double degRad = Math.toRadians(angleDeg);
+        double cos0 = Math.cos(degRad);
+        double sin0 = Math.sin(degRad);
+        setAll(0.0);
+        set(1.0);
+        _mat[4] = cos0;
+        _mat[5] = -sin0;
+        _mat[7] = sin0;
+        _mat[8] = cos0;
+    }
+
+    /**
+     * Transforms this matrix into a rotation matrix - overwrites
+     * whatever system is already in place
+     * @param angleDeg angle in degrees
+     */
+    public void setRotYAngle(double angleDeg)
+    {
+        double degRad = Math.toRadians(angleDeg);
+        double cos0 = Math.cos(degRad);
+        double sin0 = Math.sin(degRad);
+        setAll(0.0);
+        set(1.0);
+        _mat[0] = cos0;
+        _mat[2] = sin0;
+        _mat[6] = -sin0;
+        _mat[8] = cos0;
+    }
+
+    /**
+     * Transforms this matrix into a rotation matrix - overwrites
+     * whatever system is already in place
+     * @param angleDeg angle in degrees
+     */
+    public void setRotZAngle(double angleDeg)
+    {
+        double degRad = Math.toRadians(angleDeg);
+        double cos0 = Math.cos(degRad);
+        double sin0 = Math.sin(degRad);
+        setAll(0.0);
+        set(1.0);
+        _mat[0] = cos0;
+        _mat[1] = -sin0;
+        _mat[3] = sin0;
+        _mat[4] = cos0;
+    }
+
+    /**
+     * Sets the translation component of this Matrix - overrides
+     * whatever system is already in place
+     */
+    public void setTranslate(double x, double y)
+    {
+        setAll(0.0);
+        set(1.0);
+        _mat[2] = x;
+        _mat[5] = y;
+        _mat[8] = 1.0;
+    }
+
+    /**
+     * Transforms this matrix into a scaling matrix - overwrites
+     * whatever system is already in place
+     */
+    public void setScale(double scaleX, double scaleY)
+    {
+        setAll(0.0);
+        set(1.0);
+        _mat[0] = scaleX;
+        _mat[4] = scaleY;
     }
 
     /**
@@ -306,5 +362,19 @@ public class Matrix3 {
             throw new IllegalArgumentException("ERROR: Matrix3 indices out of range");
         }
         return index;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("");
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j) {
+                str.append(getElemAt(i, j));
+                str.append(" ");
+            }
+            str.append("\n");
+        }
+        return str.toString();
     }
 }

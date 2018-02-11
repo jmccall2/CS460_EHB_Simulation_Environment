@@ -1,6 +1,8 @@
 package application;
 
 import engine.*;
+import engine.math.Matrix3;
+import engine.math.Vector3;
 
 import java.util.LinkedList;
 
@@ -45,6 +47,9 @@ public class ApplicationEntryPoint {
             }
         }));
         */
+
+        Matrix3 mat = Matrix3.createTransMat(75, 1);
+        System.out.println(mat.multiply(Matrix3.IDENTITY));
     }
 
     /**

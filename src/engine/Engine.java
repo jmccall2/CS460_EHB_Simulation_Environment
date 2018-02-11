@@ -18,6 +18,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     private MessagePump _messageSystem;
     private ConsoleVariables _cvarSystem;
     private Window _window;
+    private Renderer _renderer;
     private int _maxFrameRate;
     private long _lastFrameTimeMS;
     private boolean _isRunning = false;
@@ -73,6 +74,8 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         {
             entity.pulse(deltaSeconds);
         }
+        // Tell the renderer to update the screen
+        _renderer.render(deltaSeconds);
     }
 
     @Override
@@ -97,8 +100,34 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     private void _init(Stage stage)
     {
         Singleton.engine = this; // Make sure this gets set before everything else
+        _cvarSystem = new ConsoleVariables();
+        _loadEngineConfig("src/resources/engine.cfg");
+        _registerDefaultCVars();
         _messageSystem = new MessagePump();
         // Make sure we register all of the message types
+        _registerMessageTypes();
+        // Signal interest in the things the engine needs to know about
+        _messageSystem.signalInterest(Singleton.ADD_PULSE_ENTITY, this);
+        _messageSystem.signalInterest(Singleton.REMOVE_PULSE_ENTITY, this);
+        _pulseEntities = new HashSet<>();
+        _window = new Window();
+        _renderer = new Renderer();
+        _application = new ApplicationEntryPoint();
+        _isRunning = true;
+        _lastFrameTimeMS = System.currentTimeMillis();
+        GraphicsContext gc = _window.init(stage);
+        _renderer.init(gc);
+        _application.init();
+    }
+
+    private void _registerDefaultCVars()
+    {
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.ENG_MAX_FPS, "60", "60"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.ENG_LIMIT_FPS, "true", "true"));
+    }
+
+    private void _registerMessageTypes()
+    {
         _messageSystem.registerMessage(new Message(Singleton.ADD_PULSE_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.REMOVE_PULSE_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.ADD_UI_ELEMENT));
@@ -106,17 +135,9 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.SET_FULLSCREEN));
         _messageSystem.registerMessage(new Message(Singleton.SET_SCR_HEIGHT));
         _messageSystem.registerMessage(new Message(Singleton.SET_SCR_WIDTH));
-        _messageSystem.signalInterest(Singleton.ADD_PULSE_ENTITY, this);
-        _messageSystem.signalInterest(Singleton.REMOVE_PULSE_ENTITY, this);
-        _pulseEntities = new HashSet<>();
-        _cvarSystem = new ConsoleVariables();
-        _window = new Window();
-        _application = new ApplicationEntryPoint();
-        _cvarSystem.registerVariable(new ConsoleVariable("MAX_FRAMERATE", "60"));
-        _isRunning = true;
-        _lastFrameTimeMS = System.currentTimeMillis();
-        _window.init(stage);
-        _application.init();
+        _messageSystem.registerMessage(new Message(Singleton.ADD_RENDER_ENTITY));
+        _messageSystem.registerMessage(new Message(Singleton.REMOVE_RENDER_ENTITY));
+        _messageSystem.registerMessage(new Message(Singleton.REGISTER_TEXTURE));
     }
 
     /**
@@ -144,7 +165,6 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
             while ((line = reader.readLine()) != null)
             {
                 line = line.replaceAll(" ", "");
-                System.out.println(line);
                 String variable = "";
                 String value = "";
                 boolean isReadingValue = false;
@@ -165,8 +185,8 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         }
         catch (Exception e)
         {
-            System.out.println("Unable to load " + engineCfgFile);
-            System.exit(-1);
+            System.err.println("WARNING: Unable to load " + engineCfgFile);
+            //System.exit(-1);
         }
     }
 

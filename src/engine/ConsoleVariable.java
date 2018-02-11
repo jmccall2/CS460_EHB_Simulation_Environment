@@ -14,14 +14,14 @@ public class ConsoleVariable {
     private String _cvarValue; // Raw String value
     private int _cvarIntVal; // Defaults to -1 if _cvarValue cannot be casted
     private double _cvarFloatVal; // Defaults to -1.0 if _cvarValue cannot be casted
+    private int _numEdits = 0; // Number of times this variable was edited
 
     public ConsoleVariable(String name, String defaultValue)
     {
         _cvarName = name;
-        Singleton.engine.getMessagePump().registerMessage(new Message(_cvarName + "_WAS_CHANGED"));
+        //Singleton.engine.getMessagePump().registerMessage(new Message(_cvarName + "_WAS_CHANGED"));
         _defaultValue = defaultValue;
-        _cvarValue = defaultValue;
-        setValueNoMessageDispatch(_cvarValue);
+        setValueNoMessageDispatch(_defaultValue);
     }
 
     public ConsoleVariable(String name, String defaultValue, String value)
@@ -84,7 +84,7 @@ public class ConsoleVariable {
     {
         setValueNoMessageDispatch(value);
         // Notify anyone who is interested that this variable was changed
-        Singleton.engine.getMessagePump().sendMessage(_cvarName + "_WAS_CHANGED");
+        //Singleton.engine.getMessagePump().sendMessage(_cvarName + "_WAS_CHANGED");
     }
 
     /**
@@ -97,6 +97,7 @@ public class ConsoleVariable {
 
     private void setValueNoMessageDispatch(String value)
     {
+        ++_numEdits;
         _cvarValue = value;
         try
         {
@@ -122,6 +123,6 @@ public class ConsoleVariable {
 
     @Override
     public String toString() {
-        return "CVar: " + _cvarName + "; value: " + _cvarValue;
+        return "name: " + _cvarName + "; value: " + _cvarValue;
     }
 }
