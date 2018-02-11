@@ -43,6 +43,8 @@ public class ApplicationEntryPoint {
             }
         }));
         */
+        ExampleMovingEntity entity = new ExampleMovingEntity();
+        entity.addToWorld();
     }
 
     /**

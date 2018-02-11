@@ -59,6 +59,11 @@ public class Renderer implements MessageHandler {
                 //imageView.setFitHeight(height);
                 _gc.drawImage(imageView.getImage(), locX, locY, width, height);
             }
+            else
+            {
+                _gc.setFill(Color.RED);
+                _gc.fillRect(locX, locY, width, height);
+            }
         }
     }
 
@@ -75,10 +80,16 @@ public class Renderer implements MessageHandler {
             case Singleton.REGISTER_TEXTURE: {
                 String texture = (String)message.getMessageData();
                 if (!_textures.containsKey(texture)) {
-                    Image image = new Image(texture);
-                    ImageView imageView = new ImageView(image);
-                    imageView.setRotationAxis(new Point3D(0.0, 0.0, 1.0));
-                    _textures.put((String)message.getMessageData(), imageView);
+                    try {
+                        Image image = new Image(texture);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setRotationAxis(new Point3D(0.0, 0.0, 1.0));
+                        _textures.put((String) message.getMessageData(), imageView);
+                    }
+                    catch (Exception e)
+                    {
+                        System.err.println("ERROR: Unable to load " + texture);
+                    }
                 }
                 break;
             }
