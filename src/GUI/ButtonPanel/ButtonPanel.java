@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class ButtonPanel// implements GUIPanel
+public class ButtonPanel implements GUIPanel
 {
     private BorderPane _buttonPanel;
     private EHBButton _ehbButton;
@@ -16,9 +16,7 @@ public class ButtonPanel// implements GUIPanel
     {
         _buttonPanel = new BorderPane();
         _ehbButton = new EHBButton();
-       // _buttonPanel.getChildren().add(_ehbButton.getEHBButton());
         _buttonPanel.setCenter(_ehbButton.getEHBButton());
-     //  StackPane.setAlignment(_buttonPanel,    Pos.TOP_CENTER);
         Text t = new Text (10, 20, "EHB Button");
         t.setFont(Font.font ("Verdana", 35));
         t.setFill(Color.RED);
