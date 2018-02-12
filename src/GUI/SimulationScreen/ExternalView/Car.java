@@ -49,8 +49,11 @@ public class Car extends RenderEntity
     @Override
     public void pulse(double deltaSeconds) {
         //_delay++;
-        _animationSequence.update(deltaSeconds); // Make sure we call this!
-        if(getLocationX() > 750) setSpeed(0,0);
+        if(getLocationX() > 750)
+        {
+            setSpeed(0,0);
+        }
+        else _animationSequence.update(deltaSeconds); // Make sure we call this!
         //if(_delay == 10) {
         //    setTexture(getLatestFrontWheelFrame());
         //    _delay = 0;
