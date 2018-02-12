@@ -41,17 +41,6 @@ public class GUI
         _setConstraints(200,250);
         _gPane.add(_initParamPanel.getPanel(),2,2,2,1);
         _setConstraints(200,250);
-        //gPane.setFillHeight(bp.getPanel(), true);
-      //  gPane.setFillWidth(bp.getPanel(), true);
-      //  gPane.setStyle("fx-background-color:#000000;");
-      //  gPane.setBackground(new Background(new BackgroundFill(Color.web("#000000"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-//        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResource("/Resources/img/black-leather-texture.jpg").toExternalForm()),
-//                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-//                BackgroundSize.DEFAULT);
-//
-//        gPane.setBackground(new Background(myBI));
-
         Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _gPane));
     }
 
