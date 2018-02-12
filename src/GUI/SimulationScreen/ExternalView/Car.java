@@ -14,7 +14,7 @@ public class Car extends RenderEntity
     public Car()
     {
         _buildFrontWheelFrames();
-        setLocation(350, 200);
+        setLocation(0, 200);
         setSpeed(10, 0);
         // setAcceleration(175, 0);
         setWidthHeight(200, 100);

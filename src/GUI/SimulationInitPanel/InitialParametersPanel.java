@@ -1,10 +1,7 @@
 package GUI.SimulationInitPanel;
 
 import GUI.*;
-import GUI.SimulationScreen.ExternalView.SimulationPanel;
 import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
