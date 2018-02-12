@@ -31,7 +31,7 @@ public class Renderer implements MessageHandler {
 
     public void render(double deltaSeconds)
     {
-       // _gc.setFill(Color.ANTIQUEWHITE);
+        _gc.setFill(Color.WHITE);
         _gc.fillRect(0, 0,
                      Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
                      Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());

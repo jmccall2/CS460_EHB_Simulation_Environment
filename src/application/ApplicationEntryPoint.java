@@ -26,6 +26,8 @@ public class ApplicationEntryPoint {
         _gui = new GUI();
         _bi = new ButtonInterface(_gui);
         _ehb = new EHB();
+        ExampleMovingEntity entity = new ExampleMovingEntity();
+        entity.addToWorld();
     }
 
     /**

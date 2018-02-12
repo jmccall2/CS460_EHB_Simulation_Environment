@@ -29,11 +29,11 @@ public class GUI
         _gearControlPanel = new GearControlPanel();
         _dataPanel = new DataPanel();
         _initParamPanel = new InitialParametersPanel();
-        _gPane.add(_brakeDisplayPanel.getPanel(),0,0,2,1);
+        //_gPane.add(_brakeDisplayPanel.getPanel(),0,0,2,1);
         _setConstraints(200,250);
-        _gPane.add(_dataPanel.getPanel(),0,1,1,1);
+        //_gPane.add(_dataPanel.getPanel(),0,1,1,1);
         _setConstraints(200,250);
-        _gPane.add(_simulationPanel.getPanel(),1,0,3,2);
+        //_gPane.add(_simulationPanel.getPanel(),1,0,3,2);
         _setConstraints(400,250);
         _gPane.add(_buttonPanel.getPanel(),0, 2, 1, 1);
         _setConstraints(200,250);

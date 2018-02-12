@@ -8,7 +8,7 @@ import engine.RenderEntity;
 public class ExampleMovingEntity extends RenderEntity {
     public ExampleMovingEntity()
     {
-        setLocation(0, 200);
+        setLocation(300, 200);
         setSpeed(0, 0);
         setAcceleration(175, 0);
         setWidthHeight(100, 100);
