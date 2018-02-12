@@ -5,6 +5,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class GearControlPanel implements GUIPanel
 {
@@ -18,12 +20,23 @@ public class GearControlPanel implements GUIPanel
         _gearControlPanel.setBackground(new Background(myBF));
         _shifter = new Shifter();
         _gearControlPanel.setCenter(_shifter.getHBox());
-      //  _gearControlPanel.setAlignment(_shifter.getHBox(), Pos.CENTER);
+        _addHeader();
     }
 
     public BorderPane getPanel()
     {
         return _gearControlPanel;
+    }
+
+    private void _addHeader()
+    {
+        HBox container = new HBox();
+        Text t = new Text (10, 20, "Gear Control Panel");
+        t.setFont(Font.font ("Verdana", 20));
+        t.setFill(Color.RED);
+        container.getChildren().add(t);
+        container.setPadding(new Insets(10,10,10,25));
+        _gearControlPanel.setTop(container);
     }
 
 }

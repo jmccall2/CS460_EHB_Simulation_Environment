@@ -76,7 +76,7 @@ public class Shifter
         _container.getChildren().add(_shifter);
         _container.setSpacing(50);
         _container.setStyle("-fx-background-color:#000000;");
-        _container.setPadding(new Insets(55,75,5,100));
+        _container.setPadding(new Insets(10,75,5,100));
     }
 
     public HBox getHBox()
