@@ -29,18 +29,18 @@ public class GUI
         _gearControlPanel = new GearControlPanel();
         _dataPanel = new DataPanel();
         _initParamPanel = new InitialParametersPanel();
-        //_gPane.add(_brakeDisplayPanel.getPanel(),0,0,2,1);
-        _setConstraints(200,250);
-        //_gPane.add(_dataPanel.getPanel(),0,1,1,1);
-        _setConstraints(200,250);
-        //_gPane.add(_simulationPanel.getPanel(),1,0,3,2);
-        _setConstraints(400,250);
+        _gPane.add(_brakeDisplayPanel.getPanel(),0,0,1,1);
+        _setConstraints(225,250);
+        _gPane.add(_dataPanel.getPanel(),0,1,1,1);
+        _setConstraints(225,250);
+       // _gPane.add(_simulationPanel.getPanel(),1,0,3,2);
+       // _setConstraints(400,250);
         _gPane.add(_buttonPanel.getPanel(),0, 2, 1, 1);
-        _setConstraints(200,250);
+        _setConstraints(225,250);
         _gPane.add(_gearControlPanel.getPanel(), 1,2,1,1);
-        _setConstraints(200,250);
+        _setConstraints(225,250);
         _gPane.add(_initParamPanel.getPanel(),2,2,2,1);
-        _setConstraints(200,250);
+        _setConstraints(225,250);
         Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _gPane));
     }
 
@@ -49,7 +49,6 @@ public class GUI
         _gPane.getColumnConstraints().add(new ColumnConstraints(width));
         _gPane.getRowConstraints().add(new RowConstraints(height));
     }
-
 
     public GUI getReference() {return this;}
 

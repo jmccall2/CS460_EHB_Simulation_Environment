@@ -1,9 +1,11 @@
 package application;
 
+import GUI.SimulationScreen.ExternalView.Car;
 import engine.*;
 import GUI.*;
 import ElectronicHandBrake.*;
 import PublicInterfaces.*;
+
 
 /**
  * This is the only part of the application that the engine
@@ -26,8 +28,8 @@ public class ApplicationEntryPoint {
         _gui = new GUI();
         _bi = new ButtonInterface(_gui);
         _ehb = new EHB();
-        ExampleMovingEntity entity = new ExampleMovingEntity();
-        entity.addToWorld();
+        Car car = new Car();
+        car.addToWorld();
     }
 
     /**

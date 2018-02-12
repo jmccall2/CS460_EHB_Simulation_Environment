@@ -1,6 +1,7 @@
 package application;
 
 import engine.RenderEntity;
+import GUI.SimulationScreen.ExternalView.Car.*;
 
 /**
  * @Hector - I'm thinking the physics will get implemented in a class a lot like this

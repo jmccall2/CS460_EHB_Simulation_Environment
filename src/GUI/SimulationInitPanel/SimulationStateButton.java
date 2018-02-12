@@ -3,6 +3,8 @@ package GUI.SimulationInitPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 public class SimulationStateButton
 {
@@ -23,6 +25,7 @@ public class SimulationStateButton
             }
         };
         _simStateButton.setOnAction(_buttonHandler);
+
     }
 
     public Button getButton()

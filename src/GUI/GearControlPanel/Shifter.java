@@ -65,18 +65,18 @@ public class Shifter
         _shifter.getChildren().add(firstGear);
         _shifter.getChildren().add(secondGear);
         _shifter.setSpacing(10);
-        _shifter.setPadding(new Insets(25,2,2,5));
+        _shifter.setPadding(new Insets(8,2,2,5));
         _shifter.setStyle( "-fx-background-color:#D4D0D7;"
                 + "    -fx-background-radius: 5em; " + "-fx-min-width: 40px; "
-                + "-fx-min-height: 200px; " + "-fx-max-width: 40px; "
-                + "-fx-max-height: 200px;");
+                + "-fx-min-height: 175px; " + "-fx-max-width: 40px; "
+                + "-fx-max-height: 175px;");
 
         _container = new HBox();
 
         _container.getChildren().add(_shifter);
         _container.setSpacing(50);
         _container.setStyle("-fx-background-color:#000000;");
-        _container.setPadding(new Insets(10,75,5,100));
+        _container.setPadding(new Insets(0,75,0,100));
     }
 
     public HBox getHBox()
