@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 
 public class EHBButton
 {
-    private Button _loginButton;
+    private Button _ehbButton;
     private final String _DEFAULT_COLOR = "#0032FF";
     private boolean _activated = false;
     private ButtonColor _activatedColor;
@@ -18,9 +18,9 @@ public class EHBButton
 
     EHBButton()
     {
-        _loginButton = new Button();
-        _loginButton.getStyleClass().add("ehbButton");
-        _loginButton.setStyle(_buildCSSString(_DEFAULT_COLOR));
+        _ehbButton = new Button();
+        _ehbButton.getStyleClass().add("ehbButton");
+        _ehbButton.setStyle(_buildCSSString(_DEFAULT_COLOR));
 
         /* There needs to be some way to add additional methods to invoke in the onclick listener,
            in addition to the default. Possibly a list of Functions/Callables that are iterated and invoked
@@ -34,7 +34,7 @@ public class EHBButton
                 // event.consume(); Needed?
             }
         };
-        _loginButton.setOnAction(_buttonHandler);
+        _ehbButton.setOnAction(_buttonHandler);
     }
 
     public void toggleVisualState()
@@ -42,9 +42,9 @@ public class EHBButton
         _activated = !_activated;
         ButtonColor bc = _activated ? _activatedColor : _unactivatedColor;
         Color c = _mapToFXColor(bc);
-        _loginButton.setStyle(_buildCSSString(bc.convertToHex()));
-        if(_activated) _loginButton.setEffect(new DropShadow(50, c));
-        else _loginButton.setEffect(null);
+        _ehbButton.setStyle(_buildCSSString(bc.convertToHex()));
+        if(_activated) _ehbButton.setEffect(new DropShadow(50, c));
+        else _ehbButton.setEffect(null);
     }
 
     public void setUnactivatedColor(ButtonColor bc)
@@ -87,7 +87,7 @@ public class EHBButton
 
     public Button getEHBButton()
     {
-        return _loginButton;
+        return _ehbButton;
     }
 
 }
