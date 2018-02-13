@@ -23,6 +23,12 @@ public class Singleton {
     public static final String ADD_UI_ELEMENT = "add_ui_element";
     public static final String REMOVE_UI_ELEMENT = "remove_ui_element";
 
+    // Set values that are needed from the 'interfaces'
+    // Such as speed and pressure
+    public static final String SET_SPEED = "set_speed";
+    public static final String SET_PRESSURE = "set_pressure";
+
+
     // Adds a Pulse Entity to the simulation.engine, which is an entity that needs to update
     // as frequently as possible. Be sure the include the object as the data portion of
     // the Message, with the Object implementing the "MessageHandler" interface.
