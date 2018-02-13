@@ -136,6 +136,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.ADD_RENDER_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.REMOVE_RENDER_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.REGISTER_TEXTURE));
+        _messageSystem.registerMessage(new Message(Singleton.SET_MAIN_CAMERA));
     }
 
     /**

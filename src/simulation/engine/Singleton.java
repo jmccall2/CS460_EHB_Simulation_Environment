@@ -36,6 +36,9 @@ public class Singleton {
     // Tells the renderer to register the texture and cache it - the data part
     // of your message should be a string to a file
     public static final String REGISTER_TEXTURE = "register_texture";
+    // Sets the main camera of the scene - the data part of the object
+    // should be a reference to a Camera object
+    public static final String SET_MAIN_CAMERA = "set_main_camera";
 
     /**
      * The following are console variables that will be registered at startup
