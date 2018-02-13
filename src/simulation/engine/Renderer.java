@@ -62,7 +62,6 @@ public class Renderer implements MessageHandler {
             xOffset = translate.x();
             yOffset = translate.y();
         }
-        System.out.println(xOffset + " " + yOffset);
         for (RenderEntity entity : _entities)
         {
             double accelX = entity.getAccelerationX();
