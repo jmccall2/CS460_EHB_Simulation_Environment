@@ -8,8 +8,8 @@ import simulation.engine.RenderEntity;
 public class ExampleMovingEntity extends RenderEntity {
     public ExampleMovingEntity()
     {
-        setLocation(300, 200);
-        setSpeed(0, 0);
+        setLocationXYDepth(300, 200, 1.0);
+        setSpeedXY(0, 0);
         setAcceleration(175, 0);
         setWidthHeight(100, 100);
         setTexture("resources/rock_texture.png");
