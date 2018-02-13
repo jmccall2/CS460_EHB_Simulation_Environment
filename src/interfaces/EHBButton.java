@@ -1,9 +1,12 @@
 package interfaces;
 
 import simulation.GUI;
+import simulation.engine.Message;
+import simulation.engine.MessageHandler;
 
 public class EHBButton
 {
+    private static int numTimesPressed;
     private static GUI _gui;
     public EHBButton(GUI gui)
     {
@@ -19,4 +22,29 @@ public class EHBButton
     {
         _gui.getEHBReference().setUnactivatedColor(c);
     }
+
+    public static void setEngagedSound(String path)
+    {
+
+    }
+
+    public static void setDisenagedSound(String path)
+    {
+
+    }
+
+    public static int getNumTimesPressed()
+    {
+        return numTimesPressed;
+    }
+
+    class Helper implements MessageHandler
+    {
+        @Override
+        public void handleMessage(Message message)
+        {
+
+        }
+    }
+
 }
