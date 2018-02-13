@@ -120,6 +120,7 @@ public class Renderer implements MessageHandler {
                 String texture = (String)message.getMessageData();
                 if (!_textures.containsKey(texture)) {
                     try {
+                        System.out.println("Registering " + texture);
                         Image image = new Image(texture);
                         ImageView imageView = new ImageView(image);
                         imageView.setRotationAxis(new Point3D(0.0, 0.0, 1.0));

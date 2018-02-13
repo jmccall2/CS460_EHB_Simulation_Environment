@@ -114,7 +114,7 @@ public class MessagePump {
      */
     public void sendMessage(Message message)
     {
-        System.out.println("Sending message: " + message.getMessageName());
+        //System.out.println("Sending message: " + message.getMessageName());
         if (!_registeredMessages.containsKey(message.getMessageName()))
         {
             throw new IllegalArgumentException("Non-registered message passed into MessagePump");
