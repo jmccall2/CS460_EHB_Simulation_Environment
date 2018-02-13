@@ -17,8 +17,8 @@ public class Car extends RenderEntity
         // to a new animation frame
         _animationSequence = new Animation(this, 0.25);
         _buildFrontWheelFrames();
-        setLocation(0, 200);
-        setSpeed(10, 0);
+        setLocationXYDepth(0, 200, -1);
+        setSpeedXY(10, 0);
         // setAcceleration(175, 0);
         setWidthHeight(200, 100);
         //setTexture("resources/img/car/car1.png");
@@ -49,7 +49,7 @@ public class Car extends RenderEntity
         //_delay++;
         if(getLocationX() > 750)
         {
-            setSpeed(0,0);
+            setSpeedXY(0,0);
         }
         else _animationSequence.update(deltaSeconds); // Make sure we call this!
         //if(_delay == 10) {

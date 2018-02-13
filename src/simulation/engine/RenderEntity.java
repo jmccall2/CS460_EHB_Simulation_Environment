@@ -7,7 +7,7 @@ import simulation.engine.math.Vector3;
  * the world, render it and have it move around.
  */
 public abstract class RenderEntity implements PulseEntity {
-    private Vector3 _location = new Vector3(0, 0, 1);
+    private Vector3 _location = new Vector3(0, 0, 0);
     private Vector3 _speed = new Vector3(0, 0, 0);
     private Vector3 _acceleration = new Vector3(0, 0, 0);
     private double _rotationDeg = 0.0;
@@ -82,12 +82,28 @@ public abstract class RenderEntity implements PulseEntity {
         return _height;
     }
 
-    public void setLocation(double x, double y)
+    /**
+     * Allows you to set the location of the render entity along with
+     * its depth.
+     *
+     * The depth component tells the renderer how far back it is in relation
+     * to other objects. While this will not influence the scale of the object,
+     * it will ultimately help determine its rendering order.
+     *
+     * Example:
+     *      Object 1: depth -100
+     *      Object 2: depth 0
+     *      Object 3: depth 100
+     *
+     *      The renderer will draw them to the screen in this order: Object 3,
+     *      then Object 2, then Object 1 --> Object 1 will be on top
+     */
+    public void setLocationXYDepth(double x, double y, double depth)
     {
-        _location.setXYZ(x, y, 1.0);
+        _location.setXYZ(x, y, depth);
     }
 
-    public void setSpeed(double speedX, double speedY)
+    public void setSpeedXY(double speedX, double speedY)
     {
         _speed.setXYZ(speedX, speedY, 0.0);
     }
@@ -105,6 +121,11 @@ public abstract class RenderEntity implements PulseEntity {
     public double getLocationY()
     {
         return _location.y();
+    }
+
+    public double getDepth()
+    {
+        return _location.z();
     }
 
     public double getSpeedX()
