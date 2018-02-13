@@ -4,6 +4,7 @@ import simulation.BackgroundPanel;
 import simulation.Car;
 import interfaces.EHBButton;
 import simulation.GUI;
+import simulation.SingleFrameEntity;
 import simulation.engine.Camera;
 
 
@@ -39,11 +40,26 @@ public class ApplicationEntryPoint {
 
     private void _buildWorld()
     {
+        // Background.
        for(int i = 1; i <=6; i++)
        {
            BackgroundPanel bp = new BackgroundPanel("resources/img/world/part"+i+".jpeg",-375 + (1000*(i-1)),0,10,1000,500);
            bp.addToWorld();
+
+           // There should probably be a better heuristic to decide where the clouds are placed.
+           String cloud = "resources/img/world/cloud.png";
+           SingleFrameEntity sfe1 = new SingleFrameEntity(cloud,0+ (1000*(i-1)),0,5,5,0,100,100);
+           SingleFrameEntity sfe2 = new SingleFrameEntity(cloud,-400+ (1000*(i-1)),10,5,8,0,100,100);
+           SingleFrameEntity sfe3 = new SingleFrameEntity(cloud,250+ (1000*(i-1)),35,5,12,0,100,100);
+           SingleFrameEntity sfe4 = new SingleFrameEntity(cloud,100+ (1000*(i-1)),0,5,20,0,100,100);
+           sfe1.addToWorld();
+           sfe2.addToWorld();
+           sfe3.addToWorld();
+           sfe4.addToWorld();
        }
+
+
+       // SingleFrameEntity sfe5 = new SingleFrameEntity();
     }
 
 

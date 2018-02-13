@@ -4,12 +4,12 @@ import simulation.engine.RenderEntity;
 
 public class SingleFrameEntity extends RenderEntity
 {
-    SingleFrameEntity(String texture, int xLoc, int yLoc, int xSpeed, int ySpeed, int width, int height)
+    public SingleFrameEntity(String texture, int x, int y, int d, int xs, int ys, int w, int h)
     {
         setTexture(texture);
-        //setLocationXYDepth(xLoc, yLoc);
-     //   setSpeed(xSpeed, ySpeed);
-        setWidthHeight(width, height);
+        setLocationXYDepth(x, y,d);
+        setSpeedXY(xs, ys);
+        setWidthHeight(w, h);
     }
 
 
