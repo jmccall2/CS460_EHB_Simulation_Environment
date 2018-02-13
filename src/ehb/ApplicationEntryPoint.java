@@ -1,8 +1,10 @@
 package ehb;
 
+import simulation.BackgroundPanel;
 import simulation.Car;
 import interfaces.EHBButton;
 import simulation.GUI;
+import simulation.engine.Camera;
 
 
 /**
@@ -28,7 +30,22 @@ public class ApplicationEntryPoint {
         _ehb = new EHB();
         Car car = new Car();
         car.addToWorld();
+        Camera camera = new Camera();
+        camera.attachToEntity(car);
+        camera.setAsMainCamera();
+        _buildWorld();
     }
+
+
+    private void _buildWorld()
+    {
+       for(int i = 1; i <=6; i++)
+       {
+           BackgroundPanel bp = new BackgroundPanel("resources/img/world/part"+i+".jpeg",-375 + (1000*(i-1)),0,10,1000,500);
+           bp.addToWorld();
+       }
+    }
+
 
     /**
      * Tells the application we need to shutdown

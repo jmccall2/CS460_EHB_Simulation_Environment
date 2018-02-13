@@ -18,7 +18,7 @@ public class Car extends RenderEntity
         _animationSequence = new Animation(this, 0.25);
         _buildFrontWheelFrames();
         setLocationXYDepth(0, 200, -1);
-        setSpeedXY(10, 0);
+        setSpeedXY(50, 0);
         // setAcceleration(175, 0);
         setWidthHeight(200, 100);
         //setTexture("resources/img/car/car1.png");
@@ -46,16 +46,7 @@ public class Car extends RenderEntity
 
     @Override
     public void pulse(double deltaSeconds) {
-        //_delay++;
-        if(getLocationX() > 750)
-        {
-            setSpeedXY(0,0);
-        }
-        else _animationSequence.update(deltaSeconds); // Make sure we call this!
-        //if(_delay == 10) {
-        //    setTexture(getLatestFrontWheelFrame());
-        //    _delay = 0;
-        //}
+        _animationSequence.update(deltaSeconds); // Make sure we call this!
     }
 }
 
