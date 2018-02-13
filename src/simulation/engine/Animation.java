@@ -93,6 +93,7 @@ public class Animation {
             _animationCategories.put(category, new ArrayList<>());
         }
         _animationCategories.get(category).add(file);
+        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, file));
         // If we do not have a current animation sequence, set it to the recently
         // added category and make sure to set the entity's texture
         if (_currentAnimationSequence == null)
