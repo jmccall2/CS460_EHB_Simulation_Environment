@@ -1,26 +1,23 @@
 package interfaces;
 
 import simulation.GUI;
+import simulation.SimGlobals;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
+import simulation.engine.Singleton;
 
 public class EHBButton
 {
     private static int numTimesPressed;
-    private static GUI _gui;
-    public EHBButton(GUI gui)
-    {
-        _gui=gui;
-    }
 
     static public void setActiveColor(ButtonColor c)
     {
-        _gui.getEHBReference().setActivatedColor(c);
+        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR, c));
     }
 
     static public void setUnActiveColor(ButtonColor c)
     {
-        _gui.getEHBReference().setUnactivatedColor(c);
+        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR, c));
     }
 
     public static void setEngagedSound(String path)
