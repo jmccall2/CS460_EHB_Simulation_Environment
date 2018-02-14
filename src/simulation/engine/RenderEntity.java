@@ -1,5 +1,6 @@
 package simulation.engine;
 
+import javafx.scene.paint.Color;
 import simulation.engine.math.Vector3;
 
 /**
@@ -13,6 +14,7 @@ public abstract class RenderEntity implements PulseEntity {
     private double _rotationDeg = 0.0;
     private double _width = 0.0, _height = 0.0;
     private String _texture;
+    private Color _color = Color.RED;
 
     /**
      * This function ensures that the render entity is added to the world. After
@@ -44,6 +46,17 @@ public abstract class RenderEntity implements PulseEntity {
         _texture = texture;
         // Make sure the texture gets registered with the system
         Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, _texture));
+    }
+
+
+    public void setColor(Color color)
+    {
+        _color = color;
+    }
+
+    public Color getColor()
+    {
+        return _color;
     }
 
     public String getTexture()

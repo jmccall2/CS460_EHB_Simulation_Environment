@@ -19,6 +19,7 @@ import java.util.*;
 public class Renderer implements MessageHandler {
     private GraphicsContext _gc;
     private HashMap<String, ImageView> _textures = new HashMap<>();
+    private HashMap<String, Color> _colors = new HashMap<>();
     private HashSet<RenderEntity> _entities = new HashSet<>();
     private TreeMap<Integer, ArrayList<RenderEntity>> _drawOrder = new TreeMap<>();
     private Camera _worldCamera;
@@ -99,7 +100,7 @@ public class Renderer implements MessageHandler {
                     //imageView.setFitHeight(height);
                     _gc.drawImage(imageView.getImage(), screenX, screenY, width, height);
                 } else {
-                    _gc.setFill(Color.RED);
+                    _gc.setFill(entity.getColor());
                     _gc.fillRect(screenX, screenY, width, height);
                 }
             }
