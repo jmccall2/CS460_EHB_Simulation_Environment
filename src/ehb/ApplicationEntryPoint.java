@@ -5,6 +5,7 @@ import interfaces.EHBButton;
 import simulation.engine.Camera;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
+import simulation.engine.Sun;
 
 
 /**
@@ -55,8 +56,7 @@ public class ApplicationEntryPoint {
            cloud4.addToWorld();
        }
 
-
-       SingleFrameEntity sun = new SingleFrameEntity("resources/img/world/sun.png",-350,5,8,50,0,100,100);
+       Sun sun = new Sun();
        sun.addToWorld();
     }
 

@@ -16,15 +16,13 @@ public class Car extends RenderEntity
         // If the rate is 5.0, it means that every 5 seconds we move
         // to a new animation frame
         _animationSequence = new Animation(this, 0.25);
-        _buildFrontWheelFrames();
+        _buildFrames();
         setLocationXYDepth(0, 200, -1);
         setSpeedXY(50, 0);
-        // setAcceleration(175, 0);
         setWidthHeight(200, 100);
-        //setTexture("resources/img/car/car1.png");
     }
 
-    private void _buildFrontWheelFrames()
+    private void _buildFrames()
     {
         // In this case, "car_drive" specifies a set of animation frames that go together.
         // We can create different categories within the same animation object so that
