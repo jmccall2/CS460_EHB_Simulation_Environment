@@ -1,4 +1,8 @@
 # CS460_HandBrake
+
+>>> TEMPORARY: Here is our current working outline for the structure of this program:
+        https://go.gliffy.com/go/share/sitm5q6uo5wgpeuxe8b6
+
 Simulation of electronic handbrake for CS 460.
 
 
