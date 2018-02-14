@@ -26,9 +26,22 @@ public class Car extends RenderEntity
         // to a new animation frame
         _animationSequence = new Animation(this, 0.03);
         _buildFrames();
-        setLocationXYDepth(0, 200, -1);
-        setSpeedXY(50, 0);
+        setLocationXYDepth(0, 215, -1);
+        setSpeedXY(100, 0); // There is something wrong with the scaling of the background and seed, i.e this does not look like 100 mph
         setWidthHeight(200, 100);
+
+    }
+
+    private void _buildFrames()
+    {
+        // In this case, "car_drive" specifies a set of animation frames that go together.
+        // We can create different categories within the same animation object so that
+        // we can have the car play different animations under different circumstances if we want.
+        for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
+
+        // This part isn't completely necessary since we only have one category,
+        // but I guess it's good to be explicit
+        _animationSequence.setCategory("car_drive");
     }
 
     // they can change gear at runtime
@@ -48,29 +61,31 @@ public class Car extends RenderEntity
         this.engine_force = force;
     }
 
-    private void _buildFrames()
-    {
-        // In this case, "car_drive" specifies a set of animation frames that go together.
-        // We can create different categories within the same animation object so that
-        // we can have the car play different animations under different circumstances if we want.
-        for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
-
-        // This part isn't completely necessary since we only have one category,
-        // but I guess it's good to be explicit
-        _animationSequence.setCategory("car_drive");
-    }
-
-    public String getLatestFrontWheelFrame()
-    {
-        //_currentCarFrame++;
-        //if(_currentCarFrame == carFrames.size()) _currentCarFrame = 0;
-        //return carFrames.get(_currentCarFrame);
-        return "";
-    }
-
+    // This variables are just for an example.
+    // The tire track in the future will have have tire tracks with different curvatures
+    // for different levels of traction loss.
+    int delay = 0;
+    int brakeToggle = 0;
+    boolean APPLY_BRAKES = false;
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
+        brakeToggle++;
+        if (brakeToggle > 350)
+        {
+            brakeToggle = 0;
+            APPLY_BRAKES = !APPLY_BRAKES;
+        }
+
+        delay++;
+            if (delay == 10) {
+                delay = 0;
+                if(APPLY_BRAKES) {
+                System.out.println("adding tire track.");
+                TireTrack tt = new TireTrack(this.getLocationX() + 5, this.getLocationY() + 55);
+                tt.addToWorld();
+            }
+        }
     }
 }
 
