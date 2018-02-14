@@ -1,4 +1,5 @@
 package simulation;
+import interfaces.Gear;
 import simulation.engine.Animation;
 import simulation.engine.RenderEntity;
 
@@ -9,6 +10,14 @@ public class Car extends RenderEntity
     //private int _currentCarFrame = 0;
     //private int _delay = 0;
     private Animation _animationSequence;
+    private double speed;
+    private Gear gear;
+    private double engine_force;
+    private double brake_pressure;
+    // might move this to physics engine since they should't change
+    private static final double wheel_radius = .2286;
+    private static final double weight = 400; // per wheel in kg
+    private static final double coeff = .9;
 
     public Car()
     {
@@ -20,6 +29,23 @@ public class Car extends RenderEntity
         setLocationXYDepth(0, 200, -1);
         setSpeedXY(50, 0);
         setWidthHeight(200, 100);
+    }
+
+    // they can change gear at runtime
+    public void set_gear(Gear gear){
+        this.gear = gear;
+    }
+
+    // they can change force at runtime
+    public void set_force(double force) {
+        this.engine_force = force;
+    }
+
+    // use this to set before simulation starts
+    public void init_status(double speed, Gear gear, double force) {
+        this.speed = speed;
+        this.gear = gear;
+        this.engine_force = force;
     }
 
     private void _buildFrames()
