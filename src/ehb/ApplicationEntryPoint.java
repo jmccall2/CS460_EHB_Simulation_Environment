@@ -21,12 +21,10 @@ public class ApplicationEntryPoint {
 
     GUI _gui;
     EHB _ehb;
-    EHBButton _bi;
 
     public void init()
     {
         _gui = new GUI();
-        _bi = new EHBButton(_gui);
         _ehb = new EHB();
         Car car = new Car();
         car.addToWorld();
