@@ -1,11 +1,10 @@
 package ehb;
 
-import simulation.BackgroundPanel;
-import simulation.Car;
+import simulation.*;
 import interfaces.EHBButton;
-import simulation.GUI;
-import simulation.SingleFrameEntity;
 import simulation.engine.Camera;
+import simulation.engine.Message;
+import simulation.engine.Singleton;
 
 
 /**
@@ -35,6 +34,8 @@ public class ApplicationEntryPoint {
         camera.attachToEntity(car);
         camera.setAsMainCamera();
         _buildWorld();
+        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
     }
 
 
