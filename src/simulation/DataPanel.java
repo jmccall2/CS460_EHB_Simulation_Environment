@@ -51,58 +51,58 @@ public class DataPanel implements GUIPanel
       _dataPanel.getChildren().setAll(page);
     }
     
-    public void setSpeed(double speed)
-    {
-      this.speed = speed;
-      controller.setSpeed(speed);
-    }
-    
-    public double getSpeed()
-    {
-      return speed;
-    }
-
-    public void setAcceleration(double acceleration)
-    {
-      this.acceleration = acceleration;
-      controller.setAcceleration(acceleration);
-    }
-    
-    public double getAcceleration()
-    {
-      return acceleration;
-    }
-    
-    public void setGear(String gear)
-    {
-      this.gear = gear;
-      controller.setGear(gear);
-    }
-    
-    public String getGear()
-    {
-      return gear;
-    }
-    
-    public void setTraction(double traction)
-    {
-      this.traction = traction;
-      controller.setTraction(traction);
-    }
-    
-    public double getTraction()
-    {
-      return traction;
-    }
-    
-    public void setPressure(double pressure)
-    {
-      this.pressure = pressure;
-      controller.setPressure(pressure);
-    }
-    
-    public double getPressure()
-    {
-      return pressure;
-    }
+//    public void setSpeed(double speed)
+//    {
+//      this.speed = speed;
+//      controller.setSpeed(speed);
+//    }
+//    
+//    public double getSpeed()
+//    {
+//      return speed;
+//    }
+//
+//    public void setAcceleration(double acceleration)
+//    {
+//      this.acceleration = acceleration;
+//      controller.setAcceleration(acceleration);
+//    }
+//    
+//    public double getAcceleration()
+//    {
+//      return acceleration;
+//    }
+//    
+//    public void setGear(String gear)
+//    {
+//      this.gear = gear;
+//      controller.setGear(gear);
+//    }
+//    
+//    public String getGear()
+//    {
+//      return gear;
+//    }
+//    
+//    public void setTraction(double traction)
+//    {
+//      this.traction = traction;
+//      controller.setTraction(traction);
+//    }
+//    
+//    public double getTraction()
+//    {
+//      return traction;
+//    }
+//    
+//    public void setPressure(double pressure)
+//    {
+//      this.pressure = pressure;
+//      controller.setPressure(pressure);
+//    }
+//    
+//    public double getPressure()
+//    {
+//      return pressure;
+//    }
 }
