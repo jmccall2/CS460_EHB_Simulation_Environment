@@ -1,4 +1,7 @@
-package simulation.engine;
+package simulation;
+
+import simulation.engine.Animation;
+import simulation.engine.RenderEntity;
 
 public class Sun extends RenderEntity
 {

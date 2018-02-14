@@ -1,11 +1,10 @@
 package ehb;
 
 import simulation.*;
-import interfaces.EHBButton;
 import simulation.engine.Camera;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
-import simulation.engine.Sun;
+import simulation.Sun;
 
 
 /**
