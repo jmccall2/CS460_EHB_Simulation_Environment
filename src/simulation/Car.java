@@ -15,7 +15,7 @@ public class Car extends RenderEntity
         // The second parameter to the Animation is the rate of change
         // If the rate is 5.0, it means that every 5 seconds we move
         // to a new animation frame
-        _animationSequence = new Animation(this, 0.25);
+        _animationSequence = new Animation(this, 0.03);
         _buildFrames();
         setLocationXYDepth(0, 200, -1);
         setSpeedXY(50, 0);
