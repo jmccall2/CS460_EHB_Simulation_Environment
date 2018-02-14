@@ -14,6 +14,7 @@ https://c1.staticflickr.com/3/2658/4153625805_b3f328f87a_b.jpg
 https://pixabay.com/p-1844227/?no_redirect
 http://www.publicdomainpictures.net/pictures/190000/velka/the-sun-30.jpg
 https://commons.wikimedia.org/wiki/File:Linecons_small-cloud.svg
+http://clipart-library.com/images/kc8o9GEoi.jpg
 
 List of things that need to be done (this is not everything)
 
