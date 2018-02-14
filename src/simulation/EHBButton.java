@@ -1,6 +1,5 @@
 package simulation;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import interfaces.ButtonColor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +10,6 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
-import java.net.SocketImpl;
 
 public class EHBButton
 {
