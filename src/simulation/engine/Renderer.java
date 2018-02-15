@@ -5,112 +5,46 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import simulation.engine.math.Vector3;
 
 import java.util.*;
 
 /**
- * Updates the drawable portion of the screen and ensures
- * that all actors properly move within the world based on
- * their speed & acceleration.
- *
- * @author Justin Hall
+ * Handles all the drawing, entity location updates based on
+ * speed and acceleration, and
  */
 public class Renderer implements MessageHandler {
     private GraphicsContext _gc;
     private HashMap<String, ImageView> _textures = new HashMap<>();
-    private HashMap<String, Color> _colors = new HashMap<>();
     private HashSet<RenderEntity> _entities = new HashSet<>();
+    private HashSet<ActorGraph> _rootSet = new HashSet<>();
     private TreeMap<Integer, ArrayList<RenderEntity>> _drawOrder = new TreeMap<>();
-    private Camera _worldCamera;
+    private Camera _worldCamera = new Camera(); // Start with a default camera
+    private Rotate _rotation = new Rotate(0);
 
     public void init(GraphicsContext gc)
     {
         _gc = gc;
+        _rotation.setAxis(new Point3D(0, 0, 1)); // In 2D we rotate about the z-axis
         Engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
         Engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
         Engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
         Engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
-    }
-
-    public void render(double deltaSeconds)
-    {
-        _gc.setFill(Color.WHITE);
-        _gc.fillRect(0, 0,
-                     Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
-                     Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
-
-        // What values to offset everything in the world by
-        double xOffset = 0.0;
-        double yOffset = 0.0;
-        // If the world camera was set then we need to deal with its entity first
-        if (_worldCamera != null)
-        {
-            RenderEntity entity = _worldCamera.getEntity();
-            double accelX = entity.getAccelerationX();
-            double accelY = entity.getAccelerationY();
-            double speedX = entity.getSpeedX();
-            double speedY = entity.getSpeedY();
-            double locX = entity.getLocationX();
-            double locY = entity.getLocationY();
-            speedX += (accelX * deltaSeconds);
-            speedY += (accelY * deltaSeconds);
-            entity.setSpeedXY(speedX, speedY);
-            locX += (speedX * deltaSeconds);
-            locY += (speedY * deltaSeconds);
-            entity.setLocationXYDepth(locX, locY, entity.getDepth());
-            Vector3 translate = _worldCamera.getWorldTranslate();
-            xOffset = translate.x();
-            yOffset = translate.y();
-        }
-        _determineDrawOrder();
-        for (Map.Entry<Integer, ArrayList<RenderEntity>> entry : _drawOrder.entrySet())
-        {
-            for (RenderEntity entity : entry.getValue()) {
-                double accelX = entity.getAccelerationX();
-                double accelY = entity.getAccelerationY();
-                double speedX = entity.getSpeedX();
-                double speedY = entity.getSpeedY();
-                double locX = entity.getLocationX();
-                double locY = entity.getLocationY();
-                double width = entity.getWidth();
-                double height = entity.getHeight();
-                double screenX = 0.0;
-                double screenY = 0.0;
-                if (_worldCamera == null || entity != _worldCamera.getEntity()) {
-                    speedX += (accelX * deltaSeconds);
-                    speedY += (accelY * deltaSeconds);
-                    entity.setSpeedXY(speedX, speedY);
-                    locX += (speedX * deltaSeconds);
-                    locY += (speedY * deltaSeconds);
-                    screenX = locX + xOffset;
-                    screenY = locY + yOffset;
-                    entity.setLocationXYDepth(locX, locY, entity.getDepth());
-                } else if (_worldCamera != null && entity == _worldCamera.getEntity()) {
-                    Vector3 location = _worldCamera.getEntityLocation();
-                    locX = location.x();
-                    locY = location.y();
-                    screenX = locX;
-                    screenY = locY;
-                }
-                if (_textures.containsKey(entity.getTexture())) {
-                    ImageView imageView = _textures.get(entity.getTexture());
-                    imageView.setRotate(entity.getRotationAngle());
-                    //imageView.setFitWidth(width);
-                    //imageView.setFitHeight(height);
-                    _gc.drawImage(imageView.getImage(), screenX, screenY, width, height);
-                } else {
-                    _gc.setFill(entity.getColor());
-                    _gc.fillRect(screenX, screenY, width, height);
-                }
-            }
-        }
+        Engine.getMessagePump().signalInterest(Engine.R_RENDER_SCENE, this);
+        Engine.getMessagePump().signalInterest(Engine.R_UPDATE_ENTITIES, this);
     }
 
     @Override
     public void handleMessage(Message message) {
         switch (message.getMessageName())
         {
+            case Engine.R_RENDER_SCENE:
+                _render((Double)message.getMessageData());
+                break;
+            case Engine.R_UPDATE_ENTITIES:
+                _updateEntities((Double)message.getMessageData());
+                break;
             case Singleton.ADD_RENDER_ENTITY:
                 _entities.add((RenderEntity)message.getMessageData());
                 break;
@@ -139,6 +73,130 @@ public class Renderer implements MessageHandler {
         }
     }
 
+    private void _render(double deltaSeconds)
+    {
+        _gc.setFill(Color.WHITE);
+        _gc.fillRect(0, 0,
+                Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
+                Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
+
+        _determineDrawOrder();
+        // What values to offset everything in the world by to
+        // determine camera-space coordinates
+        double xOffset;
+        double yOffset;
+        Vector3 translate = _worldCamera.getWorldTranslate();
+        xOffset = translate.x();
+        yOffset = translate.y();
+        // Now transform everyone to camera space and determine if they
+        // are visible and need to be drawn
+        double screenX;
+        double screenY;
+        double rotation;
+        double width;
+        double height;
+        Vector3 location;
+        int screenWidth = Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt();
+        int screenHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt();
+        for (Map.Entry<Integer, ArrayList<RenderEntity>> entry : _drawOrder.entrySet())
+        {
+            for (RenderEntity entity : entry.getValue())
+            {
+                location = entity.getTranslationVec();
+                boolean isStatic = entity.isStaticActor();
+                screenX = location.x() + (isStatic ? 0 : xOffset);
+                screenY = location.y() + (isStatic ? 0 : yOffset);
+                width = entity.getWidth();
+                height = entity.getHeight();
+                rotation = entity.getRotation();
+                if (screenX + width < 0 || screenX > screenWidth ||
+                        screenY + height < 0 || screenY > screenHeight)
+                {
+                    entity.setScreenVisibility(false);
+                }
+                else
+                {
+                    entity.setScreenVisibility(true);
+                    _rotation.setAngle(rotation);
+                    _rotation.setPivotX(screenX + width / 2);
+                    _rotation.setPivotY(screenY + height / 2);
+                    // See https://stackoverflow.com/questions/18260421/how-to-draw-image-rotated-on-javafx-canvas
+                    _gc.setTransform(_rotation.getMxx(), _rotation.getMyx(),
+                            _rotation.getMxy(), _rotation.getMyy(), _rotation.getTx(), _rotation.getTy());
+                    if (_textures.containsKey(entity.getTexture()))
+                    {
+                        ImageView imageView = _textures.get(entity.getTexture());
+                        _gc.drawImage(imageView.getImage(), screenX, screenY, width, height);
+                    }
+                    else
+                    {
+                        _gc.setFill(entity.getColor());
+                        _gc.fillRect(screenX, screenY, width, height);
+                    }
+                }
+            }
+        }
+    }
+
+    private void _updateEntities(double deltaSeconds)
+    {
+        _rootSet.clear();
+        int worldStartX = Engine.getConsoleVariables().find(Singleton.WORLD_START_X).getcvarAsInt();
+        int worldStartY = Engine.getConsoleVariables().find(Singleton.WORLD_START_Y).getcvarAsInt();
+        int worldWidth = Engine.getConsoleVariables().find(Singleton.WORLD_WIDTH).getcvarAsInt();
+        int worldHeight = Engine.getConsoleVariables().find(Singleton.WORLD_HEIGHT).getcvarAsInt();
+        // Account for the fact that worldStartX/worldStartY may not simply be 0
+        worldWidth += worldStartX;
+        worldHeight += worldStartY;
+        for (ActorGraph graph : _entities)
+        {
+            if (_rootSet.contains(graph)) continue; // Already processed this actor and its attached actors
+            if (graph.isAttached()) continue; // Will be processed later
+            Vector3 speed = graph.getSpeedVec();
+            Vector3 acceleration = graph.getAccelerationVec();
+            speed.setXYZ(speed.x() + acceleration.x() * deltaSeconds,
+                    speed.y() + acceleration.y() * deltaSeconds, 0);
+            double speedX = speed.x();
+            double speedY = speed.y();
+            double deltaSpeedX = speedX * deltaSeconds;
+            double deltaSpeedY = speedY * deltaSeconds;
+            double x = graph.getLocationX();
+            double y = graph.getLocationY();
+            double depth = graph.getDepth();
+            graph.setLocationXYDepth(x + deltaSpeedX,
+                    y + deltaSpeedY,
+                    depth);
+            _checkAndCorrectOutOfBounds(graph, worldStartX, worldStartY, worldWidth, worldHeight);
+            _rootSet.add(graph);
+            for (ActorGraph attached : graph.getActors())
+            {
+                _updateGraphEntitiesRecursive(attached, worldStartX, worldStartY, worldWidth,
+                        worldHeight, deltaSpeedX, deltaSpeedY);
+            }
+        }
+    }
+
+    private void _updateGraphEntitiesRecursive(ActorGraph actor, int worldStartX, int worldStartY,
+                                               int worldWidth, int worldHeight,
+                                               double deltaSpeedX, double deltaSpeedY)
+    {
+        // Only process this actor if it is part of the world
+        // and has not been processed yet
+        if (_entities.contains(actor) && !_rootSet.contains(actor))
+        {
+            actor.setLocationXYDepth(actor.getLocationX() + deltaSpeedX,
+                    actor.getLocationY() + deltaSpeedY, actor.getDepth());
+            _checkAndCorrectOutOfBounds(actor, worldStartX, worldStartY, worldWidth, worldHeight);
+        }
+        _rootSet.add(actor);
+        // Process its attached actors regardless
+        for (ActorGraph attached : actor.getActors())
+        {
+            _updateGraphEntitiesRecursive(attached, worldStartX, worldStartY, worldWidth,
+                    worldHeight, deltaSpeedX, deltaSpeedY);
+        }
+    }
+
     private void _determineDrawOrder()
     {
         for (Map.Entry<Integer, ArrayList<RenderEntity>> entry : _drawOrder.entrySet())
@@ -148,12 +206,29 @@ public class Renderer implements MessageHandler {
 
         for (RenderEntity entity : _entities)
         {
-            int depth = (int)entity.getDepth() * -1; // * -1 because if the depth is negative, we actually want it to show up later in the map
+            int depth = (int)entity.getDepth() * -1; // * -1 because if the depth is negative it needs to come
+                                                     // later in the list so that it gets drawn last and
+                                                     // will then appear to be on top of other objects
             if (!_drawOrder.containsKey(depth))
             {
                 _drawOrder.put(depth, new ArrayList<>());
             }
             _drawOrder.get(depth).add(entity);
         }
+    }
+
+    private void _checkAndCorrectOutOfBounds(Actor actor, int worldStartX, int worldStartY,
+                                             int worldWidth, int worldHeight)
+    {
+        Vector3 translation = actor.getTranslationVec();
+        double x = translation.x();
+        double y = translation.y();
+        double width = actor.getWidth();
+        double height = actor.getHeight();
+        if (x + width < worldStartX) x = worldWidth - width;
+        else if (x > worldWidth) x = worldStartX;
+        if (y + height < worldStartY) y = worldHeight - height;
+        else if (y > worldHeight) y = worldStartY;
+        translation.setXYZ(x, y, 1);
     }
 }

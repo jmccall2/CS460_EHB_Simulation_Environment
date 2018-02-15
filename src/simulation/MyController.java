@@ -48,13 +48,13 @@ public class MyController implements Initializable
       {
         stopped = false;
         start_stop_sim.setText("Stop simulation");
-        Engine.getMessagePump().sendMessage(new Message(Singleton.START_SIM));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
       }
       else if(!stopped)
       {
         stopped = true;
         start_stop_sim.setText("Start simulation");
-        Engine.getMessagePump().sendMessage(new Message(Singleton.STOP_SIM));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.STOP_SIM));
       } 
     });
     ehb = new EHBButton();
@@ -77,29 +77,29 @@ public class MyController implements Initializable
       {
         brakeOff = false;
         handBrake.setText("Deactivate");
-        Engine.getMessagePump().sendMessage(new Message(Singleton.ACTIVATE_BRAKE));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
       }
       else if(!brakeOff)
       {
         brakeOff = true;
         handBrake.setText("Activate Brake");
-        Engine.getMessagePump().sendMessage(new Message(Singleton.DEACTIVATE_BRAKE));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       }
     });
     parkButton.setOnAction((event) ->{
-      Engine.getMessagePump().sendMessage(new Message(Singleton.PARK));
+      Engine.getMessagePump().sendMessage(new Message(SimGlobals.PARK));
     });
     neutralButton.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(Singleton.NEUTRAL));
+      Engine.getMessagePump().sendMessage(new Message(SimGlobals.NEUTRAL));
     });
     driveButton.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(Singleton.DRIVE));
+      Engine.getMessagePump().sendMessage(new Message(SimGlobals.DRIVE));
     });
     firstGear.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(Singleton.FIRST));
+      Engine.getMessagePump().sendMessage(new Message(SimGlobals.FIRST));
     });
     secondGear.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(Singleton.SECOND));
+      Engine.getMessagePump().sendMessage(new Message(SimGlobals.SECOND));
     });
     enterSpeed.setOnAction((event)->{
       if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
@@ -116,7 +116,7 @@ public class MyController implements Initializable
         }
         if(speed >= 0 && speed <=140)
         {
-          Engine.getMessagePump().sendMessage(new Message(Singleton.SPEED, speed));
+          Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
         }
       }
     });

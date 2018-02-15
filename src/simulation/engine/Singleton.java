@@ -20,7 +20,6 @@ public class Singleton {
     public static final String ADD_UI_ELEMENT = "add_ui_element";
     public static final String REMOVE_UI_ELEMENT = "remove_ui_element";
 
-
     // This message is sent whenever any of the console variables changes - the data
     // will be a direct reference to the changed variable
     public static final String CONSOLE_VARIABLE_CHANGED = "console_variable_changed";
@@ -63,29 +62,10 @@ public class Singleton {
     // This value can be cast to an int - 60 fps, for example, means the simulation.engine will not
     // update more than 60 times per second
     public static final String ENG_MAX_FPS = "eng_max_fps";
-    
-    /**
-     * The following messages are tied to GUI actions and are registered at startup
-     * in GUI.java.
-     */
-    //Start the simulation.
-    public static final String START_SIM = "Start simulation."; 
-    //Stop the simulation.
-    public static final String STOP_SIM = "Stop simulation."; 
-    //Hand brake activated.
-    public static final String ACTIVATE_BRAKE = "Activate brake.";
-    //Hand brake deactivated.
-    public static final String DEACTIVATE_BRAKE = "Deactivate brake.";
-    //Car is put in park.
-    public static final String PARK ="Park.";
-    //Car is put in neutral.
-    public static final String NEUTRAL = "Neutral.";
-    //Car is put in drive.
-    public static final String DRIVE = "Drive.";
-    //Car is put in first gear.
-    public static final String FIRST = "First.";
-    //Car is put in second gear.
-    public static final String SECOND = "Second.";
-    //Speed entered by user.
-    public static final String SPEED = "Speed.";
+    // Where the world starts in terms of x and y
+    public static final String WORLD_START_X = "world_start_x";
+    public static final String WORLD_START_Y = "world_start_y";
+    // How large the world is in terms of width and height
+    public static final String WORLD_WIDTH = "world_width";
+    public static final String WORLD_HEIGHT = "world_height";
 }

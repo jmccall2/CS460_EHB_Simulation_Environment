@@ -24,6 +24,7 @@ public class ApplicationEntryPoint {
 
     GUI _gui;
     EHB _ehb;
+    Car _car;
 
     public void init()
     {
@@ -39,10 +40,10 @@ public class ApplicationEntryPoint {
 
         _gui = new GUI();
         _ehb = new EHB();
-        Car car = new Car();
-        car.addToWorld();
+        _car = new Car();
+        _car.addToWorld();
         Camera camera = new Camera();
-        camera.attachToEntity(car);
+        camera.attachToEntity(_car);
         camera.setAsMainCamera();
         _buildWorld();
     }
@@ -68,6 +69,9 @@ public class ApplicationEntryPoint {
 
        Sun sun = new Sun();
        sun.addToWorld();
+
+       // Attach the sun to the car so that it never gets left behind
+       _car.attachActor(sun);
     }
 
 
@@ -76,7 +80,5 @@ public class ApplicationEntryPoint {
      */
     public void shutdown()
     {
-
-
     }
 }

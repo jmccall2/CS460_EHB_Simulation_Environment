@@ -35,16 +35,16 @@ public class GUI
       newPane.setLayoutX(0);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.START_SIM));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.STOP_SIM));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.ACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.DEACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.PARK));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.NEUTRAL));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.DRIVE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.FIRST));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.SECOND));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.SPEED));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.PARK));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.NEUTRAL));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DRIVE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.FIRST));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SECOND));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
     }
 
     public GUI()
@@ -62,16 +62,16 @@ public class GUI
       newPane.setLayoutX(0);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.START_SIM));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.STOP_SIM));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.ACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.DEACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.PARK));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.NEUTRAL));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.DRIVE));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.FIRST));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.SECOND));
-      Engine.getMessagePump().registerMessage(new Message(Singleton.SPEED));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.PARK));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.NEUTRAL));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DRIVE));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.FIRST));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SECOND));
+      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
     }
     
     public void setActiveColor(ButtonColor col)

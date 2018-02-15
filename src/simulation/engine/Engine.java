@@ -14,6 +14,9 @@ import java.util.HashSet;
 public class Engine extends Application implements PulseEntity, MessageHandler {
     private static Engine _engine; // Self-reference
     private static boolean _isInitialized = false;
+    // Package private
+    static final String R_RENDER_SCENE = "r_render_screen";
+    static final String R_UPDATE_ENTITIES = "r_update_entities";
 
     private HashSet<PulseEntity> _pulseEntities;
     private ApplicationEntryPoint _application;
@@ -58,7 +61,8 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                 long currentTimeMS = System.currentTimeMillis();
                 double deltaSeconds = (currentTimeMS - _lastFrameTimeMS) / 1000.0;
                 // Don't pulse faster than the maximum frame rate
-                if (deltaSeconds < (1/60)) return;
+                //if (deltaSeconds <= (1.0 / 60)) return;
+                //System.out.println(deltaSeconds);
                 pulse(deltaSeconds);
                 _lastFrameTimeMS = currentTimeMS;
             }
@@ -76,6 +80,10 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         {
             _messageSystem.sendMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED, cvar));
         }
+        // Make sure these two get added so that all entities are updated and
+        // the screen is refreshed
+        _messageSystem.sendMessage(new Message(Engine.R_UPDATE_ENTITIES, deltaSeconds));
+        _messageSystem.sendMessage(new Message(Engine.R_RENDER_SCENE, deltaSeconds));
         // Make sure we keep the messages flowing
         _messageSystem.dispatchMessages();
         for (PulseEntity entity : _pulseEntities)
@@ -83,7 +91,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
             entity.pulse(deltaSeconds);
         }
         // Tell the renderer to update the screen
-        _renderer.render(deltaSeconds);
+        //_renderer.render(deltaSeconds);
     }
 
     @Override
@@ -128,12 +136,17 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         GraphicsContext gc = _window.init(stage);
         _renderer.init(gc);
         _application.init();
+        _maxFrameRate = _cvarSystem.find(Singleton.ENG_MAX_FPS).getcvarAsInt();
     }
 
     private void _registerDefaultCVars()
     {
         _cvarSystem.registerVariable(new ConsoleVariable(Singleton.ENG_MAX_FPS, "60", "60"));
         _cvarSystem.registerVariable(new ConsoleVariable(Singleton.ENG_LIMIT_FPS, "true", "true"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_START_X, "0", "0"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_START_Y, "0", "0"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_WIDTH, "1000", "0"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_HEIGHT, "1000", "0"));
     }
 
     private void _registerMessageTypes()
@@ -150,6 +163,8 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.REGISTER_TEXTURE));
         _messageSystem.registerMessage(new Message(Singleton.SET_MAIN_CAMERA));
         _messageSystem.registerMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED));
+        _messageSystem.registerMessage(new Message(R_RENDER_SCENE));
+        _messageSystem.registerMessage(new Message(R_UPDATE_ENTITIES));
     }
 
     /**
