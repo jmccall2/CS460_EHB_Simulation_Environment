@@ -1,16 +1,11 @@
 package simulation;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import interfaces.ButtonColor;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
-import simulation.engine.Singleton;
 
 
 public class EHBButton
@@ -27,13 +22,8 @@ public class EHBButton
     EHBButton()
     {
         _colorMessageHelper = new ColorMessageHelper();
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
-    }
-    
-    public Color getInitColor()
-    {
-      return _mapToFXColor(_unactivatedColor);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
     }
 
     public Color getColor()

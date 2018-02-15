@@ -75,13 +75,13 @@ public class UIButton implements UIElement {
 
     public void addToWindow()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _button));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _button));
         //Singleton.simulation.engine._window._stack.getChildren().add(_button);
     }
 
     public void removeFromWindow()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _button));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _button));
     }
 
     public void toggleHide(boolean value)

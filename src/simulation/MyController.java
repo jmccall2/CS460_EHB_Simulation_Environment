@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
+import simulation.engine.Engine;
 //Controller for FXML pane.
 public class MyController implements Initializable
 {
@@ -47,13 +48,13 @@ public class MyController implements Initializable
       {
         stopped = false;
         start_stop_sim.setText("Stop simulation");
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.START_SIM));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.START_SIM));
       }
       else if(!stopped)
       {
         stopped = true;
         start_stop_sim.setText("Start simulation");
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.STOP_SIM));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.STOP_SIM));
       } 
     });
     ehb = new EHBButton();
@@ -76,29 +77,29 @@ public class MyController implements Initializable
       {
         brakeOff = false;
         handBrake.setText("Deactivate");
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ACTIVATE_BRAKE));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ACTIVATE_BRAKE));
       }
       else if(!brakeOff)
       {
         brakeOff = true;
         handBrake.setText("Activate Brake");
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.DEACTIVATE_BRAKE));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.DEACTIVATE_BRAKE));
       }
     });
     parkButton.setOnAction((event) ->{
-      Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.PARK));
+      Engine.getMessagePump().sendMessage(new Message(Singleton.PARK));
     });
     neutralButton.setOnAction((event)->{
-      Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.NEUTRAL));
+      Engine.getMessagePump().sendMessage(new Message(Singleton.NEUTRAL));
     });
     driveButton.setOnAction((event)->{
-      Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.DRIVE));
+      Engine.getMessagePump().sendMessage(new Message(Singleton.DRIVE));
     });
     firstGear.setOnAction((event)->{
-      Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.FIRST));
+      Engine.getMessagePump().sendMessage(new Message(Singleton.FIRST));
     });
     secondGear.setOnAction((event)->{
-      Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.SECOND));
+      Engine.getMessagePump().sendMessage(new Message(Singleton.SECOND));
     });
     enterSpeed.setOnAction((event)->{
       if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
@@ -115,7 +116,7 @@ public class MyController implements Initializable
         }
         if(speed >= 0 && speed <=140)
         {
-          Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.SPEED, speed));
+          Engine.getMessagePump().sendMessage(new Message(Singleton.SPEED, speed));
         }
       }
     });

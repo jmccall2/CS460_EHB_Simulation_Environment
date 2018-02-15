@@ -4,6 +4,7 @@ import interfaces.Brake;
 import interfaces.Speed;
 import simulation.*;
 import simulation.engine.Camera;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
 import simulation.Sun;
@@ -26,14 +27,15 @@ public class ApplicationEntryPoint {
 
     public void init()
     {
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
 
+        // instances of the interfaces so that they do get creates
         new Brake();
         new Speed();
-
+        //need to create an instance of EHBButton(interfaces), but there are two classes with that name
 
         _gui = new GUI();
         _ehb = new EHB();
@@ -43,7 +45,6 @@ public class ApplicationEntryPoint {
         camera.attachToEntity(car);
         camera.setAsMainCamera();
         _buildWorld();
-
     }
 
 

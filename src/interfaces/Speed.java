@@ -1,6 +1,7 @@
 package interfaces;
 
 import simulation.SimGlobals;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
@@ -15,7 +16,7 @@ public class Speed
 
   public Speed()
   {
-    Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_SPEED, helper);
+    Engine.getMessagePump().signalInterest(SimGlobals.SET_SPEED, helper);
   }
 
   public static double getSpeed()
@@ -23,10 +24,11 @@ public class Speed
     return speed;
   }
 
+  //since the GUI will set the speed and the car will have the speed there is no need for this method setSpeed
   private static void setSpeed(double speed1)
   {
     speed = speed1;
-    Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED, speed));
+    Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED, speed));
   }
 
   class Helper implements MessageHandler
