@@ -14,6 +14,8 @@ import simulation.engine.math.Vector3;
  * If no camera is set then the system will pick some location to
  * focus on.
  *
+ * @TODO figure out why the camera transitions the way it does when world wraparound occurs
+ *
  * @author Justin Hall
  */
 public class Camera {
