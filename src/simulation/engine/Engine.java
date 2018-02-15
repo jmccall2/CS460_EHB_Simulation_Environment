@@ -172,9 +172,11 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                 String variable = "";
                 String value = "";
                 boolean isReadingValue = false;
-                for (int i = 1; i < line.length(); ++i)
+                for (int i = 0; i < line.length(); ++i)
                 {
                     char c = line.charAt(i);
+                    if (c == '+') continue;
+                    if (c == '/' && (i + 1) < line.length() && line.charAt(i + 1) == '/') break; // Found a comment
                     if (c == '=')
                     {
                         isReadingValue = true;
@@ -183,6 +185,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                     if (isReadingValue) value += c;
                     else variable += c;
                 }
+                if (variable.equals("")) continue;
                 if (_cvarSystem.contains(variable)) _cvarSystem.find(variable).setValue(value);
                 else _cvarSystem.registerVariable(new ConsoleVariable(variable, value));
             }
