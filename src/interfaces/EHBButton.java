@@ -28,12 +28,12 @@ public class EHBButton
 
     public static void setEngagedSound(String path)
     {
-
+        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, path));
     }
 
     public static void setDisenagedSound(String path)
     {
-
+        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, path));
     }
 
     public static int getNumTimesPressed()
@@ -46,7 +46,15 @@ public class EHBButton
         @Override
         public void handleMessage(Message message)
         {
-
+            switch (message.getMessageName())
+            {
+                case SimGlobals.SET_ENGAGED_SOUND:
+                    // do something
+                    break;
+                case SimGlobals.SET_DISENGAGED_SOUND:
+                    // do something
+                    break;
+            }
         }
     }
 
