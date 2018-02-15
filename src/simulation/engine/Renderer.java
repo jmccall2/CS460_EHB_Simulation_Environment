@@ -27,10 +27,10 @@ public class Renderer implements MessageHandler {
     public void init(GraphicsContext gc)
     {
         _gc = gc;
-        Singleton.engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
+        Engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
+        Engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
+        Engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
+        Engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
     }
 
     public void render(double deltaSeconds)

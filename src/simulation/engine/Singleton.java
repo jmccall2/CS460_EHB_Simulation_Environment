@@ -1,13 +1,10 @@
 package simulation.engine;
 
 /**
- * All absolutely critical global variables, such as the simulation.engine
+ * All absolutely critical global variables - keep them as simple as possible
+ * and final unless you must mutate them
  */
 public class Singleton {
-    // If you are not the Engine class, don't set this variable to be any other Engine object
-    // or everything will probably break - the simulation.engine creates itself and sets this at startup
-    public static Engine engine;
-
     /**
      * The following are message types that the message pump is
      * guaranteed to recognize

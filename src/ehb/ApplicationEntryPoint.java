@@ -2,6 +2,7 @@ package ehb;
 
 import simulation.*;
 import simulation.engine.Camera;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
 import simulation.Sun;
@@ -32,8 +33,8 @@ public class ApplicationEntryPoint {
         camera.attachToEntity(car);
         camera.setAsMainCamera();
         _buildWorld();
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
     }
 
 

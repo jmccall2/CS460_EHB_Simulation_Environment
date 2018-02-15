@@ -11,6 +11,9 @@ import java.io.FileReader;
 import java.util.HashSet;
 
 public class Engine extends Application implements PulseEntity, MessageHandler {
+    private static Engine _engine; // Self-reference
+    private static boolean _isInitialized = false;
+
     private HashSet<PulseEntity> _pulseEntities;
     private ApplicationEntryPoint _application;
     private MessagePump _messageSystem;
@@ -28,17 +31,17 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
      * signal interest in message.
      * @return MessagePump for modification
      */
-    public MessagePump getMessagePump()
+    public static MessagePump getMessagePump()
     {
-        return _messageSystem;
+        return _engine._messageSystem;
     }
 
     /**
      * Returns the console variable listing for viewing/modification
      */
-    public ConsoleVariables getConsoleVariables()
+    public static ConsoleVariables getConsoleVariables()
     {
-        return _cvarSystem;
+        return _engine._cvarSystem;
     }
 
     @Override
@@ -97,7 +100,9 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
 
     private void _init(Stage stage)
     {
-        Singleton.engine = this; // Make sure this gets set before everything else
+        if (_isInitialized) return; // Already initialized
+        _isInitialized = true;
+        _engine = this; // This is a static variable
         _cvarSystem = new ConsoleVariables();
         _loadEngineConfig("src/resources/engine.cfg");
         _registerDefaultCVars();

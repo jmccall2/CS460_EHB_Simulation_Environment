@@ -46,7 +46,7 @@ public class Camera {
      */
     public void setAsMainCamera()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.SET_MAIN_CAMERA, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.SET_MAIN_CAMERA, this));
     }
 
     /**
@@ -60,8 +60,8 @@ public class Camera {
             _editedEntityLocation.setXYZ(0.0, 0.0, 0.0);
             return _editedEntityLocation;
         }
-        int scrWidth = Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt();
-        int scrHeight = Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt();
+        int scrWidth = Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt();
+        int scrHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt();
         _editedEntityLocation.setXYZ(scrWidth / _widthScalar, scrHeight / _heightScalar, 0.0);
         return _editedEntityLocation;
     }
