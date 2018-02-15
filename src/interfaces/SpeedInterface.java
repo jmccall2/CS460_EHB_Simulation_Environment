@@ -7,14 +7,14 @@ import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
 
-public class Speed
+public class SpeedInterface
 {
 
   Helper helper = new Helper();
 
   private static double speed = 0;
 
-  public Speed()
+  public SpeedInterface()
   {
     Engine.getMessagePump().signalInterest(SimGlobals.SET_SPEED, helper);
   }

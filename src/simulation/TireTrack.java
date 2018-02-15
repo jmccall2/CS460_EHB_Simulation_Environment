@@ -27,7 +27,7 @@ public class TireTrack extends RenderEntity
     @Override
     public void pulse(double deltaSeconds)
     {
-        if(getLocationX() < - 1000) removeFromWorld();
+        if(!isVisibleOnScreen()) removeFromWorld();
     }
 
 }

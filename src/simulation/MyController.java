@@ -3,12 +3,12 @@ package simulation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import interfaces.Gear;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
@@ -39,10 +39,18 @@ public class MyController implements Initializable
     currSpeedField.setText("");
     pressureField.setText("");
     parkButton.setToggleGroup(group);
+    parkButton.setUserData("P");
     neutralButton.setToggleGroup(group);
+    neutralButton.setUserData("N");
     driveButton.setToggleGroup(group);
+    driveButton.setUserData("D");
     firstGear.setToggleGroup(group);
+    firstGear.setUserData("1");
     secondGear.setToggleGroup(group);
+    secondGear.setUserData("2");
+    // We need to start in some gear.
+    driveButton.setSelected(true);
+    Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
     start_stop_sim.setOnAction((event) -> {
       if(stopped)
       {
@@ -86,21 +94,16 @@ public class MyController implements Initializable
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       }
     });
-    parkButton.setOnAction((event) ->{
-      Engine.getMessagePump().sendMessage(new Message(SimGlobals.PARK));
+    group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+      public void changed(ObservableValue<? extends Toggle> ov,
+                          Toggle old_toggle, Toggle new_toggle) {
+        if (group.getSelectedToggle() != null)
+        {
+          Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, _getGear(group.getSelectedToggle().getUserData().toString())));
+        }
+      }
     });
-    neutralButton.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(SimGlobals.NEUTRAL));
-    });
-    driveButton.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(SimGlobals.DRIVE));
-    });
-    firstGear.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(SimGlobals.FIRST));
-    });
-    secondGear.setOnAction((event)->{
-      Engine.getMessagePump().sendMessage(new Message(SimGlobals.SECOND));
-    });
+
     enterSpeed.setOnAction((event)->{
       if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
       {
@@ -131,7 +134,22 @@ public class MyController implements Initializable
   {
     guiRef = mainGUI;
   }
-  
+
+  private Gear _getGear(String s)
+  {
+    switch(s)
+    {
+      case "P": return Gear.PARK;
+      case "N": return Gear.NEUTRAL;
+      case "D": return Gear.DRIVE;
+      case "1": return Gear.FIRST;
+      case "2": return Gear.SECOND;
+      default:
+        System.err.println("UNSUPPORTED GEAR, returning drive.");
+        return Gear.DRIVE;
+    }
+  }
+
   private String getColor(Color col)
   {
     if(col.equals(Color.CYAN))

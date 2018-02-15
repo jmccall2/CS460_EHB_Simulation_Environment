@@ -8,7 +8,7 @@ import simulation.engine.Singleton;
 
 import java.util.HashSet;
 
-public class Brake
+public class BrakeInterface
 {
 
   Helper helper = new Helper();
@@ -20,7 +20,7 @@ public class Brake
     return pressure;
   }
 
-  public Brake()
+  public BrakeInterface()
   {
     Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE, helper);
   }

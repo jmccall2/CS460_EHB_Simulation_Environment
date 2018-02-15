@@ -1,4 +1,7 @@
 package simulation;
+import ehb.EHB;
+import interfaces.BrakeInterface;
+import interfaces.EHBButtonInterface;
 import interfaces.Gear;
 import simulation.engine.Animation;
 import simulation.engine.RenderEntity;
@@ -73,29 +76,23 @@ public class Car extends RenderEntity
     // The tire track in the future will have have tire tracks with different curvatures
     // for different levels of traction loss.
     int delay = 0;
-    int brakeToggle = 0;
-    boolean APPLY_BRAKES = false;
     int xOffset = 0;
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
-        brakeToggle++;
-        if (brakeToggle > 350)
+        if(EHBButtonInterface.isActive())
         {
-            brakeToggle = 0;
-            APPLY_BRAKES = !APPLY_BRAKES;
-        }
-
-        delay++;
+            brake_pressure = BrakeInterface.getPressure(); // Do something with the pressure to tie it in with the animation, and update sim.
+            delay++;
             if (delay == 25) {
                 delay = 0;
-                if(APPLY_BRAKES) {
                 System.out.println("adding tire track.");
                 xOffset = _tractionLossLevel == 1 ? 5 : 1;
                 TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
                 tt.addToWorld();
             }
         }
+
     }
 }
 

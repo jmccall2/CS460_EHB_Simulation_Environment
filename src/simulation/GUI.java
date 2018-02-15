@@ -3,6 +3,7 @@ package simulation;
 import java.io.IOException;
 
 import interfaces.ButtonColor;
+import interfaces.EHBButtonInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
@@ -23,10 +24,8 @@ public class GUI
       setActiveColor(activeColor);
       setUnActiveColor(inactiveColor);
       _gPane = new GridPane();
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
-      interfaces.EHBButton.setActiveColor(activeColor);
-      interfaces.EHBButton.setUnActiveColor(inactiveColor);
+      EHBButtonInterface.setActiveColor(activeColor);
+      EHBButtonInterface.setUnActiveColor(inactiveColor);
       controller = new MyController();
       controller.setGUI(this);
       _addFXMLCode();
@@ -35,16 +34,6 @@ public class GUI
       newPane.setLayoutX(0);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.PARK));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.NEUTRAL));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DRIVE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.FIRST));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SECOND));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
     }
 
     public GUI()
@@ -52,8 +41,8 @@ public class GUI
       _gPane = new GridPane();
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
-      interfaces.EHBButton.setActiveColor(activeColor);
-      interfaces.EHBButton.setUnActiveColor(inactiveColor);
+      EHBButtonInterface.setActiveColor(activeColor);
+      EHBButtonInterface.setUnActiveColor(inactiveColor);
       controller = new MyController();
       controller.setGUI(this);
       _addFXMLCode();
@@ -62,16 +51,6 @@ public class GUI
       newPane.setLayoutX(0);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.PARK));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.NEUTRAL));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.DRIVE));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.FIRST));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SECOND));
-      Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
     }
     
     public void setActiveColor(ButtonColor col)
