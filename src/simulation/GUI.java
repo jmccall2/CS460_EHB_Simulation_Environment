@@ -46,7 +46,7 @@ public class GUI
       _addFXMLCode();
       Pane newPane = new Pane();
       newPane.getChildren().add(_gPane);
-      newPane.setLayoutX(0);
+      newPane.setLayoutX(123);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
     }

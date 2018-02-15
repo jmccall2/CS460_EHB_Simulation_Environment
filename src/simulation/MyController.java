@@ -22,11 +22,12 @@ import simulation.engine.Singleton;
 public class MyController implements Initializable
 {
   @FXML private TextField setSpeedField;
-  @FXML private TextField currSpeedField;
-  @FXML private TextField pressureField;
+  //@FXML private TextField currSpeedField;
+  //@FXML private TextField pressureField;
   @FXML private Button start_stop_sim;
   @FXML private Button handBrake;
   @FXML private Button enterSpeed;
+  @FXML private Button statsButton;
   @FXML private RadioButton parkButton;
   @FXML private RadioButton neutralButton;
   @FXML private RadioButton driveButton;
@@ -42,8 +43,8 @@ public class MyController implements Initializable
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   {
-    currSpeedField.setText("");
-    pressureField.setText("");
+    //currSpeedField.setText("");
+    //pressureField.setText("");
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
     neutralButton.setToggleGroup(group);
@@ -57,11 +58,14 @@ public class MyController implements Initializable
     // We need to start in some gear.
     driveButton.setSelected(true);
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
+    statsButton.setOnAction((event) ->{
+      
+    });
     start_stop_sim.setOnAction((event) -> {
       if(stopped)
       {
         stopped = false;
-        start_stop_sim.setText("Stop simulation.");
+        start_stop_sim.setText("Stop simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
@@ -69,7 +73,7 @@ public class MyController implements Initializable
       else if(!stopped)
       {
         stopped = true;
-        start_stop_sim.setText("Start simulation.");
+        start_stop_sim.setText("Start simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.STOP_SIM));
         // Start simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
@@ -200,12 +204,12 @@ public class MyController implements Initializable
   public void setSpeed(double speed)
   {
     String speedStr = Double.toString(speed);
-    currSpeedField.setText(speedStr);
+    //currSpeedField.setText(speedStr);
   }
   
   public void setPressure(double pressure)
   {
     String pressureStr = Double.toString(pressure);
-    pressureField.setText(pressureStr);
+    //pressureField.setText(pressureStr);
   }
 }
