@@ -12,12 +12,13 @@ public class Car extends RenderEntity
     private Animation _animationSequence;
     private double speed;
     private Gear gear;
-    private double engine_force;
     private double brake_pressure;
-    // might move this to physics engine since they should't change
-    private static final double wheel_radius = .2286;
-    private static final double weight = 400; // per wheel in kg
-    private static final double coeff = .9;
+    //acceleration due to engine, max ~ 5 m/s^2
+    private double acceleration;
+
+    private static final double mass = 1600; // in kg
+    private static final double h = 1/60; // update rate
+    private static final double drag_c = 1.4; // drag coefficient
 
     public Car()
     {
@@ -50,15 +51,21 @@ public class Car extends RenderEntity
     }
 
     // they can change force at runtime
-    public void set_force(double force) {
-        this.engine_force = force;
+    public void set_force(double acceleration) {
+        this.acceleration = acceleration;
     }
 
     // use this to set before simulation starts
     public void init_status(double speed, Gear gear, double force) {
         this.speed = speed;
         this.gear = gear;
-        this.engine_force = force;
+        this.acceleration = acceleration;
+    }
+
+    private void update(){
+        double force = mass*acceleration - drag_c*speed*speed - 30*drag_c*speed;
+        double actual_acceleration = force/mass;
+        speed = speed + actual_acceleration*h;
     }
 
     // This variables are just for an example.
