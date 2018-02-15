@@ -1,5 +1,6 @@
 package interfaces;
 
+import ehb.EHB;
 import simulation.SimGlobals;
 import simulation.engine.Engine;
 import simulation.engine.Message;
@@ -29,12 +30,12 @@ public class EHBButton
 
     public static void setEngagedSound(String path)
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, path));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, path));
     }
 
     public static void setDisenagedSound(String path)
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, path));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, path));
     }
 
     public static int getNumTimesPressed()
