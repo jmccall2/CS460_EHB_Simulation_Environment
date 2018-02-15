@@ -68,4 +68,7 @@ public class Singleton {
     // How large the world is in terms of width and height
     public static final String WORLD_WIDTH = "world_width";
     public static final String WORLD_HEIGHT = "world_height";
+    // If this value is "false" then the engine will not simulate movement
+    // for anything in the world
+    public static final String CALCULATE_MOVEMENT = "calculate_movement";
 }

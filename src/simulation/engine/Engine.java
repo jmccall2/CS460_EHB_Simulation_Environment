@@ -27,6 +27,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     private int _maxFrameRate;
     private long _lastFrameTimeMS;
     private boolean _isRunning = false;
+    private boolean _updateEntities = true; // If false, nothing is allowed to move
 
     /**
      * Warning! Do not call the MessagePump's dispatch method!
@@ -82,7 +83,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         }
         // Make sure these two get added so that all entities are updated and
         // the screen is refreshed
-        _messageSystem.sendMessage(new Message(Engine.R_UPDATE_ENTITIES, deltaSeconds));
+        if (_updateEntities) _messageSystem.sendMessage(new Message(Engine.R_UPDATE_ENTITIES, deltaSeconds));
         _messageSystem.sendMessage(new Message(Engine.R_RENDER_SCENE, deltaSeconds));
         // Make sure we keep the messages flowing
         _messageSystem.dispatchMessages();
@@ -104,6 +105,15 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
             case Singleton.REMOVE_PULSE_ENTITY:
                 _deregisterPulseEntity((PulseEntity)message.getMessageData());
                 break;
+            case Singleton.CONSOLE_VARIABLE_CHANGED:
+            {
+                ConsoleVariable cvar = (ConsoleVariable)message.getMessageData();
+                if (cvar.getcvarName().equals(Singleton.CALCULATE_MOVEMENT))
+                {
+                    _updateEntities = Boolean.parseBoolean(cvar.getcvarValue());
+                }
+                break;
+            }
         }
     }
 
@@ -121,12 +131,14 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _cvarSystem = new ConsoleVariables();
         _loadEngineConfig("src/resources/engine.cfg");
         _registerDefaultCVars();
+        _updateEntities = Boolean.parseBoolean(_cvarSystem.find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
         _messageSystem = new MessagePump();
         // Make sure we register all of the message types
         _registerMessageTypes();
         // Signal interest in the things the simulation.engine needs to know about
         _messageSystem.signalInterest(Singleton.ADD_PULSE_ENTITY, this);
         _messageSystem.signalInterest(Singleton.REMOVE_PULSE_ENTITY, this);
+        _messageSystem.signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
         _pulseEntities = new HashSet<>();
         _window = new Window();
         _renderer = new Renderer();
@@ -147,6 +159,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_START_Y, "0", "0"));
         _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_WIDTH, "1000", "0"));
         _cvarSystem.registerVariable(new ConsoleVariable(Singleton.WORLD_HEIGHT, "1000", "0"));
+        _cvarSystem.registerVariable(new ConsoleVariable(Singleton.CALCULATE_MOVEMENT, "true", "true"));
     }
 
     private void _registerMessageTypes()
