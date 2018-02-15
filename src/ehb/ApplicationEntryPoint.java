@@ -93,6 +93,11 @@ public class ApplicationEntryPoint implements PulseEntity{
         Sun sun = new Sun();
         sun.addToWorld();
 
+
+        SingleFrameEntity renderPanel = new SingleFrameEntity("resources/img/panelback.png",0,460,2,0,0,1020,240);
+        renderPanel.setAsStaticActor(true);
+        renderPanel.addToWorld();
+
         // Attach the sun to the car so that it never gets left behind
         _car.attachActor(sun);
     }
