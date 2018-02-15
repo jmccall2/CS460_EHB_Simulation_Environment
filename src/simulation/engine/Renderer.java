@@ -27,18 +27,18 @@ public class Renderer implements MessageHandler {
     public void init(GraphicsContext gc)
     {
         _gc = gc;
-        Singleton.engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
+        Engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
+        Engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
+        Engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
+        Engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
     }
 
     public void render(double deltaSeconds)
     {
         _gc.setFill(Color.WHITE);
         _gc.fillRect(0, 0,
-                     Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
-                     Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
+                     Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
+                     Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
 
         // What values to offset everything in the world by
         double xOffset = 0.0;

@@ -8,9 +8,13 @@ import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Engine extends Application implements PulseEntity, MessageHandler {
+    private static Engine _engine; // Self-reference
+    private static boolean _isInitialized = false;
+
     private HashSet<PulseEntity> _pulseEntities;
     private ApplicationEntryPoint _application;
     private MessagePump _messageSystem;
@@ -28,17 +32,17 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
      * signal interest in message.
      * @return MessagePump for modification
      */
-    public MessagePump getMessagePump()
+    public static MessagePump getMessagePump()
     {
-        return _messageSystem;
+        return _engine._messageSystem;
     }
 
     /**
      * Returns the console variable listing for viewing/modification
      */
-    public ConsoleVariables getConsoleVariables()
+    public static ConsoleVariables getConsoleVariables()
     {
-        return _cvarSystem;
+        return _engine._cvarSystem;
     }
 
     @Override
@@ -66,6 +70,12 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
      */
     @Override
     public void pulse(double deltaSeconds) {
+        // Check if any console variables changed and send messages for any that have
+        ArrayList<ConsoleVariable> changedVars = _cvarSystem.getVariableChangesSinceLastCall();
+        for (ConsoleVariable cvar : changedVars)
+        {
+            _messageSystem.sendMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED, cvar));
+        }
         // Make sure we keep the messages flowing
         _messageSystem.dispatchMessages();
         for (PulseEntity entity : _pulseEntities)
@@ -97,7 +107,9 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
 
     private void _init(Stage stage)
     {
-        Singleton.engine = this; // Make sure this gets set before everything else
+        if (_isInitialized) return; // Already initialized
+        _isInitialized = true;
+        _engine = this; // This is a static variable
         _cvarSystem = new ConsoleVariables();
         _loadEngineConfig("src/resources/engine.cfg");
         _registerDefaultCVars();
@@ -137,6 +149,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.REMOVE_RENDER_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.REGISTER_TEXTURE));
         _messageSystem.registerMessage(new Message(Singleton.SET_MAIN_CAMERA));
+        _messageSystem.registerMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED));
     }
 
     /**
@@ -167,9 +180,11 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                 String variable = "";
                 String value = "";
                 boolean isReadingValue = false;
-                for (int i = 1; i < line.length(); ++i)
+                for (int i = 0; i < line.length(); ++i)
                 {
                     char c = line.charAt(i);
+                    if (c == '+') continue;
+                    if (c == '/' && (i + 1) < line.length() && line.charAt(i + 1) == '/') break; // Found a comment
                     if (c == '=')
                     {
                         isReadingValue = true;
@@ -178,6 +193,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                     if (isReadingValue) value += c;
                     else variable += c;
                 }
+                if (variable.equals("")) continue;
                 if (_cvarSystem.contains(variable)) _cvarSystem.find(variable).setValue(value);
                 else _cvarSystem.registerVariable(new ConsoleVariable(variable, value));
             }

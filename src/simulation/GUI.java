@@ -8,6 +8,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
 
@@ -40,7 +41,7 @@ public class GUI
         newPane.getChildren().add(_gPane);
         newPane.setLayoutX(0);
         newPane.setLayoutY(460);
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
     }
     
     private void _addFXMLCode()

@@ -19,6 +19,7 @@ public class Car extends RenderEntity
     private static final double mass = 1600; // in kg
     private static final double h = 1/60; // update rate
     private static final double drag_c = 1.4; // drag coefficient
+    private int _tractionLossLevel = 0;
 
     public Car()
     {
@@ -68,12 +69,13 @@ public class Car extends RenderEntity
         speed = speed + actual_acceleration*h;
     }
 
-    // This variables are just for an example.
+    // This variables are just for an example. TEMPORARY until data is available.
     // The tire track in the future will have have tire tracks with different curvatures
     // for different levels of traction loss.
     int delay = 0;
     int brakeToggle = 0;
     boolean APPLY_BRAKES = false;
+    int xOffset = 0;
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
@@ -85,11 +87,12 @@ public class Car extends RenderEntity
         }
 
         delay++;
-            if (delay == 10) {
+            if (delay == 25) {
                 delay = 0;
                 if(APPLY_BRAKES) {
                 System.out.println("adding tire track.");
-                TireTrack tt = new TireTrack(this.getLocationX() + 5, this.getLocationY() + 55);
+                xOffset = _tractionLossLevel == 1 ? 5 : 1;
+                TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
                 tt.addToWorld();
             }
         }

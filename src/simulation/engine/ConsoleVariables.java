@@ -1,5 +1,7 @@
 package simulation.engine;
 
+import java.io.Console;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -14,6 +16,8 @@ import java.util.Map;
  */
 public class ConsoleVariables {
     private HashMap<String, ConsoleVariable> _cvars = new HashMap<>();
+    private HashMap<ConsoleVariable, Integer> _cvarEditCounts = new HashMap<>(); // Keeps track of how many times the cvars were edited
+    private ArrayList<ConsoleVariable> _editedCvars = new ArrayList<>();
 
     public LinkedList<ConsoleVariable> getAllConsoleVariables()
     {
@@ -49,7 +53,28 @@ public class ConsoleVariables {
         {
             System.out.println("Registering console variable (" + cvar + ")");
             _cvars.put(cvar.getcvarName(), cvar);
+            _cvarEditCounts.put(cvar, cvar.getEditCount());
         }
+    }
+
+    /**
+     * Determines which variables have been changed since the last time this
+     * method was called
+     * @return list containing all variables that were changed
+     */
+    public ArrayList<ConsoleVariable> getVariableChangesSinceLastCall()
+    {
+        _editedCvars.clear();
+        for (Map.Entry<String, ConsoleVariable> entry : _cvars.entrySet())
+        {
+            ConsoleVariable cvar = entry.getValue();
+            if (_cvarEditCounts.get(cvar) != cvar.getEditCount())
+            {
+                _editedCvars.add(cvar);
+                _cvarEditCounts.put(cvar, cvar.getEditCount());
+            }
+        }
+        return _editedCvars;
     }
 
     public void unregisterVariable(String cvar)

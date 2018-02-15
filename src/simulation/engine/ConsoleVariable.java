@@ -19,14 +19,14 @@ public class ConsoleVariable {
         _cvarName = name;
         //Singleton.simulation.engine.getMessagePump().registerMessage(new Message(_cvarName + "_WAS_CHANGED"));
         _defaultValue = defaultValue;
-        setValueNoMessageDispatch(_defaultValue);
+        _setValueNoMessageDispatch(_defaultValue);
     }
 
     public ConsoleVariable(String name, String defaultValue, String value)
     {
         _cvarName = name;
         _defaultValue = defaultValue;
-        setValueNoMessageDispatch(value);
+        _setValueNoMessageDispatch(value);
     }
 
     /**
@@ -35,6 +35,14 @@ public class ConsoleVariable {
     public void reset()
     {
         setValue(_defaultValue);
+    }
+
+    /**
+     * @return total number of times this console variable has been edited
+     */
+    public int getEditCount()
+    {
+        return _numEdits;
     }
 
     /**
@@ -80,7 +88,7 @@ public class ConsoleVariable {
      */
     public void setValue(String value)
     {
-        setValueNoMessageDispatch(value);
+        _setValueNoMessageDispatch(value);
         // Notify anyone who is interested that this variable was changed
         //Singleton.simulation.engine.getMessagePump().sendMessage(_cvarName + "_WAS_CHANGED");
     }
@@ -93,7 +101,7 @@ public class ConsoleVariable {
         _defaultValue = defaultValue;
     }
 
-    private void setValueNoMessageDispatch(String value)
+    private void _setValueNoMessageDispatch(String value)
     {
         ++_numEdits;
         _cvarValue = value;

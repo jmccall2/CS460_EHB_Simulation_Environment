@@ -1,13 +1,10 @@
 package simulation.engine;
 
 /**
- * All absolutely critical global variables, such as the simulation.engine
+ * All absolutely critical global variables - keep them as simple as possible
+ * and final unless you must mutate them
  */
 public class Singleton {
-    // If you are not the Engine class, don't set this variable to be any other Engine object
-    // or everything will probably break - the simulation.engine creates itself and sets this at startup
-    public static Engine engine;
-
     /**
      * The following are message types that the message pump is
      * guaranteed to recognize
@@ -24,6 +21,9 @@ public class Singleton {
     public static final String REMOVE_UI_ELEMENT = "remove_ui_element";
 
 
+    // This message is sent whenever any of the console variables changes - the data
+    // will be a direct reference to the changed variable
+    public static final String CONSOLE_VARIABLE_CHANGED = "console_variable_changed";
     // Adds a Pulse Entity to the simulation.engine, which is an entity that needs to update
     // as frequently as possible. Be sure the include the object as the data portion of
     // the Message, with the Object implementing the "MessageHandler" interface.

@@ -135,7 +135,7 @@ public class MessagePump {
     /**
      * If you are not the simulation.engine then it is best not to call this
      */
-    public void dispatchMessages()
+    void dispatchMessages()
     {
         for (Message msg : _messageDispatchBuffer)
         {

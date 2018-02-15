@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
@@ -24,11 +25,11 @@ public class EHBButton
 
     EHBButton()
     {
-         Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
-         Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
         _colorMessageHelper = new ColorMessageHelper();
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
         _ehbButton = new Button();
         _ehbButton.getStyleClass().add("ehbButton");
         _ehbButton.setStyle(_buildCSSString(_DEFAULT_COLOR));
