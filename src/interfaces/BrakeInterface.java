@@ -15,11 +15,6 @@ public class BrakeInterface
 
   private static double pressure;
 
-  public static double getPressure()
-  {
-    return pressure;
-  }
-
   public BrakeInterface()
   {
     Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE, helper);

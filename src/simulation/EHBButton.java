@@ -33,6 +33,11 @@ public class EHBButton
         Color c = _mapToFXColor(bc);
         return c;
     }
+    
+    public Color getInitUnactiveColor()
+    {
+      return _mapToFXColor(_unactivatedColor);
+    }
 
     public void setUnactivatedColor(ButtonColor bc)
     {

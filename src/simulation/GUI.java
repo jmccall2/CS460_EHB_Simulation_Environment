@@ -41,8 +41,6 @@ public class GUI
       _gPane = new GridPane();
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
-      EHBButtonInterface.setActiveColor(activeColor);
-      EHBButtonInterface.setUnActiveColor(inactiveColor);
       controller = new MyController();
       controller.setGUI(this);
       _addFXMLCode();
@@ -51,6 +49,11 @@ public class GUI
       newPane.setLayoutX(0);
       newPane.setLayoutY(460);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
+    }
+    
+    public void setInitColor()
+    {
+      controller.setInitButtonColor();
     }
     
     public void setActiveColor(ButtonColor col)

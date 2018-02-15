@@ -1,11 +1,19 @@
 package ehb;
 
-import interfaces.*;
-import simulation.*;
+import interfaces.BrakeInterface;
+import interfaces.EHBButtonInterface;
+import interfaces.GearInterface;
+import interfaces.SpeedInterface;
+import simulation.BackgroundPanel;
+import simulation.Car;
+import simulation.GUI;
+import simulation.SimGlobals;
+import simulation.SingleFrameEntity;
+import simulation.Sun;
 import simulation.engine.Camera;
 import simulation.engine.Engine;
 import simulation.engine.Message;
-import simulation.Sun;
+import simulation.engine.PulseEntity;
 import simulation.engine.Singleton;
 
 
@@ -16,7 +24,7 @@ import simulation.engine.Singleton;
  * at the end. If you need anything else you must set it up
  * with the simulation.engine
  */
-public class ApplicationEntryPoint {
+public class ApplicationEntryPoint implements PulseEntity{
     /**
      * Initializes the application
      */
@@ -24,20 +32,21 @@ public class ApplicationEntryPoint {
     GUI _gui;
     EHB _ehb;
     Car _car;
+    boolean init = true;
 
     public void init()
     {
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         _registerSimulationMessages();
-        _gui = new GUI();
         // instances of the interfaces so that they do get creates
         new BrakeInterface();
         new SpeedInterface();
         new EHBButtonInterface();
         new GearInterface();
 
-        _gui = new GUI();
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY,this));
         _ehb = new EHB();
+        _gui = new GUI();
         _car = new Car();
         _car.addToWorld();
         Camera camera = new Camera();
@@ -96,5 +105,12 @@ public class ApplicationEntryPoint {
     {
 
 
+    }
+
+    @Override
+    public void pulse(double deltaSeconds) {
+        _ehb.update();
+        if(init)_gui.setInitColor();
+        init = false;
     }
 }

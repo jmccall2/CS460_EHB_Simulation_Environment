@@ -16,29 +16,37 @@ http://www.publicdomainpictures.net/pictures/190000/velka/the-sun-30.jpg
 https://commons.wikimedia.org/wiki/File:Linecons_small-cloud.svg
 http://clipart-library.com/images/kc8o9GEoi.jpg
 
-List of things that need to be done (this is not everything)
+
+TODO:
 
 GUI:
-* Initial parameters have not been added.
-* Nothing really happens when you change gears.
-* Determine when/what components will become unusable while the simulation is running/not running. 
+* Grey out park gear when appropriate.
+* Grey out speed changing when simulation is running. 
+* Add popup graph pane that can pane graphs on data gathered from the simulation. 
 
-Simulation (Visual):
-* Add moving background rendering to simulation.
-* Add extra animations to car for when it skids/loses control from braking to fast.
-* Add support to scale animation (car) speed.
-* Add frames for internal animation of brake (I have frames available under CC I believe)
+GUI/Animation:
+* Add pressure bars to the speed/pressure values being reported.
 
-Simulation (Logic):
-* Non of the physics/internal simulation logic is implemented, this includes (what I can think of)
-- What happens when you change from some gear to another in motion/not in motion/ different speeds.
-- How does various braking pressures effect the change of the rate of rotation of the wheels and how does
-that change the traction/friction on the wheels, and at what traction/speed combination would the car start to lose control.
-* Tying in the Simulation logic to the GUI events and the visual part of the simulation.
+GUI/Simulation binding:
+* Initial parameters do nothing when you set them.
+
+Animations:
+* Need more tiretrack svg's for various traction loss levels. (only two exist)
+* Need to add car wobble for the traction loss levels.
+* Need to add the final animaion of complete traction loss.
+
+Simulation:
+* Need to calculate new traction/speed values for each engine tick and make the information avaliable
+to the appropriate entitys. 
+
+Simulation/Animation binding:
+* Need to take in the traction values and map it to different animations, including change of car
+wheel rpm, traction loss level animations.
+
+Engine:
+* Figure out issue with background wrapping. 
 
 EHB:
 * We need to add an example EHB software package, right now it's very basic.
 
-Public Interfaces:
-* Is this what he was talking about in the email??? Is the structure correct/ and are the required things made avaliable?
 

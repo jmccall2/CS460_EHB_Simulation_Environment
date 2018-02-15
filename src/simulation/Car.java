@@ -3,8 +3,7 @@ import ehb.EHB;
 import interfaces.BrakeInterface;
 import interfaces.EHBButtonInterface;
 import interfaces.Gear;
-import simulation.engine.Animation;
-import simulation.engine.RenderEntity;
+import simulation.engine.*;
 
 public class Car extends RenderEntity
 {
@@ -12,12 +11,14 @@ public class Car extends RenderEntity
     //private ArrayList<String> carFrames = new ArrayList<>();
     //private int _currentCarFrame = 0;
     //private int _delay = 0;
+    Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
     private Gear gear;
     private double brake_pressure;
     //acceleration due to engine, max ~ 5 m/s^2
     private double acceleration;
+    private boolean _isActive;
 
     private static final double mass = 1600; // in kg
     private static final double h = 1/60; // update rate
@@ -34,6 +35,8 @@ public class Car extends RenderEntity
         setLocationXYDepth(0, 215, -1);
         setSpeedXY(100, 0); // There is something wrong with the scaling of the background and seed, i.e this does not look like 100 mph
         setWidthHeight(200, 100);
+        Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
 
     }
 
@@ -80,9 +83,8 @@ public class Car extends RenderEntity
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
-        if(EHBButtonInterface.isActive())
+        if(_isActive)
         {
-            brake_pressure = BrakeInterface.getPressure(); // Do something with the pressure to tie it in with the animation, and update sim.
             delay++;
             if (delay == 25) {
                 delay = 0;
@@ -93,6 +95,23 @@ public class Car extends RenderEntity
             }
         }
 
+    }
+
+    class Helper implements MessageHandler
+    {
+        @Override
+        public void handleMessage(Message message)
+        {
+            switch (message.getMessageName())
+            {
+                case SimGlobals.ACTIVATE_BRAKE:
+                    _isActive = true;
+                    break;
+                case SimGlobals.DEACTIVATE_BRAKE:
+                    _isActive = false;
+                    break;
+            }
+        }
     }
 }
 

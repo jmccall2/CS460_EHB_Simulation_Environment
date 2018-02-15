@@ -144,6 +144,18 @@ public class MyController implements Initializable
   {
     guiRef = mainGUI;
   }
+  
+  public void setInitButtonColor()
+  {
+    Color col = ehb.getInitUnactiveColor();
+    String color1 = getColor(col);
+    String colorStr1 = "-fx-background-color:" + color1+";";
+    String radStr1 = "-fx-background-radius:100;";
+    String backgroundStr1 = "-fx-border-width:0;";
+    String backgroundStr22 = "-fx-border-style:none;";
+    String cssStr1 = colorStr1 + radStr1 + backgroundStr1 + backgroundStr22;
+    handBrake.setStyle(cssStr1);
+  }
 
   private Gear _getGear(String s)
   {
