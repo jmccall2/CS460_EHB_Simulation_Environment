@@ -1,5 +1,7 @@
 package simulation;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import interfaces.ButtonColor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,47 +18,30 @@ public class EHBButton
     private Button _ehbButton;
     private final String _DEFAULT_COLOR = "#0032FF";
     private boolean _activated = false;
-    private ButtonColor _activatedColor;
-    private ButtonColor _unactivatedColor;
+    private ButtonColor _activatedColor = null;
+    private ButtonColor _unactivatedColor = null;
     private ColorMessageHelper _colorMessageHelper;
   //  private UnactiveColorMessageHelper _unactiveColorMessageHelper;
 
 
     EHBButton()
     {
-         Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
-         Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
         _colorMessageHelper = new ColorMessageHelper();
         Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
         Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
-        _ehbButton = new Button();
-        _ehbButton.getStyleClass().add("ehbButton");
-        _ehbButton.setStyle(_buildCSSString(_DEFAULT_COLOR));
-
-
-        /* There needs to be some way to add additional methods to invoke in the onclick listener,
-           in addition to the default. Possibly a list of Functions/Callables that are iterated and invoked
-           in the listener?
-         */
-
-        EventHandler<ActionEvent> _buttonHandler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                toggleVisualState();
-                // event.consume(); Needed?
-            }
-        };
-        _ehbButton.setOnAction(_buttonHandler);
+    }
+    
+    public Color getInitColor()
+    {
+      return _mapToFXColor(_unactivatedColor);
     }
 
-    public void toggleVisualState()
+    public Color getColor()
     {
         _activated = !_activated;
         ButtonColor bc = _activated ? _activatedColor : _unactivatedColor;
         Color c = _mapToFXColor(bc);
-        _ehbButton.setStyle(_buildCSSString(bc.convertToHex()));
-        if(_activated) _ehbButton.setEffect(new DropShadow(50, c));
-        else _ehbButton.setEffect(null);
+        return c;
     }
 
     public void setUnactivatedColor(ButtonColor bc)

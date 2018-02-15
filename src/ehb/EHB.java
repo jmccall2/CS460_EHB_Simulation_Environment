@@ -18,8 +18,8 @@ public class EHB
 
     public void init()
     {
-        EHBButton.setActiveColor(ButtonColor.RED);
-        EHBButton.setUnActiveColor(ButtonColor.BLUE);
+        //EHBButton.setActiveColor(ButtonColor.RED);
+        //EHBButton.setUnActiveColor(ButtonColor.BLUE);
     }
 
 

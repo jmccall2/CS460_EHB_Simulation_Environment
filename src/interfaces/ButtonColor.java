@@ -34,15 +34,15 @@ public enum ButtonColor
         switch(this)
         {
             case CYAN:
-                return "Cyan";
+                return "cyan";
             case BLUE:
-                return "Blue";
+                return "blue";
             case RED:
-                return "Red";
+                return "red";
             case GREEN:
-                return "Green";
+                return "green";
             case PURPLE:
-                return "Purple";
+                return "purple";
             default:
                 return "NULL";
         }
