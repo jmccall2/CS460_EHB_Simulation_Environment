@@ -99,7 +99,6 @@ public class Window implements MessageHandler, PulseEntity {
             case Singleton.CONSOLE_VARIABLE_CHANGED:
             {
                 ConsoleVariable cvar = (ConsoleVariable)message.getMessageData();
-                System.out.println(cvar + " was changed and received by the Window class!");
                 if (cvar.getcvarName().equals(Singleton.SCR_WIDTH) || cvar.getcvarName().equals(Singleton.SCR_HEIGHT))
                 {
                     _width = (int) _jfxScene.getWidth();
