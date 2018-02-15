@@ -6,6 +6,7 @@ import simulation.engine.Camera;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.Sun;
+import simulation.engine.Singleton;
 
 
 /**
@@ -26,6 +27,7 @@ public class ApplicationEntryPoint {
 
     public void init()
     {
+        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         _registerSimulationMessages();
         _gui = new GUI();
         // instances of the interfaces so that they do get creates
