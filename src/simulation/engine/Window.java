@@ -50,23 +50,23 @@ public class Window implements MessageHandler, PulseEntity {
     public GraphicsContext init(Stage stage)
     {
         // We want to update frequently to check for resizes, so tell the system to add us as a pulse entity
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY, this));
-        Singleton.engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_FULLSCREEN, Boolean.toString(_isFullscreen)));
-        Singleton.engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_WIDTH, Integer.toString(_width)));
-        Singleton.engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_HEIGHT, Integer.toString(_height)));
-        Singleton.engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_RESIZEABLE, Boolean.toString(_resizeable)));
-        Singleton.engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_TITLE, _title));
-        ConsoleVariables cvars = Singleton.engine.getConsoleVariables();
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY, this));
+        Engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_FULLSCREEN, Boolean.toString(_isFullscreen)));
+        Engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_WIDTH, Integer.toString(_width)));
+        Engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_HEIGHT, Integer.toString(_height)));
+        Engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_RESIZEABLE, Boolean.toString(_resizeable)));
+        Engine.getConsoleVariables().registerVariable(new ConsoleVariable(Singleton.SCR_TITLE, _title));
+        ConsoleVariables cvars = Engine.getConsoleVariables();
         _isFullscreen = Boolean.parseBoolean(cvars.find(Singleton.SCR_FULLSCREEN).getcvarValue());
         _width = Integer.parseInt(cvars.find(Singleton.SCR_WIDTH).getcvarValue());
         _height = Integer.parseInt(cvars.find(Singleton.SCR_HEIGHT).getcvarValue());
         _resizeable = Boolean.parseBoolean(cvars.find(Singleton.SCR_RESIZEABLE).getcvarValue());
         _title = cvars.find(Singleton.SCR_TITLE).getcvarValue();
-        Singleton.engine.getMessagePump().signalInterest(Singleton.SET_SCR_WIDTH, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.SET_SCR_HEIGHT, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.SET_FULLSCREEN, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.ADD_UI_ELEMENT, this);
-        Singleton.engine.getMessagePump().signalInterest(Singleton.REMOVE_UI_ELEMENT, this);
+        Engine.getMessagePump().signalInterest(Singleton.SET_SCR_WIDTH, this);
+        Engine.getMessagePump().signalInterest(Singleton.SET_SCR_HEIGHT, this);
+        Engine.getMessagePump().signalInterest(Singleton.SET_FULLSCREEN, this);
+        Engine.getMessagePump().signalInterest(Singleton.ADD_UI_ELEMENT, this);
+        Engine.getMessagePump().signalInterest(Singleton.REMOVE_UI_ELEMENT, this);
         stage.setFullScreen(_isFullscreen);
         stage.setResizable(_resizeable);
         if (_isFullscreen)
@@ -124,8 +124,8 @@ public class Window implements MessageHandler, PulseEntity {
     public void pulse(double deltaSeconds) {
         if (_width != (int)_jfxScene.getWidth() || _height != (int)_jfxScene.getHeight())
         {
-            Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).setValue(Integer.toString((int)_jfxScene.getWidth()));
-            Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).setValue(Integer.toString((int)_jfxScene.getHeight()));
+            Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).setValue(Integer.toString((int)_jfxScene.getWidth()));
+            Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).setValue(Integer.toString((int)_jfxScene.getHeight()));
         }
     }
 }

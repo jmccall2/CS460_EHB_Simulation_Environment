@@ -23,8 +23,8 @@ public abstract class RenderEntity implements PulseEntity {
      */
     public void addToWorld()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY, this));
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_RENDER_ENTITY, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_RENDER_ENTITY, this));
     }
 
     /**
@@ -33,8 +33,8 @@ public abstract class RenderEntity implements PulseEntity {
      */
     public void removeFromWorld()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_PULSE_ENTITY, this));
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_RENDER_ENTITY, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_PULSE_ENTITY, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_RENDER_ENTITY, this));
     }
 
     /**
@@ -45,7 +45,7 @@ public abstract class RenderEntity implements PulseEntity {
     {
         _texture = texture;
         // Make sure the texture gets registered with the system
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, _texture));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, _texture));
     }
 
 

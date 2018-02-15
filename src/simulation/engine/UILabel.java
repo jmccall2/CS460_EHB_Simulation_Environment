@@ -39,11 +39,11 @@ public class UILabel implements UIElement {
 
     public void addToWindow()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _label));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _label));
     }
 
     public void removeFromWindow()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _label));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _label));
     }
 }

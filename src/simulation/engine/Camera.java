@@ -80,8 +80,8 @@ public class Camera {
             _worldTranslate.setXYZ(0.0, 0.0, 0.0);
             return _worldTranslate;
         }
-        double scrWidth = Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt() / _widthScalar;
-        double scrHeight = Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt() / _heightScalar;
+        double scrWidth = Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt() / _widthScalar;
+        double scrHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt() / _heightScalar;
         double locX = _attachedTo.getLocationX();
         double locY = _attachedTo.getLocationY();
         double modLocX = locX < 0 ? -locX : locX;

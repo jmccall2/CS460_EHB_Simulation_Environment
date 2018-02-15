@@ -25,11 +25,11 @@ public class EHBButton
 
     EHBButton()
     {
-         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
-         Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
         _colorMessageHelper = new ColorMessageHelper();
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
-        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_ACTIVATED_COLOR,_colorMessageHelper);
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_UNACTIVATED_COLOR, _colorMessageHelper);
         _ehbButton = new Button();
         _ehbButton.getStyleClass().add("ehbButton");
         _ehbButton.setStyle(_buildCSSString(_DEFAULT_COLOR));

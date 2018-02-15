@@ -1,5 +1,7 @@
 package ehb;
 
+import interfaces.Brake;
+import interfaces.Speed;
 import simulation.*;
 import simulation.engine.Camera;
 import simulation.engine.Engine;
@@ -25,6 +27,15 @@ public class ApplicationEntryPoint {
 
     public void init()
     {
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
+
+        new Brake();
+        new Speed();
+
+
         _gui = new GUI();
         _ehb = new EHB();
         Car car = new Car();
@@ -33,8 +44,6 @@ public class ApplicationEntryPoint {
         camera.attachToEntity(car);
         camera.setAsMainCamera();
         _buildWorld();
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
     }
 
 

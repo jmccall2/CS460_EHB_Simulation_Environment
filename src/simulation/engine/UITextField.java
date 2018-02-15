@@ -43,12 +43,12 @@ public class UITextField implements UIElement {
 
     @Override
     public void addToWindow() {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _text));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, _text));
     }
 
     @Override
     public void removeFromWindow() {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _text));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_UI_ELEMENT, _text));
     }
 
     @Override

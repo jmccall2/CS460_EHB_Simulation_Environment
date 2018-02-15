@@ -37,8 +37,8 @@ public class Renderer implements MessageHandler {
     {
         _gc.setFill(Color.WHITE);
         _gc.fillRect(0, 0,
-                     Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
-                     Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
+                     Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
+                     Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
 
         // What values to offset everything in the world by
         double xOffset = 0.0;
