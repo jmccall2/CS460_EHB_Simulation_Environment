@@ -11,4 +11,24 @@ public class SimGlobals
     // Such as speed and pressure
     public static final String SET_SPEED = "set_speed";
     public static final String SET_PRESSURE = "set_pressure";
+    public static final String SET_ENGAGED_SOUND = "set_engaged_sound";
+    public static final String SET_DISENGAGED_SOUND = "set_disengaged_sound";
+
+
+    /**
+     * The following messages are tied to GUI actions and are registered at startup
+     * in GUI.java.
+     */
+    //Start the simulation.
+    public static final String START_SIM = "Start simulation.";
+    //Stop the simulation.
+    public static final String STOP_SIM = "Stop simulation.";
+    //Hand brake activated.
+    public static final String ACTIVATE_BRAKE = "Activate brake.";
+    //Hand brake deactivated.
+    public static final String DEACTIVATE_BRAKE = "Deactivate brake.";
+    //Gear changed.
+    public static final String GEAR_CHANGE ="Gear change";
+    //Speed entered by user.
+    public static final String SPEED = "Speed.";
 }

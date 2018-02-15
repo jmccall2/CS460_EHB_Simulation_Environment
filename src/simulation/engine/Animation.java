@@ -19,13 +19,14 @@ import java.util.HashMap;
  *
  * @author Justin Hall
  */
-public class Animation {
+public class Animation implements MessageHandler {
     private RenderEntity _managedEntity;
     private HashMap<String, ArrayList<String>> _animationCategories = new HashMap<>();
     private double _changeRate = 1.0; // If this is 1.0 (for example) it means that every second the frame will change
     private double _elapsedSeconds = 0.0;
     private int _currentAnimIndex = 0;
     private ArrayList<String> _currentAnimationSequence;
+    private boolean _animate;
 
     /**
      * @param entity entity that this animation manages
@@ -36,6 +37,8 @@ public class Animation {
     {
         _managedEntity = entity;
         _changeRate = rateOfChange;
+        Engine.getMessagePump().signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
+        _animate = Boolean.parseBoolean(Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
     }
 
     /**
@@ -46,6 +49,7 @@ public class Animation {
     public void update(double deltaSeconds)
     {
         if (_currentAnimationSequence == null) return; // No images specified
+        if (!_animate) return;
         _elapsedSeconds += deltaSeconds;
         if (_elapsedSeconds >= _changeRate)
         {
@@ -93,13 +97,28 @@ public class Animation {
             _animationCategories.put(category, new ArrayList<>());
         }
         _animationCategories.get(category).add(file);
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, file));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, file));
         // If we do not have a current animation sequence, set it to the recently
         // added category and make sure to set the entity's texture
         if (_currentAnimationSequence == null)
         {
             _currentAnimationSequence = _animationCategories.get(category);
             _managedEntity.setTexture(_currentAnimationSequence.get(0));
+        }
+    }
+
+    @Override
+    public void handleMessage(Message message) {
+        switch (message.getMessageName())
+        {
+            case Singleton.CONSOLE_VARIABLE_CHANGED:
+            {
+                ConsoleVariable cvar = (ConsoleVariable)message.getMessageData();
+                if (cvar.getcvarName().equals(Singleton.CALCULATE_MOVEMENT))
+                {
+                    _animate = Boolean.parseBoolean(Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
+                }
+            }
         }
     }
 }

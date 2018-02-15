@@ -1,10 +1,12 @@
 package ehb;
 
+import interfaces.*;
 import simulation.*;
 import simulation.engine.Camera;
+import simulation.engine.Engine;
 import simulation.engine.Message;
-import simulation.engine.Singleton;
 import simulation.Sun;
+import simulation.engine.Singleton;
 
 
 /**
@@ -21,20 +23,44 @@ public class ApplicationEntryPoint {
 
     GUI _gui;
     EHB _ehb;
+    Car _car;
 
     public void init()
     {
+        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
+        _registerSimulationMessages();
+        _gui = new GUI();
+        // instances of the interfaces so that they do get creates
+        new BrakeInterface();
+        new SpeedInterface();
+        new EHBButtonInterface();
+        new GearInterface();
+
         _gui = new GUI();
         _ehb = new EHB();
-        Car car = new Car();
-        car.addToWorld();
+        _car = new Car();
+        _car.addToWorld();
         Camera camera = new Camera();
-        camera.attachToEntity(car);
+        camera.attachToEntity(_car);
         camera.setAsMainCamera();
         _buildWorld();
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
-        Singleton.engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
     }
+
+    private void _registerSimulationMessages()
+    {
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.GEAR_CHANGE));
+    }
+
 
 
     private void _buildWorld()
@@ -55,8 +81,11 @@ public class ApplicationEntryPoint {
            cloud4.addToWorld();
        }
 
-       Sun sun = new Sun();
-       sun.addToWorld();
+        Sun sun = new Sun();
+        sun.addToWorld();
+
+        // Attach the sun to the car so that it never gets left behind
+        _car.attachActor(sun);
     }
 
 

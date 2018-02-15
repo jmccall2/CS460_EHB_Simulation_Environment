@@ -14,6 +14,8 @@ import simulation.engine.math.Vector3;
  * If no camera is set then the system will pick some location to
  * focus on.
  *
+ * @TODO figure out why the camera transitions the way it does when world wraparound occurs
+ *
  * @author Justin Hall
  */
 public class Camera {
@@ -46,7 +48,7 @@ public class Camera {
      */
     public void setAsMainCamera()
     {
-        Singleton.engine.getMessagePump().sendMessage(new Message(Singleton.SET_MAIN_CAMERA, this));
+        Engine.getMessagePump().sendMessage(new Message(Singleton.SET_MAIN_CAMERA, this));
     }
 
     /**
@@ -60,8 +62,8 @@ public class Camera {
             _editedEntityLocation.setXYZ(0.0, 0.0, 0.0);
             return _editedEntityLocation;
         }
-        int scrWidth = Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt();
-        int scrHeight = Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt();
+        int scrWidth = Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt();
+        int scrHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt();
         _editedEntityLocation.setXYZ(scrWidth / _widthScalar, scrHeight / _heightScalar, 0.0);
         return _editedEntityLocation;
     }
@@ -80,8 +82,8 @@ public class Camera {
             _worldTranslate.setXYZ(0.0, 0.0, 0.0);
             return _worldTranslate;
         }
-        double scrWidth = Singleton.engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt() / _widthScalar;
-        double scrHeight = Singleton.engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt() / _heightScalar;
+        double scrWidth = Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsInt() / _widthScalar;
+        double scrHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt() / _heightScalar;
         double locX = _attachedTo.getLocationX();
         double locY = _attachedTo.getLocationY();
         double modLocX = locX < 0 ? -locX : locX;
