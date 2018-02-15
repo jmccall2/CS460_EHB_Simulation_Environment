@@ -21,6 +21,9 @@ public class Singleton {
     public static final String REMOVE_UI_ELEMENT = "remove_ui_element";
 
 
+    // This message is sent whenever any of the console variables changes - the data
+    // will be a direct reference to the changed variable
+    public static final String CONSOLE_VARIABLE_CHANGED = "console_variable_changed";
     // Adds a Pulse Entity to the simulation.engine, which is an entity that needs to update
     // as frequently as possible. Be sure the include the object as the data portion of
     // the Message, with the Object implementing the "MessageHandler" interface.

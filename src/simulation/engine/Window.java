@@ -67,6 +67,7 @@ public class Window implements MessageHandler, PulseEntity {
         Engine.getMessagePump().signalInterest(Singleton.SET_FULLSCREEN, this);
         Engine.getMessagePump().signalInterest(Singleton.ADD_UI_ELEMENT, this);
         Engine.getMessagePump().signalInterest(Singleton.REMOVE_UI_ELEMENT, this);
+        Engine.getMessagePump().signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
         stage.setFullScreen(_isFullscreen);
         stage.setResizable(_resizeable);
         if (_isFullscreen)
@@ -93,20 +94,29 @@ public class Window implements MessageHandler, PulseEntity {
 
     @Override
     public void handleMessage(Message message) {
-        // If the window width/height were changed then we need to deal with it
-        if (message.getMessageName().equals("SCR_WIDTH_WAS_CHANGED") ||
-                message.getMessageName().equals("SCR_HEIGHT_WAS_CHANGED")) {
-            _width = (int) _jfxScene.getWidth();
-            _height = (int) _jfxScene.getHeight();
-            _canvas.setWidth(_width);
-            _canvas.setHeight(_height);
-        }
-        else if (message.getMessageName().equals("FULLSCREEN_WAS_CHANGED")) {
-            _stage.setFullScreen(_isFullscreen);
-        }
-
         switch(message.getMessageName())
         {
+            case Singleton.CONSOLE_VARIABLE_CHANGED:
+            {
+                ConsoleVariable cvar = (ConsoleVariable)message.getMessageData();
+                System.out.println(cvar + " was changed and received by the Window class!");
+                if (cvar.getcvarName().equals(Singleton.SCR_WIDTH) || cvar.getcvarName().equals(Singleton.SCR_HEIGHT))
+                {
+                    _width = (int) _jfxScene.getWidth();
+                    _height = (int) _jfxScene.getHeight();
+                    _canvas.setWidth(_width);
+                    _canvas.setHeight(_height);
+                }
+                else if (cvar.getcvarName().equals(Singleton.SCR_FULLSCREEN))
+                {
+                    _stage.setFullScreen(_isFullscreen);
+                }
+                else if (cvar.getcvarName().equals(Singleton.SCR_RESIZEABLE))
+                {
+                    _stage.setResizable(true);
+                }
+                break;
+            }
             case Singleton.ADD_UI_ELEMENT:
             {
                 _stack.getChildren().add((Node)message.getMessageData());

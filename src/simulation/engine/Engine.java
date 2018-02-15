@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Engine extends Application implements PulseEntity, MessageHandler {
@@ -69,6 +70,12 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
      */
     @Override
     public void pulse(double deltaSeconds) {
+        // Check if any console variables changed and send messages for any that have
+        ArrayList<ConsoleVariable> changedVars = _cvarSystem.getVariableChangesSinceLastCall();
+        for (ConsoleVariable cvar : changedVars)
+        {
+            _messageSystem.sendMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED, cvar));
+        }
         // Make sure we keep the messages flowing
         _messageSystem.dispatchMessages();
         for (PulseEntity entity : _pulseEntities)
@@ -142,6 +149,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.REMOVE_RENDER_ENTITY));
         _messageSystem.registerMessage(new Message(Singleton.REGISTER_TEXTURE));
         _messageSystem.registerMessage(new Message(Singleton.SET_MAIN_CAMERA));
+        _messageSystem.registerMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED));
     }
 
     /**
