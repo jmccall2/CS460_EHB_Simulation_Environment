@@ -1,11 +1,20 @@
 package interfaces;
 
+import simulation.SimGlobals;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
+import simulation.engine.Singleton;
 
 public class EHBButton
 {
+    Helper helper = new Helper();
     private static int numTimesPressed;
+
+    public EHBButton()
+    {
+        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_ENGAGED_SOUND, helper);
+        Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_DISENGAGED_SOUND, helper);
+    }
 
     static public void setActiveColor(ButtonColor c)
     {

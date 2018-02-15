@@ -1,13 +1,16 @@
 package ehb;
 
+import interfaces.Brake;
 import interfaces.ButtonColor;
 import interfaces.EHBButton;
+import interfaces.Speed;
 
 /* I am not sure what the best way to invoke the main procedure of the ehb software is so I'm temporarily
 * doing it this way for now so I can test things. */
 
 public class EHB
 {
+
     public EHB()
     {
         init();

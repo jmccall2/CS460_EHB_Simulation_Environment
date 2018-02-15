@@ -9,9 +9,14 @@ import simulation.engine.Singleton;
 public class Speed
 {
 
-  Helper helper;
+  Helper helper = new Helper();
 
   private static double speed = 0;
+
+  public Speed()
+  {
+    Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_SPEED, helper);
+  }
 
   public static double getSpeed()
   {
@@ -29,7 +34,7 @@ public class Speed
     @Override
     public void handleMessage(Message message)
     {
-        speed = (Double)message.getMessageData();
+      speed = (Double)message.getMessageData();
     }
   }
 }

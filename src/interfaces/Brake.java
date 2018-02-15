@@ -5,14 +5,23 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
+import java.util.HashSet;
+
 public class Brake
 {
+
+  Helper helper = new Helper();
 
   private static double pressure;
 
   public static double getPressure()
   {
     return pressure;
+  }
+
+  public Brake()
+  {
+    Singleton.engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE, helper);
   }
 
   public static void setPressure(double press)
