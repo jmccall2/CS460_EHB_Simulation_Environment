@@ -7,6 +7,7 @@ import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.Sun;
 import simulation.engine.Singleton;
+import simulation.engine.PulseEntity;
 
 
 /**
@@ -16,7 +17,7 @@ import simulation.engine.Singleton;
  * at the end. If you need anything else you must set it up
  * with the simulation.engine
  */
-public class ApplicationEntryPoint {
+public class ApplicationEntryPoint implements PulseEntity{
     /**
      * Initializes the application
      */
@@ -35,6 +36,8 @@ public class ApplicationEntryPoint {
         new SpeedInterface();
         new EHBButtonInterface();
         new GearInterface();
+
+        Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY,this));
 
         _gui = new GUI();
         _ehb = new EHB();
@@ -96,5 +99,10 @@ public class ApplicationEntryPoint {
     {
 
 
+    }
+
+    @Override
+    public void pulse(double deltaSeconds) {
+        _ehb.update();
     }
 }
