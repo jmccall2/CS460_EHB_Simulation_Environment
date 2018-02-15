@@ -14,6 +14,7 @@ public class Car extends RenderEntity
     private Gear gear;
     private double engine_force;
     private double brake_pressure;
+    private int _tractionLossLevel = 0;
     // might move this to physics engine since they should't change
     private static final double wheel_radius = .2286;
     private static final double weight = 400; // per wheel in kg
@@ -61,12 +62,13 @@ public class Car extends RenderEntity
         this.engine_force = force;
     }
 
-    // This variables are just for an example.
+    // This variables are just for an example. TEMPORARY until data is available.
     // The tire track in the future will have have tire tracks with different curvatures
     // for different levels of traction loss.
     int delay = 0;
     int brakeToggle = 0;
     boolean APPLY_BRAKES = false;
+    int xOffset = 0;
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
@@ -78,11 +80,12 @@ public class Car extends RenderEntity
         }
 
         delay++;
-            if (delay == 10) {
+            if (delay == 25) {
                 delay = 0;
                 if(APPLY_BRAKES) {
                 System.out.println("adding tire track.");
-                TireTrack tt = new TireTrack(this.getLocationX() + 5, this.getLocationY() + 55);
+                xOffset = _tractionLossLevel == 1 ? 5 : 1;
+                TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
                 tt.addToWorld();
             }
         }
