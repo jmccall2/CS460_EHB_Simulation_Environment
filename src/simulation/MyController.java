@@ -58,7 +58,7 @@ public class MyController implements Initializable
         start_stop_sim.setText("Stop simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
-        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
+        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
       }
       else if(!stopped)
       {
@@ -66,7 +66,7 @@ public class MyController implements Initializable
         start_stop_sim.setText("Start simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.STOP_SIM));
         // Start simulating movement
-        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
+        Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
       } 
     });
     ehb = new EHBButton();
