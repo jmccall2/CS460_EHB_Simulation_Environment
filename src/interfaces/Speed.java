@@ -24,6 +24,7 @@ public class Speed
     return speed;
   }
 
+  //since the GUI will set the speed and the car will have the speed there is no need for this method setSpeed
   private static void setSpeed(double speed1)
   {
     speed = speed1;

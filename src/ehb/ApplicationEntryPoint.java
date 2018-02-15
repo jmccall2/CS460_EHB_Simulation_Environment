@@ -32,9 +32,10 @@ public class ApplicationEntryPoint {
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
 
+        // instances of the interfaces so that they do get creates
         new Brake();
         new Speed();
-
+        //need to create an instance of EHBButton(interfaces), but there are two classes with that name
 
         _gui = new GUI();
         _ehb = new EHB();
