@@ -4,12 +4,8 @@ import interfaces.BrakeInterface;
 import interfaces.EHBButtonInterface;
 import interfaces.GearInterface;
 import interfaces.SpeedInterface;
-import simulation.BackgroundPanel;
-import simulation.Car;
-import simulation.GUI;
-import simulation.SimGlobals;
-import simulation.SingleFrameEntity;
-import simulation.Sun;
+import javafx.scene.paint.Color;
+import simulation.*;
 import simulation.engine.Camera;
 import simulation.engine.Engine;
 import simulation.engine.Message;
@@ -53,6 +49,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         camera.attachToEntity(_car);
         camera.setAsMainCamera();
         _buildWorld();
+        _buildMetricPanels();
     }
 
     private void _registerSimulationMessages()
@@ -94,13 +91,27 @@ public class ApplicationEntryPoint implements PulseEntity{
         Sun sun = new Sun();
         sun.addToWorld();
 
+        // Attach the sun to the car so that it never gets left behind
+        _car.attachActor(sun);
+    }
 
-        SingleFrameEntity renderPanel = new SingleFrameEntity("resources/img/panelback.png",0,460,2,0,0,1020,240);
+    private void _buildMetricPanels()
+    {
+        SingleFrameEntity renderPanel = new SingleFrameEntity("resources/img/panelback.png",0,460,4,0,0,1020,240);
         renderPanel.setAsStaticActor(true);
         renderPanel.addToWorld();
 
-        // Attach the sun to the car so that it never gets left behind
-        _car.attachActor(sun);
+        SingleFrameEntity blockingPanel = new SingleFrameEntity("resources/img/panelback.png",0,625,2,0,0,1020,60);
+        blockingPanel.setAsStaticActor(true);
+        blockingPanel.addToWorld();
+
+        BarEntity speedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240);
+        speedGauge.setAsStaticActor(true);
+        speedGauge.addToWorld();
+
+        BarEntity pressureGauge = new BarEntity(Color.GREEN,902,625,3,0,0,75,240);
+        pressureGauge.setAsStaticActor(true);
+        pressureGauge.addToWorld();
     }
 
 
