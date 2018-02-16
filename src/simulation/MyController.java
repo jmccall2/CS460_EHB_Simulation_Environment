@@ -3,6 +3,7 @@ package simulation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import interfaces.EHBButtonInterface;
 import interfaces.Gear;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -102,12 +103,14 @@ public class MyController implements Initializable
         brakeOff = false;
         handBrake.setText("Deactivate");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+        EHBButtonInterface.setEngagedSound("");
       }
       else if(!brakeOff)
       {
         brakeOff = true;
         handBrake.setText("Activate Brake");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+        EHBButtonInterface.setDisengagedSound("");
       }
     });
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {

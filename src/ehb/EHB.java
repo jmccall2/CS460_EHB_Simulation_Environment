@@ -24,6 +24,8 @@ public class EHB
     {
         EHBButtonInterface.setActiveColor(ButtonColor.PURPLE);
         EHBButtonInterface.setUnActiveColor(ButtonColor.GREEN);
+        EHBButtonInterface.setEngagedSound("/resources/sounds/engaged.wav");
+        EHBButtonInterface.setDisengagedSound("/resources/sounds/disengaged.wav");
         _isActive = false;
     }
 
