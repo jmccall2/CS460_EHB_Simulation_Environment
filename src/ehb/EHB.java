@@ -18,34 +18,42 @@ public class EHB
 
     public void init()
     {
-        EHBButtonInterface.setActiveColor(ButtonColor.PURPLE);
-        EHBButtonInterface.setUnActiveColor(ButtonColor.GREEN);
-       // EHBButtonInterface.setEngagedSound("/resources/sounds/engaged.wav");
-       // EHBButtonInterface.setDisengagedSound("/resources/sounds/disengaged.wav");
-        EHBButtonInterface.setEngagedSound(ButtonSound.ENGAGED);
-        EHBButtonInterface.setDisengagedSound(ButtonSound.DISENGAGED);
+         EHBButtonInterface.setColor(ButtonColor.BLUE);
         _isActive = false;
     }
 
     
     public void update() {
-        if(EHBButtonInterface.wasPressed()) _isActive = !_isActive;
-        // Use the Button interface to see if the button is active or not.
+        if(EHBButtonInterface.wasPressed())
+        {
+            _isActive = !_isActive;
+            if(_isActive)
+            {
+                EHBButtonInterface.setColor(ButtonColor.RED);
+                EHBButtonInterface.play(ButtonSound.ENGAGED);
+            }
+            else
+            {
+                EHBButtonInterface.setColor(ButtonColor.BLUE);
+                EHBButtonInterface.play(ButtonSound.DISENGAGED);
+            }
+        }
+
+         //Use the Button interface to see if the button is active or not.
         if(_isActive)
         {
             _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
             // Get the current gear from the Gear interface.
             _gear = GearInterface.getGear();
-            // PUT CALCULATIONS FOR HOW TO DETERMINE PRESSURE HERE BASED OFF KNOWN
-            // INFORMATION.
+          //   PUT CALCULATIONS FOR HOW TO DETERMINE PRESSURE HERE BASED OFF KNOWN
+          //   INFORMATION.
 
-            // For immediate testing purposes just set the pressure to 100%.
+        //     For immediate testing purposes just set the pressure to 100%.
             BrakeInterface.setPressure(100.0); // Set the pressure using the brake interface.
 
         }
         else
         {
-          //  System.out.println("EHB IS NOT ACTIVE.");
         }
     }
 }

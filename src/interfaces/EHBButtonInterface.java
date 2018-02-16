@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.lang.invoke.MethodHandle;
 import java.net.URL;
 
 import ehb.EHB;
@@ -20,26 +21,16 @@ public class EHBButtonInterface
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
     }
 
-    static public void setActiveColor(ButtonColor c)
+    static public void setColor(ButtonColor c)
     {
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR, c));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_BUTTON_COLOR, c));
     }
-
-    static public void setUnActiveColor(ButtonColor c)
+    static public void play(ButtonSound s)
     {
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR, c));
+        URL url = EHBButtonInterface.class.getResource(_mapToSoundFile(s));
+        AudioClip sound = new AudioClip(url.toExternalForm());
+        sound.play(1, 0, 1, 0, 1);
     }
-
-    public static void setEngagedSound(ButtonSound sound)
-    {
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, sound));
-    }
-
-    public static void setDisengagedSound(ButtonSound sound)
-    {
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, sound));
-    }
-
 
     public static boolean wasPressed() {
         boolean tmp = _wasPressed;
@@ -48,13 +39,25 @@ public class EHBButtonInterface
 
     }
 
+    private static String _mapToSoundFile(ButtonSound sound)
+    {
+        switch(sound)
+        {
+            case ENGAGED:
+                return "/resources/sounds/engaged.wav";
+            case DISENGAGED:
+                return "/resources/sounds/disengaged.wav";
+            default:
+                System.err.println("WARNING: Invalid color provided");
+                return "";
+        }
+    }
+
     class Helper implements MessageHandler
     {
         @Override
         public void handleMessage(Message message)
         {
-            double volume = 1;
-            double balance = 0;
             switch (message.getMessageName())
             {
                 case SimGlobals.ACTIVATE_BRAKE:

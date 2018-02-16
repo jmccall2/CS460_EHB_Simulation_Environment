@@ -35,14 +35,14 @@ public class GUI
       newPane.getChildren().add(_gPane);
       newPane.setLayoutX(110);
       newPane.setLayoutY(460);
-      currSpeedField = new UITextField("", 10, 630);
+      currSpeedField = new UITextField("", 10, 625);
       currSpeedField.setWidthHeight(100, 10);
       currSpeedField.addToWindow();
       currSpeedField.setEditable(false);
       UILabel speedLabel = new UILabel("Current Speed", 21, 655);
       speedLabel.addToWindow();
       speedLabel.setColor(Color.WHITE);
-      pressureField = new UITextField("", 890, 630);
+      pressureField = new UITextField("", 890, 625);
       pressureField.setWidthHeight(100, 10);
       pressureField.addToWindow();
       pressureField.setEditable(false);
@@ -106,6 +106,5 @@ public class GUI
 
     public GUI getReference() {return this;}
 
-    public EHBButton getEHBReference() {return controller.getEHB();}
 
 }

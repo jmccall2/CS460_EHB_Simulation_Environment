@@ -3,6 +3,7 @@ package simulation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import interfaces.ButtonColor;
 import interfaces.ButtonSound;
 import interfaces.EHBButtonInterface;
 import interfaces.Gear;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import simulation.engine.Engine;
 import simulation.engine.Message;
+import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
 //Controller for FXML pane.
@@ -40,10 +42,13 @@ public class MyController implements Initializable
   @FXML private RadioButton firstGear;
   @FXML private RadioButton secondGear;
 
+  private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
+
   private boolean stopped = true;
   ToggleGroup group = new ToggleGroup();
   private boolean brakeOff = true;
-  EHBButton ehb = null;
+  private ButtonColor _buttonColor = null;
+ // EHBButton ehb = null;
   GUI guiRef = null;
   //True when car is in drive gear. This is the default gear.
   private boolean carDriving = true;
@@ -51,6 +56,7 @@ public class MyController implements Initializable
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   {
+    Engine.getMessagePump().signalInterest(SimGlobals.SET_BUTTON_COLOR, _buttonMessageHelper);
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
     neutralButton.setToggleGroup(group);
@@ -89,22 +95,7 @@ public class MyController implements Initializable
         enterSpeed.setDisable(false);
       } 
     });
-    ehb = new EHBButton();
-    String color = guiRef.getUnActiveColor().toString();
-    String colorStr = "-fx-background-color:" + color+";";
-    String radStr = "-fx-background-radius:100;";
-    String backgroundStr = "-fx-border-width:0;";
-    String backgroundStr2 = "-fx-border-style:none;";
-    String cssStr = colorStr + radStr + backgroundStr + backgroundStr2;
-    handBrake.setStyle(cssStr);
     handBrake.setOnAction((event) -> {
-      String color1 = getColor(ehb.getColor());
-      String colorStr1 = "-fx-background-color:" + color1+";";
-      String radStr1 = "-fx-background-radius:100;";
-      String backgroundStr1 = "-fx-border-width:0;";
-      String backgroundStr22 = "-fx-border-style:none;";
-      String cssStr1 = colorStr1 + radStr1 + backgroundStr1 + backgroundStr22;
-      handBrake.setStyle(cssStr1);
       if(brakeOff)
       {
         brakeOff = false;
@@ -117,9 +108,9 @@ public class MyController implements Initializable
         handBrake.setText("Activate Brake");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       }
-      URL url = getClass().getResource(ehb.getSoundFile());
-      AudioClip sound = new AudioClip(url.toExternalForm());
-      sound.play(1, 0, 1, 0, 1);
+      //URL url = getClass().getResource(ehb.getSoundFile());
+      //AudioClip sound = new AudioClip(url.toExternalForm());
+      //sound.play(1, 0, 1, 0, 1);
     });
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       public void changed(ObservableValue<? extends Toggle> ov,
@@ -161,10 +152,10 @@ public class MyController implements Initializable
     });
   }
   
-  public EHBButton getEHB()
-  {
-    return ehb;
-  }
+//  public EHBButton getEHB()
+//  {
+//    return ehb;
+//  }
   
   public void setGUI(GUI mainGUI)
   {
@@ -173,8 +164,7 @@ public class MyController implements Initializable
   
   public void setInitButtonColor()
   {
-    Color col = ehb.getInitUnactiveColor();
-    String color1 = getColor(col);
+    String color1 = (_buttonColor == null) ? "grey" : _buttonColor.toString();
     String colorStr1 = "-fx-background-color:" + color1+";";
     String radStr1 = "-fx-background-radius:100;";
     String backgroundStr1 = "-fx-border-width:0;";
@@ -247,6 +237,28 @@ public class MyController implements Initializable
       e.printStackTrace();
     }
 
+  }
+
+  class ButtonMessageHelper implements MessageHandler
+  {
+    @Override
+    public void handleMessage(Message message)
+    {
+      switch(message.getMessageName())
+      {
+        case SimGlobals.SET_BUTTON_COLOR:
+          _buttonColor = (ButtonColor) message.getMessageData();
+          String color = (_buttonColor == null) ? "grey" : _buttonColor.toString();
+          String colorStr = "-fx-background-color:" + color+";";
+          String radStr = "-fx-background-radius:100;";
+          String backgroundStr = "-fx-border-width:0;";
+          String backgroundStr2 = "-fx-border-style:none;";
+          String cssStr = colorStr + radStr + backgroundStr + backgroundStr2;
+          handBrake.setStyle(cssStr);
+          break;
+
+      }
+    }
   }
 
 

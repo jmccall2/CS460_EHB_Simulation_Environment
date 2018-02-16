@@ -15,7 +15,7 @@ public class ButtonPanel implements GUIPanel
     {
         _buttonPanel = new BorderPane();
         _ehbButton = new EHBButton();
-        _buttonPanel.setCenter(_ehbButton.getEHBButton());
+       // _buttonPanel.setCenter(_ehbButton.getEHBButton());
         Text t = new Text (10, 20, "EHB Button");
         t.setFont(Font.font ("Verdana", 35));
         t.setFill(Color.RED);
