@@ -1,11 +1,7 @@
 package ehb;
 
-import interfaces.BrakeInterface;
-import interfaces.ButtonColor;
-import interfaces.EHBButtonInterface;
-import interfaces.Gear;
-import interfaces.GearInterface;
-import interfaces.SpeedInterface;
+import interfaces.*;
+import simulation.EHBButton;
 
 
 public class EHB
@@ -24,8 +20,10 @@ public class EHB
     {
         EHBButtonInterface.setActiveColor(ButtonColor.PURPLE);
         EHBButtonInterface.setUnActiveColor(ButtonColor.GREEN);
-        EHBButtonInterface.setEngagedSound("/resources/sounds/engaged.wav");
-        EHBButtonInterface.setDisengagedSound("/resources/sounds/disengaged.wav");
+       // EHBButtonInterface.setEngagedSound("/resources/sounds/engaged.wav");
+       // EHBButtonInterface.setDisengagedSound("/resources/sounds/disengaged.wav");
+        EHBButtonInterface.setEngagedSound(ButtonSound.ENGAGED);
+        EHBButtonInterface.setDisengagedSound(ButtonSound.DISENGAGED);
         _isActive = false;
     }
 

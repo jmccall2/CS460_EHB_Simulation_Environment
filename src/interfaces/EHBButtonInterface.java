@@ -12,18 +12,10 @@ import simulation.engine.MessageHandler;
 public class EHBButtonInterface
 {
     Helper helper = new Helper();
-    private static int numTimesPressed;
-    private static boolean _active;
     private static boolean _wasPressed;
-    private static boolean init = true;
-    private static boolean init2 = true;
-    static String path1 = "";
-    static String path2 = "";
 
     public EHBButtonInterface()
     {
-        Engine.getMessagePump().signalInterest(SimGlobals.SET_ENGAGED_SOUND, helper);
-        Engine.getMessagePump().signalInterest(SimGlobals.SET_DISENGAGED_SOUND, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
     }
@@ -38,16 +30,14 @@ public class EHBButtonInterface
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR, c));
     }
 
-    public static void setEngagedSound(String path)
+    public static void setEngagedSound(ButtonSound sound)
     {
-        if(init)Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, path));
-        else Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, path1));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_ENGAGED_SOUND, sound));
     }
 
-    public static void setDisengagedSound(String path)
+    public static void setDisengagedSound(ButtonSound sound)
     {
-        if(init2)Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, path));
-        else Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, path2));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND, sound));
     }
 
 
@@ -67,26 +57,6 @@ public class EHBButtonInterface
             double balance = 0;
             switch (message.getMessageName())
             {
-                case SimGlobals.SET_ENGAGED_SOUND:
-                    path1 = (String)message.getMessageData();
-                    if(!init)
-                    {
-                      URL url = getClass().getResource(path1);
-                      AudioClip sound = new AudioClip(url.toExternalForm());
-                      sound.play(volume, balance, 1, 0, 1);
-                    }
-                    init = false;
-                    break;
-                case SimGlobals.SET_DISENGAGED_SOUND:
-                    path2 = (String)message.getMessageData();
-                    if(!init2)
-                    {
-                      URL url2 = getClass().getResource(path2);
-                      AudioClip sound2 = new AudioClip(url2.toExternalForm());
-                      sound2.play(volume, balance, 1, 0, 1);
-                    }
-                    init2 = false;
-                    break;
                 case SimGlobals.ACTIVATE_BRAKE:
                 case SimGlobals.DEACTIVATE_BRAKE:
                     _wasPressed  = !_wasPressed;

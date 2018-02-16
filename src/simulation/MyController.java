@@ -3,6 +3,7 @@ package simulation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import interfaces.ButtonSound;
 import interfaces.EHBButtonInterface;
 import interfaces.Gear;
 import javafx.beans.value.ChangeListener;
@@ -14,6 +15,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import simulation.engine.Engine;
 import simulation.engine.Message;
@@ -103,15 +105,16 @@ public class MyController implements Initializable
         brakeOff = false;
         handBrake.setText("Deactivate");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-        EHBButtonInterface.setEngagedSound("");
       }
       else if(!brakeOff)
       {
         brakeOff = true;
         handBrake.setText("Activate Brake");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
-        EHBButtonInterface.setDisengagedSound("");
       }
+      URL url = getClass().getResource(ehb.getSoundFile());
+      AudioClip sound = new AudioClip(url.toExternalForm());
+      sound.play(1, 0, 1, 0, 1);
     });
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       public void changed(ObservableValue<? extends Toggle> ov,
