@@ -238,6 +238,7 @@ public class MyController implements Initializable
       Scene scene = new Scene(root);
       // Again needed for making the window
       // transparent.
+      statController.init();
       scene.setFill(Color.TRANSPARENT);
       newStage.setScene(scene);
       newStage.show();

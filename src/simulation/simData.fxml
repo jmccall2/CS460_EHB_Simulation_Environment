@@ -11,6 +11,8 @@
 
 <AnchorPane prefHeight="505.0" prefWidth="592.0" style="-fx-background-color: rgba(0, 0, 0, 0.35);" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simulation.SimulationStats">
    <children>
-      <Button fx:id="exitButton" cancelButton="true" layoutX="553.0" layoutY="16.0" mnemonicParsing="false" onAction="#exit" style="-fx-background-color: rgb(230,16,16);" text="X" />
+      <Button fx:id="_exitButton" cancelButton="true" layoutX="553.0" layoutY="16.0" mnemonicParsing="false" onAction="#exit" style="-fx-background-color: rgb(230,16,16);" text="X" />
+       <Button fx:id="_leftButton" layoutX="22.0" layoutY="228.0" mnemonicParsing="false" onAction="#masterEventLeft" />
+       <Button fx:id="_rightButton" layoutX="557.0" layoutY="228.0" mnemonicParsing="false" onAction="#masterEventRight" />
    </children>
 </AnchorPane>
