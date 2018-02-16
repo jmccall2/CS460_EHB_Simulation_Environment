@@ -1,15 +1,7 @@
 package simulation;
 
 import interfaces.ButtonColor;
-import interfaces.ButtonSound;
 import javafx.scene.control.Button;
-import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.MessageHandler;
-
-import java.net.URL;
 
 
 public class EHBButton

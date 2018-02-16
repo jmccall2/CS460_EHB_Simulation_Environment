@@ -22,6 +22,7 @@ public class EHB
         _isActive = false;
     }
 
+    //Add timer to class to demo how they can measure. time between button clicks.
     
     public void update() {
         if(EHBButtonInterface.wasPressed())

@@ -1,16 +1,11 @@
 package simulation;
-import ehb.EHB;
-import interfaces.BrakeInterface;
-import interfaces.EHBButtonInterface;
+
 import interfaces.Gear;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
 {
 
-    //private ArrayList<String> carFrames = new ArrayList<>();
-    //private int _currentCarFrame = 0;
-    //private int _delay = 0;
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
