@@ -79,7 +79,7 @@ public class SimulationStats {
         }
     }
 
-    public void masterEventLeft(ActionEvent event) { System.out.println("HERE");_currentChart--; _update(); }
+    public void masterEventLeft(ActionEvent event) { _currentChart--; _update(); }
 
     public void masterEventRight(ActionEvent event) { _currentChart++; _update(); }
 

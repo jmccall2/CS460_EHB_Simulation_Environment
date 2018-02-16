@@ -36,7 +36,6 @@ public class EHB
             _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
             // Get the current gear from the Gear interface.
             _gear = GearInterface.getGear();
-            System.out.println(_gear);
             // PUT CALCULATIONS FOR HOW TO DETERMINE PRESSURE HERE BASED OFF KNOWN
             // INFORMATION.
 
