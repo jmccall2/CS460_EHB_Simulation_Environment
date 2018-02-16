@@ -9,7 +9,10 @@ import interfaces.Gear;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -17,6 +20,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
@@ -60,7 +65,7 @@ public class MyController implements Initializable
     driveButton.setSelected(true);
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
     statsButton.setOnAction((event) ->{
-      
+      invokeOtherStage();
     });
     start_stop_sim.setOnAction((event) -> {
       if(stopped)
@@ -217,4 +222,31 @@ public class MyController implements Initializable
     }
     return null;
   }
+
+  public void invokeOtherStage()
+  {
+    try
+    {
+      Stage newStage = new Stage();
+      // Make the stage transparent.
+      newStage.initStyle(StageStyle.TRANSPARENT);
+
+      FXMLLoader fxmlLoader = new FXMLLoader(
+              getClass().getResource("/simulation/simData.fxml"));
+      Parent root = fxmlLoader.load();
+      SimulationStats statController = (SimulationStats) fxmlLoader.getController();
+      Scene scene = new Scene(root);
+      // Again needed for making the window
+      // transparent.
+      scene.setFill(Color.TRANSPARENT);
+      newStage.setScene(scene);
+      newStage.show();
+    } catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+  }
+
+
 }
