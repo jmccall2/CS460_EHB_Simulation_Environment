@@ -13,7 +13,7 @@ public class BrakeInterface
 
   Helper helper = new Helper();
 
-  private static double pressure;
+  private static double pressure = 0.0; // Default
 
   public BrakeInterface()
   {
