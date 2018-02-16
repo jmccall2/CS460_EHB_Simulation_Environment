@@ -28,7 +28,12 @@ public class UITextField implements UIElement {
     {
         return _text.getText();
     }
-
+    
+    public void setText(String text)
+    {
+      _text.setText(text);
+    }
+    
     public void setXY(int xlocation, int ylocation)
     {
         _text.setLayoutX(xlocation);
@@ -39,6 +44,11 @@ public class UITextField implements UIElement {
     {
         _text.setPrefWidth(width);
         _text.setPrefHeight(height);
+    }
+    
+    public void setEditable(boolean editable)
+    {
+      _text.setEditable(editable);
     }
 
     @Override

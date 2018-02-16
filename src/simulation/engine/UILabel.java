@@ -1,6 +1,7 @@
 package simulation.engine;
 
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 /**
  * A label is simply a UI element with some text attached to it - non-clickable
@@ -24,6 +25,11 @@ public class UILabel implements UIElement {
     {
         _label.setLayoutX(x);
         _label.setLayoutY(y);
+    }
+    
+    public void setColor(Color col)
+    {
+      _label.setTextFill(col);
     }
 
     public void setWidthHeight(int width, int height)

@@ -22,8 +22,6 @@ import simulation.engine.Singleton;
 public class MyController implements Initializable
 {
   @FXML private TextField setSpeedField;
-  //@FXML private TextField currSpeedField;
-  //@FXML private TextField pressureField;
   @FXML private Button start_stop_sim;
   @FXML private Button handBrake;
   @FXML private Button enterSpeed;
@@ -39,12 +37,12 @@ public class MyController implements Initializable
   private boolean brakeOff = true;
   EHBButton ehb = null;
   GUI guiRef = null;
+  //True when car is in drive gear. This is the default gear.
+  private boolean carDriving = true;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   {
-    //currSpeedField.setText("");
-    //pressureField.setText("");
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
     neutralButton.setToggleGroup(group);
@@ -69,6 +67,8 @@ public class MyController implements Initializable
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
+        parkButton.setDisable(true);
+        enterSpeed.setDisable(true);
       }
       else if(!stopped)
       {
@@ -77,6 +77,8 @@ public class MyController implements Initializable
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.STOP_SIM));
         // Start simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
+        parkButton.setDisable(false);
+        enterSpeed.setDisable(false);
       } 
     });
     ehb = new EHBButton();
@@ -113,7 +115,16 @@ public class MyController implements Initializable
                           Toggle old_toggle, Toggle new_toggle) {
         if (group.getSelectedToggle() != null)
         {
-          Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, _getGear(group.getSelectedToggle().getUserData().toString())));
+          String gearString = group.getSelectedToggle().getUserData().toString();
+          Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, _getGear(gearString)));
+          if(gearString == "D")
+          {
+            carDriving = true;
+          }
+          else
+          {
+            carDriving = false;
+          }
         }
       }
     });
@@ -199,17 +210,5 @@ public class MyController implements Initializable
       return "blue";
     }
     return null;
-  }
-  
-  public void setSpeed(double speed)
-  {
-    String speedStr = Double.toString(speed);
-    //currSpeedField.setText(speedStr);
-  }
-  
-  public void setPressure(double pressure)
-  {
-    String pressureStr = Double.toString(pressure);
-    //pressureField.setText(pressureStr);
   }
 }

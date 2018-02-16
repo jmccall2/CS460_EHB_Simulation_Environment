@@ -6,11 +6,15 @@ import interfaces.ButtonColor;
 import interfaces.EHBButtonInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.Singleton;
+import simulation.engine.UILabel;
+import simulation.engine.UITextField;
 
 public class GUI
 {
@@ -18,23 +22,8 @@ public class GUI
     ButtonColor activeColor = ButtonColor.RED;
     ButtonColor inactiveColor = ButtonColor.BLUE;
     MyController controller = null;
-    
-    public GUI(ButtonColor activeColor, ButtonColor inactiveColor)
-    {
-      setActiveColor(activeColor);
-      setUnActiveColor(inactiveColor);
-      _gPane = new GridPane();
-      EHBButtonInterface.setActiveColor(activeColor);
-      EHBButtonInterface.setUnActiveColor(inactiveColor);
-      controller = new MyController();
-      controller.setGUI(this);
-      _addFXMLCode();
-      Pane newPane = new Pane();
-      newPane.getChildren().add(_gPane);
-      newPane.setLayoutX(0);
-      newPane.setLayoutY(460);
-      Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
-    }
+    private UITextField currSpeedField;
+    private UITextField pressureField;
 
     public GUI()
     {
@@ -48,7 +37,33 @@ public class GUI
       newPane.getChildren().add(_gPane);
       newPane.setLayoutX(123);
       newPane.setLayoutY(460);
+      currSpeedField = new UITextField("", 10, 640);
+      currSpeedField.setWidthHeight(100, 10);
+      currSpeedField.addToWindow();
+      currSpeedField.setEditable(false);
+      UILabel speedLabel = new UILabel("Current Speed", 21, 666);
+      speedLabel.addToWindow();
+      speedLabel.setColor(Color.WHITE);
+      pressureField = new UITextField("", 901, 640);
+      pressureField.setWidthHeight(100, 10);
+      pressureField.addToWindow();
+      pressureField.setEditable(false);
+      UILabel pressureLabel = new UILabel("Current Pressure", 906, 666);
+      pressureLabel.addToWindow();
+      pressureLabel.setColor(Color.WHITE);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
+    }
+    
+    public void setSpeed(double speed)
+    {
+      String speedStr = Double.toString(speed);
+      currSpeedField.setText(speedStr);
+    }
+    
+    public void setPressure(double pressure)
+    {
+      String pressureStr = Double.toString(pressure);
+      pressureField.setText(pressureStr);
     }
     
     public void setInitColor()
