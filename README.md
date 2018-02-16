@@ -20,13 +20,11 @@ http://clipart-library.com/images/kc8o9GEoi.jpg
 TODO:
 
 GUI:
-* Grey out park gear when appropriate.
-* Grey out speed changing when simulation is running. 
+* Grey out park gear when appropriate. (Need to update logic once velocity is avaliable.)
 * Add popup graph pane that can pane graphs on data gathered from the simulation. 
-* Tie in sounds (if set) into the click/unclick of the button. 
 
 GUI/Animation:
-* Add pressure bars to the speed/pressure values being reported.
+* Add pressure bars to the speed/pressure values being reported. (Added, needs to scale with actual values now).
 
 GUI/Simulation binding:
 * Initial parameters do nothing when you set them.
@@ -50,6 +48,4 @@ Engine:
 EHB:
 * We need to add an example EHB software package, right now it's very basic.
 
-Interfaces:
-* We need to create a sound enum. 
 
