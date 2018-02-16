@@ -1,6 +1,8 @@
 package simulation;
 
 import interfaces.Gear;
+import interfaces.GearInterface;
+import interfaces.SpeedInterface;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
@@ -32,6 +34,7 @@ public class Car extends RenderEntity
         setWidthHeight(200, 100);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
 
     }
 
@@ -99,6 +102,10 @@ public class Car extends RenderEntity
         {
             switch (message.getMessageName())
             {
+                case SimGlobals.START_SIM:
+                    speed = SpeedInterface.getSpeed();
+                    gear = GearInterface.getGear();
+                    break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
                     break;
