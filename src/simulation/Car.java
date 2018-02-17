@@ -1,17 +1,13 @@
 package simulation;
-import ehb.EHB;
-import interfaces.BrakeInterface;
-import interfaces.EHBButtonInterface;
+
 import interfaces.Gear;
 import interfaces.GearInterface;
+import interfaces.SpeedInterface;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
 {
 
-    //private ArrayList<String> carFrames = new ArrayList<>();
-    //private int _currentCarFrame = 0;
-    //private int _delay = 0;
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
@@ -44,6 +40,8 @@ public class Car extends RenderEntity
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
+
     }
 
     private void _buildFrames()
@@ -122,6 +120,10 @@ public class Car extends RenderEntity
                     gear = (Gear) message.getMessageData();
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
+                case SimGlobals.START_SIM:
+                    speed = SpeedInterface.getSpeed();
+                    gear = GearInterface.getGear();
+                    break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
                     break;

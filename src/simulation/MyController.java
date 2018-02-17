@@ -1,10 +1,6 @@
 package simulation;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import interfaces.ButtonSound;
-import interfaces.EHBButtonInterface;
+import interfaces.ButtonColor;
 import interfaces.Gear;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,18 +9,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.media.AudioClip;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import simulation.engine.Engine;
 import simulation.engine.Message;
+import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 //Controller for FXML pane.
 public class MyController implements Initializable
@@ -35,41 +30,42 @@ public class MyController implements Initializable
   @FXML private Button enterSpeed;
   @FXML private Button statsButton;
   @FXML private RadioButton parkButton;
+  @FXML private RadioButton reverseButton;
   @FXML private RadioButton neutralButton;
   @FXML private RadioButton driveButton;
-  @FXML private RadioButton firstGear;
-  @FXML private RadioButton secondGear;
+
+  private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
 
   private boolean stopped = true;
-  ToggleGroup group = new ToggleGroup();
+  private ToggleGroup group = new ToggleGroup();
   private boolean brakeOff = true;
-  EHBButton ehb = null;
-  GUI guiRef = null;
+  private ButtonColor _buttonColor = null;
   //True when car is in drive gear. This is the default gear.
   private boolean carDriving = true;
+  private boolean inReverse = false;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   {
+    Engine.getMessagePump().signalInterest(SimGlobals.SET_BUTTON_COLOR, _buttonMessageHelper);
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
     neutralButton.setToggleGroup(group);
     neutralButton.setUserData("N");
     driveButton.setToggleGroup(group);
     driveButton.setUserData("D");
-    firstGear.setToggleGroup(group);
-    firstGear.setUserData("1");
-    secondGear.setToggleGroup(group);
-    secondGear.setUserData("2");
+    reverseButton.setToggleGroup(group);
+    reverseButton.setUserData("R");
     // We need to start in some gear.
     driveButton.setSelected(true);
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
     statsButton.setOnAction((event) ->{
-      invokeOtherStage();
+      _InvokeOtherStage();
     });
     start_stop_sim.setOnAction((event) -> {
       if(stopped)
       {
+        if(carDriving)reverseButton.setDisable(true);
         stopped = false;
         start_stop_sim.setText("Stop simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
@@ -87,24 +83,10 @@ public class MyController implements Initializable
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         parkButton.setDisable(false);
         enterSpeed.setDisable(false);
+        reverseButton.setDisable(false);
       } 
     });
-    ehb = new EHBButton();
-    String color = guiRef.getUnActiveColor().toString();
-    String colorStr = "-fx-background-color:" + color+";";
-    String radStr = "-fx-background-radius:100;";
-    String backgroundStr = "-fx-border-width:0;";
-    String backgroundStr2 = "-fx-border-style:none;";
-    String cssStr = colorStr + radStr + backgroundStr + backgroundStr2;
-    handBrake.setStyle(cssStr);
     handBrake.setOnAction((event) -> {
-      String color1 = getColor(ehb.getColor());
-      String colorStr1 = "-fx-background-color:" + color1+";";
-      String radStr1 = "-fx-background-radius:100;";
-      String backgroundStr1 = "-fx-border-width:0;";
-      String backgroundStr22 = "-fx-border-style:none;";
-      String cssStr1 = colorStr1 + radStr1 + backgroundStr1 + backgroundStr22;
-      handBrake.setStyle(cssStr1);
       if(brakeOff)
       {
         brakeOff = false;
@@ -117,9 +99,6 @@ public class MyController implements Initializable
         handBrake.setText("Activate Brake");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       }
-      URL url = getClass().getResource(ehb.getSoundFile());
-      AudioClip sound = new AudioClip(url.toExternalForm());
-      sound.play(1, 0, 1, 0, 1);
     });
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       public void changed(ObservableValue<? extends Toggle> ov,
@@ -131,10 +110,19 @@ public class MyController implements Initializable
           if(gearString == "D")
           {
             carDriving = true;
+            if(!stopped)reverseButton.setDisable(true);
           }
           else
           {
             carDriving = false;
+          }
+          if(gearString == "R")
+          {
+            inReverse = true;
+          }
+          else if(!(gearString == "R"))
+          {
+            inReverse = false;
           }
         }
       }
@@ -155,32 +143,17 @@ public class MyController implements Initializable
         }
         if(speed >= 0 && speed <=140)
         {
+          if(inReverse)speed *=-1;
           Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
         }
       }
     });
   }
-  
-  public EHBButton getEHB()
-  {
-    return ehb;
-  }
-  
-  public void setGUI(GUI mainGUI)
-  {
-    guiRef = mainGUI;
-  }
+
   
   public void setInitButtonColor()
   {
-    Color col = ehb.getInitUnactiveColor();
-    String color1 = getColor(col);
-    String colorStr1 = "-fx-background-color:" + color1+";";
-    String radStr1 = "-fx-background-radius:100;";
-    String backgroundStr1 = "-fx-border-width:0;";
-    String backgroundStr22 = "-fx-border-style:none;";
-    String cssStr1 = colorStr1 + radStr1 + backgroundStr1 + backgroundStr22;
-    handBrake.setStyle(cssStr1);
+    handBrake.setStyle(_buildCSSString());
   }
 
   private Gear _getGear(String s)
@@ -188,42 +161,16 @@ public class MyController implements Initializable
     switch(s)
     {
       case "P": return Gear.PARK;
+      case "R": return Gear.REVERSE;
       case "N": return Gear.NEUTRAL;
       case "D": return Gear.DRIVE;
-      case "1": return Gear.FIRST;
-      case "2": return Gear.SECOND;
       default:
         System.err.println("UNSUPPORTED GEAR, returning drive.");
         return Gear.DRIVE;
     }
   }
 
-  private String getColor(Color col)
-  {
-    if(col.equals(Color.CYAN))
-    {
-      return "cyan";
-    }
-    else if(col.equals(Color.RED))
-    {
-      return "red";
-    }
-    else if(col.equals(Color.GREEN))
-    {
-      return "green";
-    }
-    else if(col.equals(Color.PURPLE))
-    {
-      return "purple";
-    }
-    else if(col.equals(Color.BLUE))
-    {
-      return "blue";
-    }
-    return null;
-  }
-
-  public void invokeOtherStage()
+  private void _InvokeOtherStage()
   {
     try
     {
@@ -247,6 +194,30 @@ public class MyController implements Initializable
       e.printStackTrace();
     }
 
+  }
+
+  private String _buildCSSString()
+  {
+    return "-fx-background-color:" + ((_buttonColor == null) ? "grey" : _buttonColor.toString())+";"
+            + "-fx-background-radius:100;"
+            + "-fx-border-width:0;"
+            + "-fx-border-style:none;";
+  }
+
+  class ButtonMessageHelper implements MessageHandler
+  {
+    @Override
+    public void handleMessage(Message message)
+    {
+      switch(message.getMessageName())
+      {
+        case SimGlobals.SET_BUTTON_COLOR:
+          _buttonColor = (ButtonColor) message.getMessageData();
+          handBrake.setStyle(_buildCSSString());
+          break;
+
+      }
+    }
   }
 
 

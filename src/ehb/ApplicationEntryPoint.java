@@ -56,17 +56,13 @@ public class ApplicationEntryPoint implements PulseEntity{
     {
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ENGAGED_SOUND));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_DISENGAGED_SOUND));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.GEAR_CHANGE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
-
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_BUTTON_COLOR));
     }
 
 
@@ -93,7 +89,10 @@ public class ApplicationEntryPoint implements PulseEntity{
         sun.addToWorld();
 
         // Attach the sun to the car so that it never gets left behind
-        _car.attachActor(sun);
+        //_car.attachActor(sun);
+
+        // Make the sun static so it's always on screen
+        sun.setAsStaticActor(true);
     }
 
     private void _buildMetricPanels()
@@ -102,7 +101,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         renderPanel.setAsStaticActor(true);
         renderPanel.addToWorld();
 
-        SingleFrameEntity blockingPanel = new SingleFrameEntity("resources/img/panelback.png",0,625,2,0,0,1020,60);
+        SingleFrameEntity blockingPanel = new SingleFrameEntity("resources/img/panelback.png",0,635,2,0,0,1020,70);
         blockingPanel.setAsStaticActor(true);
         blockingPanel.addToWorld();
 
