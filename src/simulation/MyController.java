@@ -30,10 +30,9 @@ public class MyController implements Initializable
   @FXML private Button enterSpeed;
   @FXML private Button statsButton;
   @FXML private RadioButton parkButton;
+  @FXML private RadioButton reverseButton;
   @FXML private RadioButton neutralButton;
   @FXML private RadioButton driveButton;
-  @FXML private RadioButton firstGear;
-  @FXML private RadioButton secondGear;
 
   private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
 
@@ -43,6 +42,7 @@ public class MyController implements Initializable
   private ButtonColor _buttonColor = null;
   //True when car is in drive gear. This is the default gear.
   private boolean carDriving = true;
+  private boolean inReverse = false;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
@@ -54,10 +54,8 @@ public class MyController implements Initializable
     neutralButton.setUserData("N");
     driveButton.setToggleGroup(group);
     driveButton.setUserData("D");
-    firstGear.setToggleGroup(group);
-    firstGear.setUserData("1");
-    secondGear.setToggleGroup(group);
-    secondGear.setUserData("2");
+    reverseButton.setToggleGroup(group);
+    reverseButton.setUserData("R");
     // We need to start in some gear.
     driveButton.setSelected(true);
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
@@ -67,6 +65,7 @@ public class MyController implements Initializable
     start_stop_sim.setOnAction((event) -> {
       if(stopped)
       {
+        if(carDriving)reverseButton.setDisable(true);
         stopped = false;
         start_stop_sim.setText("Stop simulation");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
@@ -84,6 +83,7 @@ public class MyController implements Initializable
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         parkButton.setDisable(false);
         enterSpeed.setDisable(false);
+        reverseButton.setDisable(false);
       } 
     });
     handBrake.setOnAction((event) -> {
@@ -110,10 +110,19 @@ public class MyController implements Initializable
           if(gearString == "D")
           {
             carDriving = true;
+            if(!stopped)reverseButton.setDisable(true);
           }
           else
           {
             carDriving = false;
+          }
+          if(gearString == "R")
+          {
+            inReverse = true;
+          }
+          else if(!(gearString == "R"))
+          {
+            inReverse = false;
           }
         }
       }
@@ -134,6 +143,7 @@ public class MyController implements Initializable
         }
         if(speed >= 0 && speed <=140)
         {
+          if(inReverse)speed *=-1;
           Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
         }
       }
@@ -151,10 +161,9 @@ public class MyController implements Initializable
     switch(s)
     {
       case "P": return Gear.PARK;
+      case "R": return Gear.REVERSE;
       case "N": return Gear.NEUTRAL;
       case "D": return Gear.DRIVE;
-      case "1": return Gear.FIRST;
-      case "2": return Gear.SECOND;
       default:
         System.err.println("UNSUPPORTED GEAR, returning drive.");
         return Gear.DRIVE;

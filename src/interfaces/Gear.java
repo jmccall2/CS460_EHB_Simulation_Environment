@@ -21,10 +21,6 @@ public enum Gear
                 return "Neutral";
             case DRIVE:
                 return "Drive";
-            case FIRST:
-                return "First";
-            case SECOND:
-                return "Second";
             default:
                 return "NULL";
         }
