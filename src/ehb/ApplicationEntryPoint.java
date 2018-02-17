@@ -89,7 +89,10 @@ public class ApplicationEntryPoint implements PulseEntity{
         sun.addToWorld();
 
         // Attach the sun to the car so that it never gets left behind
-        _car.attachActor(sun);
+        //_car.attachActor(sun);
+
+        // Make the sun static so it's always on screen
+        sun.setAsStaticActor(true);
     }
 
     private void _buildMetricPanels()
