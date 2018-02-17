@@ -3,6 +3,7 @@ import ehb.EHB;
 import interfaces.BrakeInterface;
 import interfaces.EHBButtonInterface;
 import interfaces.Gear;
+import interfaces.GearInterface;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
@@ -15,15 +16,19 @@ public class Car extends RenderEntity
     private Animation _animationSequence;
     private double speed;
     private Gear gear;
-    private double brake_pressure;
     //acceleration due to engine, max ~ 5 m/s^2
-    private double acceleration;
     private boolean _isActive;
+    private double applied_brake_force = 0;
+    private double actual_brake_force;
+    private double brake_percentage;
 
     private static final double mass = 1600; // in kg
     private static final double h = 1/60; // update rate
-    private static final double drag_c = 1.4; // drag coefficient
-    private int _tractionLossLevel = 0;
+    private static final double drag_c = 2; // drag coefficient
+    private boolean _tractionLossLevel = false;
+    private static final double uk = .68; // coefficient of kinetic friction
+    private static final double us = .9; // coefficient of static friction
+    private static final double friction_threshold = us * 9.81 * mass;
 
     public Car()
     {
@@ -37,7 +42,8 @@ public class Car extends RenderEntity
         setWidthHeight(200, 100);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
-
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
     }
 
     private void _buildFrames()
@@ -52,27 +58,33 @@ public class Car extends RenderEntity
         _animationSequence.setCategory("car_drive");
     }
 
-    // they can change gear at runtime
-    public void set_gear(Gear gear){
-        this.gear = gear;
-    }
-
-    // they can change force at runtime
-    public void set_force(double acceleration) {
-        this.acceleration = acceleration;
-    }
-
-    // use this to set before simulation starts
-    public void init_status(double speed, Gear gear, double force) {
-        this.speed = speed;
-        this.gear = gear;
-        this.acceleration = acceleration;
-    }
-
     private void update(){
-        double force = mass*acceleration - drag_c*speed*speed - 30*drag_c*speed;
-        double actual_acceleration = force/mass;
-        speed = speed + actual_acceleration*h;
+
+        // actual brake force
+        if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
+	    else {
+            _tractionLossLevel = true;
+            actual_brake_force = uk * mass * 9.81;
+        }
+
+        double actual_acceleration;
+
+        if(applied_brake_force > 0 || gear==Gear.NEUTRAL) {
+            actual_acceleration = - (drag_c * speed * speed) - (actual_brake_force / mass) - .02 * 9.8;
+        }
+        else {
+            actual_acceleration = 0;
+        }
+
+        speed = speed + actual_acceleration * h;
+
+        // incremental
+//        if actual_brake_force <= f_:
+//        fb += f_brake *h
+//        print('fb = {}',fb)
+
+        // velocity should not be negative!
+        if (speed < 0) speed = 0;
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -83,13 +95,15 @@ public class Car extends RenderEntity
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
+        update();
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED,this.speed));
         if(_isActive)
         {
             delay++;
             if (delay == 25) {
                 delay = 0;
                 System.out.println("adding tire track.");
-                xOffset = _tractionLossLevel == 1 ? 5 : 1;
+                xOffset = 5;
                 TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
                 tt.addToWorld();
             }
@@ -104,6 +118,10 @@ public class Car extends RenderEntity
         {
             switch (message.getMessageName())
             {
+                case SimGlobals.GEAR_CHANGE:
+                    gear = (Gear) message.getMessageData();
+                case SimGlobals.SET_PRESSURE:
+                    brake_percentage = (Double) message.getMessageData();
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
                     break;
