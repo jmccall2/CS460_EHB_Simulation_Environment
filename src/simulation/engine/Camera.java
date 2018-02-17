@@ -86,8 +86,9 @@ public class Camera {
         double scrHeight = Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsInt() / _heightScalar;
         double locX = _attachedTo.getLocationX();
         double locY = _attachedTo.getLocationY();
-        double modLocX = locX < 0 ? -locX : locX;
-        double modLocY = locY < 0 ? -locY : locY;
+        System.out.println(locX + " " + locY);
+        double modLocX = locX;// < 0 ? -locX : locX;
+        double modLocY = locY;// < 0 ? -locY : locY;
         double newLocX = modLocX - scrWidth;
         double newLocY = modLocY - scrHeight;
         newLocX *= -1;
