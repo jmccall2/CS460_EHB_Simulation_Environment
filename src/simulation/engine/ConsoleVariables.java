@@ -1,6 +1,8 @@
 package simulation.engine;
 
+import java.io.BufferedReader;
 import java.io.Console;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -77,11 +79,19 @@ public class ConsoleVariables {
         return _editedCvars;
     }
 
+    /**
+     * Unregisters a variable from the console variable table
+     * @param cvar cvar to remove
+     */
     public void unregisterVariable(String cvar)
     {
         _cvars.remove(cvar);
     }
 
+    /**
+     * Checks if the given variable has been registered
+     * @return true if registered and false if not
+     */
     public boolean contains(String cvar)
     {
         return _cvars.containsKey(cvar);
@@ -94,5 +104,49 @@ public class ConsoleVariables {
     {
         if (contains(cvar)) return _cvars.get(cvar);
         return null;
+    }
+
+    /**
+     * Loads a key-value config file and registers each one as
+     * a console variable that can be retrieved later.
+     * @param configFile path to the config file to load
+     */
+    public void loadConfigFile(String configFile)
+    {
+        System.out.println("Reading " + configFile);
+        try
+        {
+            FileReader fileReader = new FileReader(configFile);
+            BufferedReader reader = new BufferedReader(fileReader);
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                line = line.replaceAll(" ", "");
+                String variable = "";
+                String value = "";
+                boolean isReadingValue = false;
+                for (int i = 0; i < line.length(); ++i)
+                {
+                    char c = line.charAt(i);
+                    if (c == '+') continue;
+                    if (c == '/' && (i + 1) < line.length() && line.charAt(i + 1) == '/') break; // Found a comment
+                    if (c == '=')
+                    {
+                        isReadingValue = true;
+                        continue;
+                    }
+                    if (isReadingValue) value += c;
+                    else variable += c;
+                }
+                if (variable.equals("")) continue;
+                if (contains(variable)) find(variable).setValue(value);
+                else registerVariable(new ConsoleVariable(variable, value));
+            }
+        }
+        catch (Exception e)
+        {
+            System.err.println("WARNING: Unable to load " + configFile);
+            //System.exit(-1);
+        }
     }
 }

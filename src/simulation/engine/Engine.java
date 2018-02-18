@@ -129,7 +129,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _isInitialized = true;
         _engine = this; // This is a static variable
         _cvarSystem = new ConsoleVariables();
-        _loadEngineConfig("src/resources/engine.cfg");
+        _cvarSystem.loadConfigFile("src/resources/engine.cfg");
         _registerDefaultCVars();
         _updateEntities = Boolean.parseBoolean(_cvarSystem.find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
         _messageSystem = new MessagePump();
@@ -193,44 +193,6 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     private void _deregisterPulseEntity(PulseEntity entity)
     {
         _pulseEntities.remove(entity);
-    }
-
-    private void _loadEngineConfig(String engineCfgFile)
-    {
-        try
-        {
-            FileReader fileReader = new FileReader(engineCfgFile);
-            BufferedReader reader = new BufferedReader(fileReader);
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-                line = line.replaceAll(" ", "");
-                String variable = "";
-                String value = "";
-                boolean isReadingValue = false;
-                for (int i = 0; i < line.length(); ++i)
-                {
-                    char c = line.charAt(i);
-                    if (c == '+') continue;
-                    if (c == '/' && (i + 1) < line.length() && line.charAt(i + 1) == '/') break; // Found a comment
-                    if (c == '=')
-                    {
-                        isReadingValue = true;
-                        continue;
-                    }
-                    if (isReadingValue) value += c;
-                    else variable += c;
-                }
-                if (variable.equals("")) continue;
-                if (_cvarSystem.contains(variable)) _cvarSystem.find(variable).setValue(value);
-                else _cvarSystem.registerVariable(new ConsoleVariable(variable, value));
-            }
-        }
-        catch (Exception e)
-        {
-            System.err.println("WARNING: Unable to load " + engineCfgFile);
-            //System.exit(-1);
-        }
     }
 
     public static void main(String[] args) {
