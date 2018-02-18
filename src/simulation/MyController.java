@@ -1,7 +1,7 @@
 package simulation;
 
-import interfaces.ButtonColor;
-import interfaces.Gear;
+import interfaces.ButtonColorTypes;
+import interfaces.GearTypes;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -39,7 +39,7 @@ public class MyController implements Initializable
   private boolean stopped = true;
   private ToggleGroup group = new ToggleGroup();
   private boolean brakeOff = true;
-  private ButtonColor _buttonColor = null;
+  private ButtonColorTypes _buttonColor = null;
   //True when car is in drive gear. This is the default gear.
   private boolean carDriving = true;
   private boolean inReverse = false;
@@ -58,7 +58,7 @@ public class MyController implements Initializable
     reverseButton.setUserData("R");
     // We need to start in some gear.
     driveButton.setSelected(true);
-    Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
+    Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, GearTypes.DRIVE));
     statsButton.setOnAction((event) ->{
       _InvokeOtherStage();
     });
@@ -156,17 +156,17 @@ public class MyController implements Initializable
     handBrake.setStyle(_buildCSSString());
   }
 
-  private Gear _getGear(String s)
+  private GearTypes _getGear(String s)
   {
     switch(s)
     {
-      case "P": return Gear.PARK;
-      case "R": return Gear.REVERSE;
-      case "N": return Gear.NEUTRAL;
-      case "D": return Gear.DRIVE;
+      case "P": return GearTypes.PARK;
+      case "R": return GearTypes.REVERSE;
+      case "N": return GearTypes.NEUTRAL;
+      case "D": return GearTypes.DRIVE;
       default:
         System.err.println("UNSUPPORTED GEAR, returning drive.");
-        return Gear.DRIVE;
+        return GearTypes.DRIVE;
     }
   }
 
@@ -212,7 +212,7 @@ public class MyController implements Initializable
       switch(message.getMessageName())
       {
         case SimGlobals.SET_BUTTON_COLOR:
-          _buttonColor = (ButtonColor) message.getMessageData();
+          _buttonColor = (ButtonColorTypes) message.getMessageData();
           handBrake.setStyle(_buildCSSString());
           break;
 

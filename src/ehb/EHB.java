@@ -1,14 +1,13 @@
 package ehb;
 
 import interfaces.*;
-import simulation.EHBButton;
 
 
 public class EHB
 {
 
     private double _speed;
-    private Gear _gear;
+    private GearTypes _gear;
     private boolean _isActive;
 
     public EHB()
@@ -18,25 +17,25 @@ public class EHB
 
     public void init()
     {
-         EHBButtonInterface.setColor(ButtonColor.BLUE);
+         ButtonInterface.setColor(ButtonColorTypes.BLUE);
         _isActive = false;
     }
 
     //Add timer to class to demo how they can measure. time between button clicks.
     
     public void update() {
-        if(EHBButtonInterface.wasPressed())
+        if(ButtonInterface.wasPressed())
         {
             _isActive = !_isActive;
             if(_isActive)
             {
-                EHBButtonInterface.setColor(ButtonColor.RED);
-                EHBButtonInterface.play(ButtonSound.ENGAGED);
+                ButtonInterface.setColor(ButtonColorTypes.RED);
+                ButtonInterface.play(ButtonSoundTypes.ENGAGED);
             }
             else
             {
-                EHBButtonInterface.setColor(ButtonColor.BLUE);
-                EHBButtonInterface.play(ButtonSound.DISENGAGED);
+                ButtonInterface.setColor(ButtonColorTypes.BLUE);
+                ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
             }
         }
 
@@ -44,7 +43,7 @@ public class EHB
         if(_isActive)
         {
             _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
-            // Get the current gear from the Gear interface.
+            // Get the current gear from the GearTypes interface.
             _gear = GearInterface.getGear();
           //   PUT CALCULATIONS FOR HOW TO DETERMINE PRESSURE HERE BASED OFF KNOWN
           //   INFORMATION.

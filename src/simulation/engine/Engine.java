@@ -1,13 +1,11 @@
 package simulation.engine;
 
-import ehb.ApplicationEntryPoint;
+import simulation.ApplicationEntryPoint;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 

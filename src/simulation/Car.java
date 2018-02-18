@@ -1,6 +1,6 @@
 package simulation;
 
-import interfaces.Gear;
+import interfaces.GearTypes;
 import interfaces.GearInterface;
 import interfaces.SpeedInterface;
 import simulation.engine.*;
@@ -11,7 +11,7 @@ public class Car extends RenderEntity
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
-    private Gear gear;
+    private GearTypes gear;
     //acceleration due to engine, max ~ 5 m/s^2
     private boolean _isActive;
     private double applied_brake_force = 0;
@@ -67,7 +67,7 @@ public class Car extends RenderEntity
 
         double actual_acceleration;
 
-        if(applied_brake_force > 0 || gear==Gear.NEUTRAL) {
+        if(applied_brake_force > 0 || gear== GearTypes.NEUTRAL) {
             actual_acceleration = - (drag_c * speed * speed) - (actual_brake_force / mass) - .02 * 9.8;
         }
         else {
@@ -117,7 +117,7 @@ public class Car extends RenderEntity
             switch (message.getMessageName())
             {
                 case SimGlobals.GEAR_CHANGE:
-                    gear = (Gear) message.getMessageData();
+                    gear = (GearTypes) message.getMessageData();
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();

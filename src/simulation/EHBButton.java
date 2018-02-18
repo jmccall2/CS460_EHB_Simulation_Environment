@@ -1,6 +1,6 @@
 package simulation;
 
-import interfaces.ButtonColor;
+import interfaces.ButtonColorTypes;
 import javafx.scene.control.Button;
 
 
@@ -10,7 +10,7 @@ public class EHBButton
     private boolean _activated = false;
     private String _engagedSound = "";
     private String _disengagedSound = "";
-    private ButtonColor _buttonColor = null;
+    private ButtonColorTypes _buttonColor = null;
 
 
 

@@ -9,14 +9,14 @@ public class GearInterface
 {
     Helper helper = new Helper();
 
-    private static Gear _currentGear;
+    private static GearTypes _currentGear;
 
     public GearInterface()
     {
        Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE, helper);
     }
 
-    public static Gear getGear()
+    public static GearTypes getGear()
     {
         return _currentGear;
     }
@@ -25,6 +25,6 @@ public class GearInterface
     class Helper implements MessageHandler
     {
         @Override
-        public void handleMessage(Message message) { _currentGear = (Gear)message.getMessageData(); }
+        public void handleMessage(Message message) { _currentGear = (GearTypes)message.getMessageData(); }
     }
 }
