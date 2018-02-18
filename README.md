@@ -19,6 +19,9 @@ http://clipart-library.com/images/kc8o9GEoi.jpg
 
 TODO:
 
+Config:
+* Add another config file to store information about the initial state of the simulation
+
 GUI:
 * Grey out park gear when appropriate. (Need to update logic once velocity is avaliable.)
 * Add popup graph pane that can pane graphs on data gathered from the simulation. 
@@ -43,7 +46,7 @@ Simulation/Animation binding:
 wheel rpm, traction loss level animations.
 
 Engine:
-* Figure out issue with background wrapping. 
+* Figure out issue with background wrapping. ***DONE
 
 EHB:
 * We need to add an example EHB software package, right now it's very basic.
