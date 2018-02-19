@@ -10,7 +10,6 @@ public class SimGlobals
 
     // Set values that are needed from the 'interfaces'
     // Such as speed and pressure
-    public static final String SET_SPEED = "set_speed";
     public static final String SET_PRESSURE = "set_pressure";
     public static final String SET_BUTTON_COLOR = "set_button_color";
 

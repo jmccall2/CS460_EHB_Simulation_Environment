@@ -55,7 +55,7 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     private void _registerSimulationMessages()
     {
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
