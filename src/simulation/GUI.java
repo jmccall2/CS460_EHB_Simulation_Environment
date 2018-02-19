@@ -55,14 +55,14 @@ public class GUI
       currSpeedField.setWidthHeight(100, 10);
       currSpeedField.addToWindow();
       currSpeedField.setEditable(false);
-      UILabel speedLabel = new UILabel("Current Speed", 21, 655);
+      UILabel speedLabel = new UILabel("Current Speed", 11, 655);
       speedLabel.addToWindow();
       speedLabel.setColor(Color.WHITE);
       pressureField = new UITextField("", 890, 625);
       pressureField.setWidthHeight(100, 10);
       pressureField.addToWindow();
       pressureField.setEditable(false);
-      UILabel pressureLabel = new UILabel("Current Pressure", 894, 655);
+      UILabel pressureLabel = new UILabel("Current Pressure", 889, 655);
       pressureLabel.addToWindow();
       pressureLabel.setColor(Color.WHITE);
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));

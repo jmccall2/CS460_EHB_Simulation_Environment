@@ -16,15 +16,20 @@ http://www.publicdomainpictures.net/pictures/190000/velka/the-sun-30.jpg
 https://commons.wikimedia.org/wiki/File:Linecons_small-cloud.svg
 http://clipart-library.com/images/kc8o9GEoi.jpg
 
+GUI theme source (DarkTheme.css):
+http://code.makery.ch/library/javafx-8-tutorial/part4/
 
 TODO:
 
 Config:
-* Add another config file to store information about the initial state of the simulation
+* Add another config file to store information about the initial state of the simulation (Not needed for setting disallowed
+gear changes, since this can be done before the simulation using the Set Gear States tool. There is no limit on the amount of states
+that can be added or removed using this tool when the simulation is not running. Max speed can be set with this tool as well).
 
 GUI:
 * Grey out park gear when appropriate. (Need to update logic once velocity is avaliable.)
 * Add popup graph pane that can pane graphs on data gathered from the simulation. 
+* Need to update speed and pressure fields with values.
 
 GUI/Animation:
 * Add pressure bars to the speed/pressure values being reported. (Added, needs to scale with actual values now).
