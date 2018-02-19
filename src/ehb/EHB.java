@@ -109,7 +109,7 @@ public class EHB
         Long key = Long.valueOf((int)_speed);
         Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
         Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
-        Integer closestResult = null;
+        Integer closestResult = 50;
         if (floor != null && ceiling != null)
         {
 //          System.out.println(floor.getKey());
