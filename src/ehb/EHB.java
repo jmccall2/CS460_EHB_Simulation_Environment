@@ -10,7 +10,7 @@ public class EHB
 {
 
   private double _speed;
-  private Gear _gear;
+  private GearTypes _gear;
   private boolean _isActive;
 
   //Max pressure is considered to be at 6 kPa.
@@ -44,7 +44,7 @@ public class EHB
 
   public void init()
   {
-    EHBButtonInterface.setColor(ButtonColor.BLUE);
+    ButtonInterface.setColor(ButtonColorTypes.BLUE);
     _isActive = false;
   }
 
@@ -52,18 +52,18 @@ public class EHB
 
   public void update()
   {
-    if (EHBButtonInterface.wasPressed())
+    if (ButtonInterface.wasPressed())
     {
       _isActive = !_isActive;
       if (_isActive)
       {
-        EHBButtonInterface.setColor(ButtonColor.RED);
-        EHBButtonInterface.play(ButtonSound.ENGAGED);
+        ButtonInterface.setColor(ButtonColorTypes.RED);
+        ButtonInterface.play(ButtonSoundTypes.ENGAGED);
       }
       else
       {
-        EHBButtonInterface.setColor(ButtonColor.BLUE);
-        EHBButtonInterface.play(ButtonSound.DISENGAGED);
+        ButtonInterface.setColor(ButtonColorTypes.BLUE);
+        ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
       }
     }
 
