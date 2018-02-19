@@ -2,6 +2,7 @@ package simulation;
 
 import interfaces.*;
 import interfaces.GearInterface;
+import javafx.scene.paint.Color;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
@@ -17,6 +18,9 @@ public class Car extends RenderEntity
     private double actual_brake_force;
     private double brake_percentage;
 
+    private BarEntity _SpeedGauge;
+    private BarEntity _PressureGauge;
+
     private static final double mass = 1600; // in kg
  //   private static final double h = 1.0/60; // update rate
     private static final double drag_c = 2; // drag coefficient
@@ -30,7 +34,8 @@ public class Car extends RenderEntity
         // The second parameter to the Animation is the rate of change
         // If the rate is 5.0, it means that every 5 seconds we move
         // to a new animation frame
-        _animationSequence = new Animation(this, 0.03);
+         _animationSequence = new Animation(this, 0);
+
         _buildFrames();
         setLocationXYDepth(0, 215, -1);
         setSpeedXY(speed, 0);
@@ -40,6 +45,14 @@ public class Car extends RenderEntity
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
+
+        _SpeedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240, BarEntityModes.SPEED);
+        _SpeedGauge.setAsStaticActor(true);
+        _SpeedGauge.addToWorld();
+
+        _PressureGauge = new BarEntity(Color.GREEN,902,625,3,0,0,75,240, BarEntityModes.PRESSURE);
+        _PressureGauge.setAsStaticActor(true);
+        _PressureGauge.addToWorld();
 
     }
 
@@ -76,33 +89,37 @@ public class Car extends RenderEntity
 
         // actual brake force
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
-	    else {
+        else {
             _tractionLossLevel = true;
             actual_brake_force = uk * mass * 9.81;
         }
 //        System.out.println("actual brake force: " + actual_brake_force);
         double actual_acceleration;
 
-        int brake;
-        if(Math.abs(speed) < .01) brake = 0;
-        else brake = 1;
+//        int brake;
+//        if(Math.abs(speed) < .01) brake = 0;
+//        else brake = 1;
+//
+//        if(speed < 1.01) {
+//            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
+//        }
+//        else if(applied_brake_force == 0){
+//            actual_acceleration = 0;
+//        }
+//        else {
+//            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8));
+//        }
 
-        if(speed < 1.01) {
-            System.out.println("first");
-            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
-        }
-        else if(applied_brake_force == 0){
-            System.out.println("second");
-            actual_acceleration = 0;
+
+        if(applied_brake_force > 0) {
+            actual_acceleration = - (drag_c * speed * speed)/mass - (actual_brake_force / mass) - .02 * 9.8;
         }
         else {
-            System.out.println("third");
-            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8));
+            actual_acceleration = 0;
         }
 
-//        actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
-
         speed = speed + actual_acceleration * deltaSeconds;
+        if (speed < 0) speed = 0;
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -117,12 +134,16 @@ public class Car extends RenderEntity
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
        // System.out.println("speed: " + speed);
         setSpeedXY(speed*45,0);
+        _animationSequence.setAnimationRate(1.91/(13*((speed == 0) ? 0.0001 : speed)));
+        _SpeedGauge.updateState(speed);
+        _PressureGauge.updateState(brake_percentage);
+       // _animationSequence.setAnimationRate(100);
         if(_isActive)
         {
             delay++;
             if (delay == 25) {
                 delay = 0;
-                System.out.println("adding tire track.");
+           //     System.out.println("adding tire track.");
                 xOffset = 5;
                 TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
                 tt.addToWorld();
@@ -143,12 +164,12 @@ public class Car extends RenderEntity
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
-                    System.out.println("Brake: " + brake_percentage);
+                //    System.out.println("Brake: " + brake_percentage);
 		    break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
-                    System.out.println("Speed set: " + speed);
+              //      System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;

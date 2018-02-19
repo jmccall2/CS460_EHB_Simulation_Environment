@@ -73,7 +73,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         String cloud = "resources/img/world/cloud.png";
        for(int i = 1; i <=6; i++)
        {
-           BackgroundPanel bp = new BackgroundPanel("resources/img/world/part"+i+".jpeg",-375 + (1000*(i-1)),0,10,1000,500);
+           BackgroundPanel bp = new BackgroundPanel("resources/img/world/part"+i+".jpeg",-1000 + (1000*(i-1)),-15,10,1000,500);
            bp.addToWorld();
            // There should probably be a better heuristic to decide where the clouds are placed.
            SingleFrameEntity cloud1 = new SingleFrameEntity(cloud,0+ (1000*(i-1)),0,5,5,0,100,100);
@@ -106,13 +106,6 @@ public class ApplicationEntryPoint implements PulseEntity{
         blockingPanel.setAsStaticActor(true);
         blockingPanel.addToWorld();
 
-        BarEntity speedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240);
-        speedGauge.setAsStaticActor(true);
-        speedGauge.addToWorld();
-
-        BarEntity pressureGauge = new BarEntity(Color.GREEN,902,625,3,0,0,75,240);
-        pressureGauge.setAsStaticActor(true);
-        pressureGauge.addToWorld();
     }
 
 

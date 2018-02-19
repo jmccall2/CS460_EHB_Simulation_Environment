@@ -39,6 +39,8 @@ public class MyController implements Initializable
   @FXML private RadioButton driveButton;
   private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
 
+
+  private double MPH_TO_MS = 0.448;
   private boolean stopped = true;
   private ToggleGroup group = new ToggleGroup();
   private boolean brakeOff = true;
@@ -291,7 +293,7 @@ public class MyController implements Initializable
       if(speed >= 0 && speed <= max_speed)
       {
         if(inReverse)speed *=-1;
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed*MPH_TO_MS));
         System.out.println("SENDING SPEED " + speed);
       }
     }
