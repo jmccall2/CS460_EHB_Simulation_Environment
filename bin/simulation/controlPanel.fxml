@@ -14,7 +14,7 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="778.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="14.0" layoutY="26.0" />
-      <TextField fx:id="setSpeedField" layoutX="14.0" layoutY="123.0" prefHeight="37.0" prefWidth="132.0" styleClass="text-field" stylesheets="@workspace/CS460_HandBrake/src/simulation/DarkTheme.css" />
+      <TextField fx:id="setSpeedField" layoutX="14.0" layoutY="163.0" prefHeight="37.0" prefWidth="132.0" styleClass="text-field" stylesheets="@workspace/CS460_HandBrake/src/simulation/DarkTheme.css" />
       <RadioButton fx:id="parkButton" layoutX="505.0" layoutY="61.0" mnemonicParsing="false" text="Park" textFill="WHITE" />
       <RadioButton fx:id="neutralButton" layoutX="505.0" layoutY="109.0" mnemonicParsing="false" text="Neutral" textFill="WHITE" />
       <RadioButton fx:id="driveButton" layoutX="505.0" layoutY="133.0" mnemonicParsing="false" text="Drive" textFill="WHITE" />
@@ -23,8 +23,9 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="enterSpeed" layoutX="14.0" layoutY="166.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="132.0" text="Enter Speed" />
-      <Button fx:id="statsButton" layoutX="637.0" layoutY="101.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="111.0" text="Stats" />
+      <Button fx:id="statsButton" layoutX="632.0" layoutY="48.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="124.0" text="Stats" />
       <RadioButton fx:id="reverseButton" layoutX="505.0" layoutY="85.0" mnemonicParsing="false" text="Reverse" textFill="WHITE" />
+      <Button fx:id="gearButton" layoutX="632.0" layoutY="128.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="124.0" text="Gear States" />
+      <Label layoutX="14.0" layoutY="142.0" text="Enter Speed" />
    </children>
 </Pane>
