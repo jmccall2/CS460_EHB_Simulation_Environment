@@ -5,8 +5,6 @@ import interfaces.BrakeInterface;
 import interfaces.ButtonInterface;
 import interfaces.GearInterface;
 import interfaces.SpeedInterface;
-import javafx.scene.paint.Color;
-import simulation.*;
 import simulation.engine.Camera;
 import simulation.engine.Engine;
 import simulation.engine.Message;
@@ -45,6 +43,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         _ehb = new EHB();
         _gui = new GUI();
         _car = new Car();
+        _car.setGUI(_gui);
         _car.addToWorld();
         Camera camera = new Camera();
         camera.attachToEntity(_car);

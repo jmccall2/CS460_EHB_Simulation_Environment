@@ -73,6 +73,12 @@ public class GUI
       String speedStr = Double.toString(speed);
       currSpeedField.setText(speedStr);
     }
+    
+    public void setPressure(double pressure)
+    {
+      String pressureStr = Double.toString(pressure);
+      pressureField.setText(pressureStr);
+    }
 
     public void setInitColor()
     {

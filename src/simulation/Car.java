@@ -1,11 +1,17 @@
 package simulation;
 
-import interfaces.*;
-import interfaces.GearInterface;
-import javafx.scene.paint.Color;
-import simulation.engine.*;
-
 import java.util.ArrayList;
+
+import interfaces.GearInterface;
+import interfaces.GearTypes;
+import interfaces.SpeedInterface;
+import javafx.scene.paint.Color;
+import simulation.engine.Animation;
+import simulation.engine.Engine;
+import simulation.engine.Message;
+import simulation.engine.MessageHandler;
+import simulation.engine.RenderEntity;
+import simulation.engine.Singleton;
 
 public class Car extends RenderEntity
 {
@@ -39,6 +45,7 @@ public class Car extends RenderEntity
     private static final double uk = .68; // coefficient of kinetic friction
     private static final double us = .9; // coefficient of static friction
     private static final double friction_threshold = us * 9.81 * mass;
+    private GUI guiRef;
 
     private ArrayList<Fire> _bringTheFire = new ArrayList<>();
 
@@ -68,6 +75,11 @@ public class Car extends RenderEntity
         _PressureGauge.setAsStaticActor(true);
         _PressureGauge.addToWorld();
 
+    }
+    
+    public void setGUI(GUI gui)
+    {
+      this.guiRef = gui;
     }
 
     private void _insertFire()
@@ -175,6 +187,8 @@ public class Car extends RenderEntity
             System.out.println("park");
         }
         System.out.println(speed);
+        double speedToDisplay = speed/0.448;
+        guiRef.setSpeed(speedToDisplay);
 //        System.out.println("change in momentum = " + (mass*lastSpeed - mass*speed));
     }
 
