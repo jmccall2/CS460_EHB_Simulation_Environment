@@ -127,6 +127,7 @@ public class EHB
 //        System.out.println("speed is " + _speed);
 //        System.out.println("Pressure perc is " + (closestResult/6.0)*100);
         BrakeInterface.setPressure((closestResult/6.0)*100);
+
       }
     }
     else
