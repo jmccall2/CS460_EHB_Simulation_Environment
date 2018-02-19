@@ -120,7 +120,7 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     @Override
     public void pulse(double deltaSeconds) {
-        _ehb.update();
+        _ehb.init();
         if(init)_gui.setInitColor();
         init = false;
     }
