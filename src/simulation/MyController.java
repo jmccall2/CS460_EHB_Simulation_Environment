@@ -1,7 +1,8 @@
 package simulation;
 
-import interfaces.ButtonColor;
-import interfaces.Gear;
+
+import interfaces.ButtonColorTypes;
+import interfaces.GearTypes;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -10,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -18,6 +21,7 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -36,10 +40,12 @@ public class MyController implements Initializable
 
   private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
 
+
+  private double MPH_TO_MS = 0.448;
   private boolean stopped = true;
   private ToggleGroup group = new ToggleGroup();
   private boolean brakeOff = true;
-  private ButtonColor _buttonColor = null;
+  private ButtonColorTypes _buttonColor = null;
   //True when car is in drive gear. This is the default gear.
   private boolean carDriving = true;
   private boolean inReverse = false;
@@ -58,7 +64,7 @@ public class MyController implements Initializable
     reverseButton.setUserData("R");
     // We need to start in some gear.
     driveButton.setSelected(true);
-    Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, Gear.DRIVE));
+    Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, GearTypes.DRIVE));
     statsButton.setOnAction((event) ->{
       _InvokeOtherStage();
     });
@@ -68,6 +74,7 @@ public class MyController implements Initializable
         if(carDriving)reverseButton.setDisable(true);
         stopped = false;
         start_stop_sim.setText("Stop simulation");
+        _setInitSpeed();
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
@@ -129,26 +136,36 @@ public class MyController implements Initializable
     });
 
     enterSpeed.setOnAction((event)->{
-      if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
-      {
-        double speed = -1;
-        try
-        {
-        
-          speed = Double.parseDouble(setSpeedField.getText());
-        }
-        catch(NumberFormatException ex)
-        {
-          
-        }
-        if(speed >= 0 && speed <=140)
-        {
-          if(inReverse)speed *=-1;
-          Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-        }
-      }
+
     });
   }
+
+  private void _setInitSpeed()
+  {
+    System.out.println("here");
+    System.out.println(setSpeedField.getText());
+    System.out.println(setSpeedField.getText().isEmpty());
+    if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
+    {
+      double speed = -1;
+      try
+      {
+
+        speed = Double.parseDouble(setSpeedField.getText());
+      }
+      catch(NumberFormatException ex)
+      {
+        System.out.println(ex);
+      }
+      if(speed >= 0 && speed <=140)
+      {
+        if(inReverse)speed *=-1;
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed*MPH_TO_MS));
+        System.out.println("SENDING SPEED " + speed);
+      }
+    }
+  }
+
 
   
   public void setInitButtonColor()
@@ -156,17 +173,17 @@ public class MyController implements Initializable
     handBrake.setStyle(_buildCSSString());
   }
 
-  private Gear _getGear(String s)
+  private GearTypes _getGear(String s)
   {
     switch(s)
     {
-      case "P": return Gear.PARK;
-      case "R": return Gear.REVERSE;
-      case "N": return Gear.NEUTRAL;
-      case "D": return Gear.DRIVE;
+      case "P": return GearTypes.PARK;
+      case "R": return GearTypes.REVERSE;
+      case "N": return GearTypes.NEUTRAL;
+      case "D": return GearTypes.DRIVE;
       default:
         System.err.println("UNSUPPORTED GEAR, returning drive.");
-        return Gear.DRIVE;
+        return GearTypes.DRIVE;
     }
   }
 
@@ -212,7 +229,7 @@ public class MyController implements Initializable
       switch(message.getMessageName())
       {
         case SimGlobals.SET_BUTTON_COLOR:
-          _buttonColor = (ButtonColor) message.getMessageData();
+          _buttonColor = (ButtonColorTypes) message.getMessageData();
           handBrake.setStyle(_buildCSSString());
           break;
 

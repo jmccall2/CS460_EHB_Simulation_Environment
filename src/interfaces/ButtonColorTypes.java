@@ -2,7 +2,7 @@ package interfaces;
 
 /* We can add however many colors we want, we just have to map them to actual FX colors later. */
 
-public enum ButtonColor
+public enum ButtonColorTypes
 {
     CYAN,
     BLUE,

@@ -8,24 +8,24 @@ import simulation.engine.MessageHandler;
 
 import java.net.URL;
 
-public class EHBButtonInterface
+public class ButtonInterface
 {
     Helper helper = new Helper();
     private static boolean _wasPressed;
 
-    public EHBButtonInterface()
+    public ButtonInterface()
     {
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
     }
 
-    static public void setColor(ButtonColor c)
+    static public void setColor(ButtonColorTypes c)
     {
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_BUTTON_COLOR, c));
     }
-    static public void play(ButtonSound s)
+    static public void play(ButtonSoundTypes s)
     {
-        URL url = EHBButtonInterface.class.getResource(_mapToSoundFile(s));
+        URL url = ButtonInterface.class.getResource(_mapToSoundFile(s));
         AudioClip sound = new AudioClip(url.toExternalForm());
         sound.play(1, 0, 1, 0, 1);
     }
@@ -37,7 +37,7 @@ public class EHBButtonInterface
 
     }
 
-    private static String _mapToSoundFile(ButtonSound sound)
+    private static String _mapToSoundFile(ButtonSoundTypes sound)
     {
         switch(sound)
         {
