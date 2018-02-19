@@ -21,7 +21,7 @@ public class EHB
   static
   {
     goodPressureProfile = new TreeMap<Long, Integer>();
-    goodPressureProfile.put(Long.valueOf(2), 2);
+    goodPressureProfile.put(Long.valueOf(20), 2);
     goodPressureProfile.put(Long.valueOf(30), 3);
     goodPressureProfile.put(Long.valueOf(40), 4);
     goodPressureProfile.put(Long.valueOf(50), 4);
@@ -112,6 +112,8 @@ public class EHB
         Integer closestResult = null;
         if (floor != null && ceiling != null)
         {
+//          System.out.println(floor.getKey());
+//          System.out.println(ceiling.getKey());
           closestResult = Math.abs(closestResult - floor.getKey()) < Math.abs(closestResult - ceiling.getKey())
             ? floor.getValue()
             : ceiling.getValue();
@@ -121,12 +123,14 @@ public class EHB
           closestResult = floor != null ? floor.getValue() : ceiling.getValue();
         }
 
-//        System.out.println(closestKey);
-        BrakeInterface.setPressure(closestResult);
+        System.out.println("speed is " + _speed);
+        System.out.println("Pressure perc is " + (closestResult/6.0)*100);
+        BrakeInterface.setPressure((closestResult/6.0)*100);
       }
     }
     else
     {
+      BrakeInterface.setPressure(0.0);
     }
   }
 }
