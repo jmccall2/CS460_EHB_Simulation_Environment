@@ -16,7 +16,7 @@ public class SpeedInterface
 
   public SpeedInterface()
   {
-    Engine.getMessagePump().signalInterest(SimGlobals.SET_SPEED, helper);
+    Engine.getMessagePump().signalInterest(SimGlobals.SPEED, helper);
   }
 
   public static double getSpeed()
@@ -28,7 +28,7 @@ public class SpeedInterface
   private static void setSpeed(double speed1)
   {
     speed = speed1;
-    Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED, speed));
+    Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
   }
 
   class Helper implements MessageHandler

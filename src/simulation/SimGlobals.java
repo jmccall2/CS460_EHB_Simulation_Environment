@@ -10,7 +10,6 @@ public class SimGlobals
 
     // Set values that are needed from the 'interfaces'
     // Such as speed and pressure
-    public static final String SET_SPEED = "set_speed";
     public static final String SET_PRESSURE = "set_pressure";
     public static final String SET_BUTTON_COLOR = "set_button_color";
 
@@ -27,8 +26,8 @@ public class SimGlobals
     public static final String ACTIVATE_BRAKE = "Activate brake.";
     //Hand brake deactivated.
     public static final String DEACTIVATE_BRAKE = "Deactivate brake.";
-    //Gear changed.
-    public static final String GEAR_CHANGE ="Gear change";
+    //GearTypes changed.
+    public static final String GEAR_CHANGE ="GearTypes change";
     //Speed entered by user.
     public static final String SPEED = "Speed.";
 }

@@ -1,8 +1,7 @@
 package simulation;
 
-import interfaces.Gear;
+import interfaces.*;
 import interfaces.GearInterface;
-import interfaces.SpeedInterface;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
@@ -11,7 +10,7 @@ public class Car extends RenderEntity
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
-    private Gear gear;
+    private GearTypes gear;
     //acceleration due to engine, max ~ 5 m/s^2
     private boolean _isActive;
     private double applied_brake_force = 0;
@@ -19,7 +18,7 @@ public class Car extends RenderEntity
     private double brake_percentage;
 
     private static final double mass = 1600; // in kg
-    private static final double h = 1/60; // update rate
+ //   private static final double h = 1.0/60; // update rate
     private static final double drag_c = 2; // drag coefficient
     private boolean _tractionLossLevel = false;
     private static final double uk = .68; // coefficient of kinetic friction
@@ -34,7 +33,7 @@ public class Car extends RenderEntity
         _animationSequence = new Animation(this, 0.03);
         _buildFrames();
         setLocationXYDepth(0, 215, -1);
-        setSpeedXY(100, 0); // There is something wrong with the scaling of the background and seed, i.e this does not look like 100 mph
+        setSpeedXY(speed, 0);
         setWidthHeight(200, 100);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
@@ -56,7 +55,24 @@ public class Car extends RenderEntity
         _animationSequence.setCategory("car_drive");
     }
 
-    private void update(){
+    private void update(double deltaSeconds){
+        float idle_a = 1;
+        if(gear == GearTypes.REVERSE){
+            idle_a = -2.196f;
+        } else if(gear == GearTypes.NEUTRAL){
+            idle_a = 0.0f;
+        } else if(gear == GearTypes.DRIVE){
+            idle_a = 2.196f;
+        } else if(gear == GearTypes.PARK){
+            idle_a = 0.0f;
+        }
+
+        int speedMod = 1;
+        if(speed < 0) speedMod = -1;
+
+        applied_brake_force  = 167* brake_percentage;
+//        System.out.println("Brake force: " + applied_brake_force);
+//        System.out.println("Speed: " + speed);
 
         // actual brake force
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
@@ -64,25 +80,29 @@ public class Car extends RenderEntity
             _tractionLossLevel = true;
             actual_brake_force = uk * mass * 9.81;
         }
-
+//        System.out.println("actual brake force: " + actual_brake_force);
         double actual_acceleration;
 
-        if(applied_brake_force > 0 || gear==Gear.NEUTRAL) {
-            actual_acceleration = - (drag_c * speed * speed) - (actual_brake_force / mass) - .02 * 9.8;
+        int brake;
+        if(Math.abs(speed) < .01) brake = 0;
+        else brake = 1;
+
+        if(speed < 1.01) {
+            System.out.println("first");
+            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
         }
-        else {
+        else if(applied_brake_force == 0){
+            System.out.println("second");
             actual_acceleration = 0;
         }
+        else {
+            System.out.println("third");
+            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8));
+        }
 
-        speed = speed + actual_acceleration * h;
+//        actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
 
-        // incremental
-//        if actual_brake_force <= f_:
-//        fb += f_brake *h
-//        print('fb = {}',fb)
-
-        // velocity should not be negative!
-        if (speed < 0) speed = 0;
+        speed = speed + actual_acceleration * deltaSeconds;
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -93,8 +113,10 @@ public class Car extends RenderEntity
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
-        update();
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED,this.speed));
+        update(deltaSeconds);
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
+       // System.out.println("speed: " + speed);
+        setSpeedXY(speed*45,0);
         if(_isActive)
         {
             delay++;
@@ -117,14 +139,16 @@ public class Car extends RenderEntity
             switch (message.getMessageName())
             {
                 case SimGlobals.GEAR_CHANGE:
-                    gear = (Gear) message.getMessageData();
+                    gear = (GearTypes) message.getMessageData();
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
+                    System.out.println("Brake: " + brake_percentage);
 		    break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
+                    System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;

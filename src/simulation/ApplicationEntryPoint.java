@@ -1,7 +1,8 @@
-package ehb;
+package simulation;
 
+import ehb.EHB;
 import interfaces.BrakeInterface;
-import interfaces.EHBButtonInterface;
+import interfaces.ButtonInterface;
 import interfaces.GearInterface;
 import interfaces.SpeedInterface;
 import javafx.scene.paint.Color;
@@ -37,7 +38,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         // instances of the interfaces so that they do get creates
         new BrakeInterface();
         new SpeedInterface();
-        new EHBButtonInterface();
+        new ButtonInterface();
         new GearInterface();
 
         Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_PULSE_ENTITY,this));
@@ -54,7 +55,7 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     private void _registerSimulationMessages()
     {
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_SPEED));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));

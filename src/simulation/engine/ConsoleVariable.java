@@ -12,6 +12,7 @@ public class ConsoleVariable {
     private String _cvarValue; // Raw String value
     private int _cvarIntVal; // Defaults to -1 if _cvarValue cannot be casted
     private double _cvarFloatVal; // Defaults to -1.0 if _cvarValue cannot be casted
+    private boolean _cvarBoolVal = false; // Defaults to false
     private int _numEdits = 0; // Number of times this variable was edited
 
     public ConsoleVariable(String name, String defaultValue)
@@ -83,6 +84,11 @@ public class ConsoleVariable {
         return _cvarFloatVal;
     }
 
+    public boolean getcvarAsBool()
+    {
+        return _cvarBoolVal;
+    }
+
     /**
      * Sets the value of the console variable (Ex: "127")
      */
@@ -114,6 +120,15 @@ public class ConsoleVariable {
         {
             _cvarIntVal = -1;
             _cvarFloatVal = -1.0;
+        }
+        // Try to cast it to a boolean
+        try
+        {
+            _cvarBoolVal = Boolean.parseBoolean(_cvarValue);
+        }
+        catch (Exception e)
+        {
+            _cvarBoolVal = false;
         }
     }
 

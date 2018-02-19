@@ -1,6 +1,6 @@
 package interfaces;
 
-public enum ButtonSound
+public enum ButtonSoundTypes
 {
   ENGAGED,
   DISENGAGED;

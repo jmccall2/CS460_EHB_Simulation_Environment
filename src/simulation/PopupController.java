@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
@@ -16,22 +17,34 @@ public class PopupController implements Initializable
   @FXML private TextField maxSpeedField;
   @FXML private ChoiceBox<String> gearchangeList;
   @FXML private ChoiceBox<String> gearChanges;
+  @FXML private Button deleteButton;
   ObservableList<String> newList;
   ArrayList<String> newList2;
-
-  public PopupController()
-  {
-    // TODO Auto-generated constructor stub
-  }
-
+  GUI guiRef;
+  String itemToDelete = "";
+  
   @Override
   public void initialize(URL location, ResourceBundle resources)
   {
+    deleteButton.setDisable(true);
     addStates();
     gearChanges.getItems().addAll(newList2);
-    gearChanges.getSelectionModel().selectedItemProperty().addListener( (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-      System.out.println(newValue) ;
-      });
+    gearChanges.getSelectionModel().selectedItemProperty().addListener( 
+        (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+          addNewStates(newValue);
+          guiRef.setGearState(newValue);
+    });
+    gearchangeList.getSelectionModel().selectedItemProperty().addListener( 
+        (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+          itemToDelete = newValue;
+          deleteButton.setDisable(false);
+    });
+    deleteButton.setOnAction((event)-> {
+      gearchangeList.getItems().remove(itemToDelete);
+      guiRef.removeGearState(itemToDelete);
+      itemToDelete = "";
+      deleteButton.setDisable(true);
+    });
   }
   
   private void addStates()
@@ -50,14 +63,38 @@ public class PopupController implements Initializable
     gearStates.add("Neutral -> Reverse");
     gearStates.add("Neutral -> Drive");
     newList2 = gearStates;
-    //newList = FXCollections.observableArrayList(gearStates);
   }
   
   private void addNewStates(String state)
   {
-    ArrayList<String> gearStates = new ArrayList<>();
-    gearStates.add(state);
-    gearchangeList.getItems().addAll(gearStates);
+    if(!gearchangeList.getItems().contains(state))
+    {
+      gearchangeList.getItems().add(state);
+    }
   }
+  
+  public void setGui(GUI gui)
+  {
+    this.guiRef = gui;
+  }
+  
+  public double getMaxSpeed()
+  {
+    double maxSpeed = 140;
+    if(maxSpeedField.getText() != null && !maxSpeedField.getText().isEmpty())
+    {
+      try
+      {
 
+        maxSpeed = Double.parseDouble(maxSpeedField.getText());
+        return maxSpeed;
+      }
+      catch(NumberFormatException ex)
+      {
+        System.out.println(ex);
+      }
+    }
+    return maxSpeed;
+  }
+  
 }

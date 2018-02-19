@@ -34,12 +34,15 @@ public class GUI
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
       controller = new MyController();
+      controller.setGui(this);
       controller2 = new PopupController();
+      controller2.setGui(this);
       _addFXMLCode1();
       _addFXMLCode2();
       popUpStage.setScene(new Scene(popupBox));
       popUpStage.setOnCloseRequest(event ->
       {
+        controller.setMaxSpeed(controller2.getMaxSpeed());
         popUpStage.close();
       });
       popUpStage.setTitle("Set Gear States");
@@ -105,6 +108,25 @@ public class GUI
       }
       popupBox.getChildren().setAll(page);
     }
-
+    
+    public void activatePopup()
+    {
+      popUpStage.show();
+    }
+    
+    public void setGearState(String state)
+    {
+      controller.setRestrictedGear(state);
+    }
+    
+    public void removeGearState(String state)
+    {
+      controller.removeRestrictedGear(state);
+    }
+    
+    public void setMaxSpeed(double speed)
+    {
+      controller.setMaxSpeed(speed);
+    }
 
 }

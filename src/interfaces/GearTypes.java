@@ -1,13 +1,11 @@
 package interfaces;
 
-public enum Gear
+public enum GearTypes
 {
     PARK,
     REVERSE,
     NEUTRAL,
-    DRIVE,
-    FIRST,
-    SECOND;
+    DRIVE;
 
     @Override
     public String toString() {
