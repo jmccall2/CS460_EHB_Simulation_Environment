@@ -57,6 +57,19 @@ public class Car extends RenderEntity
     }
 
     private void update(){
+        float idle_a = 1;
+        if(gear == GearTypes.REVERSE){
+            idle_a = -2.196f;
+        } else if(gear == GearTypes.NEUTRAL){
+            idle_a = 0.0f;
+        } else if(gear == GearTypes.DRIVE){
+            idle_a = 2.196f;
+        } else if(gear == GearTypes.PARK){
+            idle_a = 0.0f;
+        }
+
+        int speedMod = 1;
+        if(speed < 0) speedMod = -1;
 
         // actual brake force
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
@@ -67,22 +80,20 @@ public class Car extends RenderEntity
 
         double actual_acceleration;
 
-        if(applied_brake_force > 0 || gear== GearTypes.NEUTRAL) {
-            actual_acceleration = - (drag_c * speed * speed) - (actual_brake_force / mass) - .02 * 9.8;
-        }
-        else {
-            actual_acceleration = 0;
-        }
+//        if(actual_brake_force > 0) { //|| gear== GearTypes.NEUTRAL
+//            actual_acceleration = speedMod*(-(drag_c * speed * speed) - (actual_brake_force / mass) - (.02 * 9.8))+idle_a;
+//        }
+//        else {
+//            actual_acceleration = 0;
+//        }
+
+        int brake;
+        if(Math.abs(speed) < .01) brake = 0;
+        else brake = 1;
+
+        actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
 
         speed = speed + actual_acceleration * h;
-
-        // incremental
-//        if actual_brake_force <= f_:
-//        fb += f_brake *h
-//        print('fb = {}',fb)
-
-        // velocity should not be negative!
-        if (speed < 0) speed = 0;
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
