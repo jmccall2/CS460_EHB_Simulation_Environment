@@ -189,6 +189,7 @@ public class Car extends RenderEntity
         System.out.println(speed);
         double speedToDisplay = speed/0.448;
         guiRef.setSpeed(speedToDisplay);
+        guiRef.setPressure(brake_percentage);
 //        System.out.println("change in momentum = " + (mass*lastSpeed - mass*speed));
     }
 

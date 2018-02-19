@@ -3,6 +3,7 @@ package simulation;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
 import interfaces.ButtonColorTypes;
 import interfaces.GearTypes;
 import javafx.beans.value.ChangeListener;
@@ -100,6 +101,9 @@ public class MyController implements Initializable
         neutralButton.setDisable(false);
         driveButton.setDisable(false);
         gearButton.setDisable(false);
+        brakeOff = true;
+        handBrake.setText("Activate Brake");
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       } 
     });
     handBrake.setOnAction((event) -> {
