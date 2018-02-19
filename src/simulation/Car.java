@@ -22,6 +22,12 @@ public class Car extends RenderEntity
     private double brake_percentage;
     private boolean pressure_set = false;
     private boolean first_start = false;
+    private int START_Y = 215;
+    private double _wobbleMinInput = 0.0;
+    private double _wobbleMaxInput = Math.PI*2;
+    private double _wobbleCurrentInput = _wobbleMinInput;
+    private double _wobbleInputStepSize = _wobbleMaxInput / 500;
+
 
     private BarEntity _SpeedGauge;
     private BarEntity _PressureGauge;
@@ -29,7 +35,7 @@ public class Car extends RenderEntity
     private static final double mass = 1600; // in kg
  //   private static final double h = 1.0/60; // update rate
     private static final double drag_c = 2; // drag coefficient
-    private boolean _tractionLossLevel = false;
+    private boolean _startTractionLossAnimation = false;
     private static final double uk = .68; // coefficient of kinetic friction
     private static final double us = .9; // coefficient of static friction
     private static final double friction_threshold = us * 9.81 * mass;
@@ -44,7 +50,7 @@ public class Car extends RenderEntity
          _animationSequence = new Animation(this, 0);
 
         _buildFrames();
-        setLocationXYDepth(0, 215, -1);
+        setLocationXYDepth(0, START_Y, -1);
         setSpeedXY(speed, 0);
         setWidthHeight(200, 100);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
@@ -70,7 +76,7 @@ public class Car extends RenderEntity
         // lol
         int particlesPerSecond = 1000;
         int iterations = (int)(speed);
-//        System.out.println("SPEED = " + speed);
+        System.out.println("SPEED = " + speed);
         for (int i = 0; i < iterations; ++i) {
             Fire fire = new Fire(particlesPerSecond, getLocationX(), getLocationY() + getHeight() / 2, getDepth() + 1,getHeight() / 2, -1, 0);
             fire.addToWorld();
@@ -122,12 +128,11 @@ public class Car extends RenderEntity
         if(speed < 0) speedMod = -1;
 
         applied_brake_force  = 167* brake_percentage;
-
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
-	    else {
-            _tractionLossLevel = true;
-            actual_brake_force = uk * mass * 9.81;
-        }
+        else actual_brake_force = uk * mass * 9.81;
+
+        if (applied_brake_force > friction_threshold - 4000)  _startTractionLossAnimation = true;
+        else _startTractionLossAnimation = false;
 
         double actual_acceleration;
 
@@ -145,40 +150,52 @@ public class Car extends RenderEntity
 
         double lastSpeed = speed;
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
-        System.out.println("acceleration : " + actual_acceleration);
-        System.out.println("idle_a : " + idle_a);
-        System.out.println("speedMod: " + speedMod);
-        System.out.println("Brake : " + brake);
+
         if(gear == GearTypes.REVERSE){
             if(speed <= 0 && nextSpeed >= 0)speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && actual_acceleration < 0) speed=0;
             else speed = nextSpeed;
-//            System.out.println("reverse");
+            System.out.println("reverse");
         } else if(gear == GearTypes.NEUTRAL){
             if(speed >= 0 && nextSpeed <= 0) speed = 0;
             else if(speed <= 0 && nextSpeed >= 0) speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && Math.abs(speed) < 1) speed=0;
             else speed = nextSpeed;
-//            System.out.println("neutral");
+            System.out.println("neutral");
         } else if(gear == GearTypes.DRIVE){
             if(speed >= 0 && nextSpeed < 0) speed = 0;
             else if(speed == 0 && pressure_set)speed = 0;
             else if(atomic_active && actual_acceleration > 0)speed=0;
             else speed = nextSpeed;
-//            System.out.println("drive");
+            System.out.println("drive");
         } else if(gear == GearTypes.PARK){
             speed = 0;
-//            System.out.println("park");
+            System.out.println("park");
         }
         System.out.println(speed);
 //        System.out.println("change in momentum = " + (mass*lastSpeed - mass*speed));
     }
 
-    // This variables are just for an example. TEMPORARY until data is available.
-    // The tire track in the future will have have tire tracks with different curvatures
-    // for different levels of traction loss.
+
+    private void _wobble()
+    {
+        double wobblePeriod;
+        double wobble;
+        _wobbleCurrentInput+=_wobbleInputStepSize;
+        if(_wobbleCurrentInput > _wobbleMaxInput) _wobbleCurrentInput = _wobbleMinInput;
+        if(speed < 63 && speed > 50) wobblePeriod = 1;
+        else if(speed < 50 && speed > 35) wobblePeriod = 5;
+        else if (speed < 35 && speed > 20) wobblePeriod = 10;
+        else if (speed < 20 && speed > 10) wobblePeriod = 15;
+        else wobblePeriod = 20;
+        wobble  =(speed/20)*Math.sin(wobblePeriod*_wobbleCurrentInput);
+        setRotation(wobble);
+        setLocationXYDepth(getLocationX(), getLocationY() + wobble, -1);
+    }
+
+
     int delay = 0;
     int xOffset = 0;
     @Override
@@ -206,23 +223,13 @@ public class Car extends RenderEntity
             _removeFire();
         }
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
-       // System.out.println("speed: " + speed);
         setSpeedXY(speed*45,0);
         _animationSequence.setAnimationRate(1.91/(13*((speed == 0) ? 0.0001 : speed)));
         _SpeedGauge.updateState(speed);
         _PressureGauge.updateState(brake_percentage);
-       // _animationSequence.setAnimationRate(100);
-        if(_isActive)
-        {
-            delay++;
-            if (delay == 25) {
-                delay = 0;
-//                System.out.println("adding tire track.");
-           //     System.out.println("adding tire track.");
-                xOffset = 5;
-                TireTrack tt = new TireTrack(this.getLocationX() +xOffset , this.getLocationY() + 55, 1);
-                tt.addToWorld();
-            }
+        if(speed > 5 && _startTractionLossAnimation) {
+            new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
+            _wobble();
         }
 
     }
@@ -239,6 +246,7 @@ public class Car extends RenderEntity
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
+                    if(brake_percentage != 0)  pressure_set = true;
                     if(brake_percentage != 0) {
                         pressure_set = true;
                         if(!first_start) first_start = true;
@@ -248,7 +256,6 @@ public class Car extends RenderEntity
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
-//                    System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
