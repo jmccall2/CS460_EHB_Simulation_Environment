@@ -71,42 +71,38 @@ public class Car extends RenderEntity
         if(speed < 0) speedMod = -1;
 
         applied_brake_force  = 167* brake_percentage;
-        System.out.println("Brake force: " + applied_brake_force);
-        System.out.println("Speed: " + speed);
+//        System.out.println("Brake force: " + applied_brake_force);
+//        System.out.println("Speed: " + speed);
+
         // actual brake force
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
 	    else {
             _tractionLossLevel = true;
             actual_brake_force = uk * mass * 9.81;
         }
-        System.out.println("actual brake force: " + actual_brake_force);
+//        System.out.println("actual brake force: " + actual_brake_force);
         double actual_acceleration;
-
-//        if(actual_brake_force > 0) { //|| gear== GearTypes.NEUTRAL
-//            actual_acceleration = speedMod*(-(drag_c * speed * speed) - (actual_brake_force / mass) - (.02 * 9.8))+idle_a;
-//        }
-//        else {
-//            actual_acceleration = 0;
-//        }
 
         int brake;
         if(Math.abs(speed) < .01) brake = 0;
         else brake = 1;
 
-        actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
+        if(speed < 1.01) {
+            System.out.println("first");
+            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
+        }
+        else if(applied_brake_force == 0){
+            System.out.println("second");
+            actual_acceleration = 0;
+        }
+        else {
+            System.out.println("third");
+            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8));
+        }
+
+//        actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
 
         speed = speed + actual_acceleration * deltaSeconds;
-       // System.out.println("h: " + h);
-        //System.out.printf("%.12f\n", (actual_acceleration * h));
-        //System.out.println("change: " +(actual_acceleration * h));
-        //System.out.println("new speed: " + speed);
-        //System.out.println();
-        // incremental
-//        if actual_brake_force <= f_:
-//        fb += f_brake *h
-//        print('fb = {}',fb)
-
-        // velocity should not be negative!
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
