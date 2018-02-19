@@ -5,12 +5,15 @@ import interfaces.GearInterface;
 import javafx.scene.paint.Color;
 import simulation.engine.*;
 
+import java.util.ArrayList;
+
 public class Car extends RenderEntity
 {
 
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
+    private double oldSpeed; // feel free to delete this later
     private GearTypes gear;
     //acceleration due to engine, max ~ 5 m/s^2
     private boolean _isActive;
@@ -30,6 +33,8 @@ public class Car extends RenderEntity
     private static final double us = .9; // coefficient of static friction
     private static final double friction_threshold = us * 9.81 * mass;
 
+    private ArrayList<Fire> _bringTheFire = new ArrayList<>();
+
     public Car()
     {
         // The second parameter to the Animation is the rate of change
@@ -46,6 +51,7 @@ public class Car extends RenderEntity
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
+        oldSpeed = speed;
 
         _SpeedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240, BarEntityModes.SPEED);
         _SpeedGauge.setAsStaticActor(true);
@@ -55,6 +61,31 @@ public class Car extends RenderEntity
         _PressureGauge.setAsStaticActor(true);
         _PressureGauge.addToWorld();
 
+    }
+
+    private void _insertFire()
+    {
+        _removeFire();
+        // lol
+        int particlesPerSecond = 1000;
+        int iterations = (int)(speed);
+        System.out.println("SPEED = " + speed);
+        for (int i = 0; i < iterations; ++i) {
+            Fire fire = new Fire(particlesPerSecond, getLocationX(), getLocationY() + getHeight() / 2, getDepth() + 1,getHeight() / 2, -1, 0);
+            fire.addToWorld();
+            attachActor(fire);
+            _bringTheFire.add(fire);
+        }
+    }
+
+    private void _removeFire()
+    {
+        for (Fire fire : _bringTheFire)
+        {
+            removeActor(fire);
+            fire.removeFromWorld();
+        }
+        _bringTheFire.clear();
     }
 
     private void _buildFrames()
@@ -146,6 +177,26 @@ public class Car extends RenderEntity
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
         update(deltaSeconds);
+        // Add the fire
+        // we should probably remove this lol
+        boolean calcMovement = Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).getcvarAsBool();
+        if (calcMovement && speed < 2)
+        {
+            _removeFire();
+        }
+        else if (calcMovement && _bringTheFire.size() == 0)
+        {
+            _insertFire();
+        }
+        else if (calcMovement && oldSpeed != speed)
+        {
+            _insertFire();
+            oldSpeed = speed;
+        }
+        else if (!calcMovement && _bringTheFire.size() > 0)
+        {
+            _removeFire();
+        }
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
        // System.out.println("speed: " + speed);
         setSpeedXY(speed*45,0);
