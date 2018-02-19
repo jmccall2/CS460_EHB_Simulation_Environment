@@ -1,8 +1,7 @@
 package simulation;
 
-import interfaces.GearTypes;
+import interfaces.*;
 import interfaces.GearInterface;
-import interfaces.SpeedInterface;
 import simulation.engine.*;
 
 public class Car extends RenderEntity
@@ -19,7 +18,7 @@ public class Car extends RenderEntity
     private double brake_percentage;
 
     private static final double mass = 1600; // in kg
-    private static final double h = 1/60; // update rate
+ //   private static final double h = 1.0/60; // update rate
     private static final double drag_c = 2; // drag coefficient
     private boolean _tractionLossLevel = false;
     private static final double uk = .68; // coefficient of kinetic friction
@@ -34,7 +33,7 @@ public class Car extends RenderEntity
         _animationSequence = new Animation(this, 0.03);
         _buildFrames();
         setLocationXYDepth(0, 215, -1);
-        setSpeedXY(100, 0); // There is something wrong with the scaling of the background and seed, i.e this does not look like 100 mph
+        setSpeedXY(speed, 0);
         setWidthHeight(200, 100);
         Engine.getMessagePump().signalInterest(SimGlobals.ACTIVATE_BRAKE, helper);
         Engine.getMessagePump().signalInterest(SimGlobals.DEACTIVATE_BRAKE,helper);
@@ -56,7 +55,7 @@ public class Car extends RenderEntity
         _animationSequence.setCategory("car_drive");
     }
 
-    private void update(){
+    private void update(double deltaSeconds){
         float idle_a = 1;
         if(gear == GearTypes.REVERSE){
             idle_a = -2.196f;
@@ -71,13 +70,16 @@ public class Car extends RenderEntity
         int speedMod = 1;
         if(speed < 0) speedMod = -1;
 
+        applied_brake_force  = 167* brake_percentage;
+        System.out.println("Brake force: " + applied_brake_force);
+        System.out.println("Speed: " + speed);
         // actual brake force
         if(applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
 	    else {
             _tractionLossLevel = true;
             actual_brake_force = uk * mass * 9.81;
         }
-
+        System.out.println("actual brake force: " + actual_brake_force);
         double actual_acceleration;
 
 //        if(actual_brake_force > 0) { //|| gear== GearTypes.NEUTRAL
@@ -93,7 +95,18 @@ public class Car extends RenderEntity
 
         actual_acceleration = speedMod*(-(drag_c * speed * speed) - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
 
-        speed = speed + actual_acceleration * h;
+        speed = speed + actual_acceleration * deltaSeconds;
+       // System.out.println("h: " + h);
+        //System.out.printf("%.12f\n", (actual_acceleration * h));
+        //System.out.println("change: " +(actual_acceleration * h));
+        //System.out.println("new speed: " + speed);
+        //System.out.println();
+        // incremental
+//        if actual_brake_force <= f_:
+//        fb += f_brake *h
+//        print('fb = {}',fb)
+
+        // velocity should not be negative!
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -104,8 +117,10 @@ public class Car extends RenderEntity
     @Override
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
-        update();
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SET_SPEED,this.speed));
+        update(deltaSeconds);
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
+       // System.out.println("speed: " + speed);
+        setSpeedXY(speed*45,0);
         if(_isActive)
         {
             delay++;
@@ -132,10 +147,12 @@ public class Car extends RenderEntity
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
+                    System.out.println("Brake: " + brake_percentage);
 		    break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
+                    System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;

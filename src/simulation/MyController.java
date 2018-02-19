@@ -1,5 +1,6 @@
 package simulation;
 
+
 import interfaces.ButtonColorTypes;
 import interfaces.GearTypes;
 import javafx.beans.value.ChangeListener;
@@ -10,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -18,6 +21,7 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -68,6 +72,7 @@ public class MyController implements Initializable
         if(carDriving)reverseButton.setDisable(true);
         stopped = false;
         start_stop_sim.setText("Stop simulation");
+        _setInitSpeed();
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
@@ -129,26 +134,36 @@ public class MyController implements Initializable
     });
 
     enterSpeed.setOnAction((event)->{
-      if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
-      {
-        double speed = -1;
-        try
-        {
-        
-          speed = Double.parseDouble(setSpeedField.getText());
-        }
-        catch(NumberFormatException ex)
-        {
-          
-        }
-        if(speed >= 0 && speed <=140)
-        {
-          if(inReverse)speed *=-1;
-          Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-        }
-      }
+
     });
   }
+
+  private void _setInitSpeed()
+  {
+    System.out.println("here");
+    System.out.println(setSpeedField.getText());
+    System.out.println(setSpeedField.getText().isEmpty());
+    if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
+    {
+      double speed = -1;
+      try
+      {
+
+        speed = Double.parseDouble(setSpeedField.getText());
+      }
+      catch(NumberFormatException ex)
+      {
+        System.out.println(ex);
+      }
+      if(speed >= 0 && speed <=140)
+      {
+        if(inReverse)speed *=-1;
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
+        System.out.println("SENDING SPEED " + speed);
+      }
+    }
+  }
+
 
   
   public void setInitButtonColor()
