@@ -102,6 +102,7 @@ public class Car extends RenderEntity
 
         if(!pressure_set && gear != GearTypes.NEUTRAL){
             actual_acceleration=0;
+            System.out.println("pressure not set");
         }
         else{
             actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
@@ -114,23 +115,26 @@ public class Car extends RenderEntity
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && actual_acceleration < 0) speed=0;
             else speed = nextSpeed;
+            System.out.println("reverse");
         } else if(gear == GearTypes.NEUTRAL){
             if(speed >= 0 && nextSpeed <= 0) speed = 0;
             else if(speed <= 0 && nextSpeed >= 0) speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && Math.abs(speed) < 1) speed=0;
             else speed = nextSpeed;
-            System.out.println(speed);
+            System.out.println("neutral");
         } else if(gear == GearTypes.DRIVE){
             if(speed >= 0 && nextSpeed <= 0)speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && actual_acceleration > 0) speed=0;
             else speed = nextSpeed;
+            System.out.println("drive");
         } else if(gear == GearTypes.PARK){
             speed = 0;
+            System.out.println("park");
         }
-
-        speed = speed + actual_acceleration * deltaSeconds;
+        System.out.println(speed);
+//        speed = speed + actual_acceleration * deltaSeconds;
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -175,15 +179,14 @@ public class Car extends RenderEntity
                     gear = (GearTypes) message.getMessageData();
 		    break;
                 case SimGlobals.SET_PRESSURE:
-                    pressure_set = true;
                     brake_percentage = (Double) message.getMessageData();
-//                    System.out.println("Brake: " + brake_percentage);
-                //    System.out.println("Brake: " + brake_percentage);
+                    if(brake_percentage != 0)  pressure_set = true;
+                    System.out.println("Brake: " + brake_percentage);
 		    break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
-              //      System.out.println("Speed set: " + speed);
+                    System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
