@@ -109,22 +109,23 @@ public class EHB
         Long key = Long.valueOf((int)_speed);
         Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
         Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
-        Integer closestResult = 50;
+
+        double closestResult;
         if (floor != null && ceiling != null)
         {
-//          System.out.println(floor.getKey());
-//          System.out.println(ceiling.getKey());
-          closestResult = Math.abs(closestResult - floor.getKey()) < Math.abs(closestResult - ceiling.getKey())
-            ? floor.getValue()
-            : ceiling.getValue();
+          closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
         }
-        else if (floor != null || ceiling != null)
+        else if (floor != null)
         {
-          closestResult = floor != null ? floor.getValue() : ceiling.getValue();
+          closestResult = floor.getValue();
+        }
+        else
+        {
+          closestResult = ceiling.getValue();
         }
 
-        System.out.println("speed is " + _speed);
-        System.out.println("Pressure perc is " + (closestResult/6.0)*100);
+//        System.out.println("speed is " + _speed);
+//        System.out.println("Pressure perc is " + (closestResult/6.0)*100);
         BrakeInterface.setPressure((closestResult/6.0)*100);
       }
     }
