@@ -1,5 +1,8 @@
 package simulation;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import interfaces.ButtonColor;
 import interfaces.Gear;
 import javafx.beans.value.ChangeListener;
@@ -9,7 +12,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -17,9 +24,6 @@ import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 //Controller for FXML pane.
 public class MyController implements Initializable
@@ -33,7 +37,6 @@ public class MyController implements Initializable
   @FXML private RadioButton reverseButton;
   @FXML private RadioButton neutralButton;
   @FXML private RadioButton driveButton;
-
   private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
 
   private boolean stopped = true;
@@ -46,7 +49,7 @@ public class MyController implements Initializable
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
-  {
+  { 
     Engine.getMessagePump().signalInterest(SimGlobals.SET_BUTTON_COLOR, _buttonMessageHelper);
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
@@ -73,6 +76,7 @@ public class MyController implements Initializable
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
         parkButton.setDisable(true);
         enterSpeed.setDisable(true);
+        setSpeedField.setDisable(true);
       }
       else if(!stopped)
       {
@@ -84,6 +88,7 @@ public class MyController implements Initializable
         parkButton.setDisable(false);
         enterSpeed.setDisable(false);
         reverseButton.setDisable(false);
+        setSpeedField.setDisable(false);
       } 
     });
     handBrake.setOnAction((event) -> {
@@ -149,7 +154,6 @@ public class MyController implements Initializable
       }
     });
   }
-
   
   public void setInitButtonColor()
   {

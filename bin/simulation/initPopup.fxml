@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="280.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ChoiceBox fx:id="gearChanges" layoutX="57.0" layoutY="94.0" prefWidth="150.0" styleClass="button" stylesheets="@DarkTheme.css" />
+      <Label layoutX="35.0" layoutY="63.0" text="Set Disallowed Gear Changes" />
+      <Label layoutX="48.0" layoutY="178.0" text="Disallowed Gear Changes" />
+      <ChoiceBox fx:id="gearchangeList" layoutX="57.0" layoutY="209.0" prefWidth="150.0" styleClass="button" stylesheets="@DarkTheme.css" />
+      <Label layoutX="75.0" layoutY="293.0" text="Maximum Speed" />
+      <TextField fx:id="maxSpeedField" layoutX="57.0" layoutY="323.0" prefHeight="37.0" prefWidth="150.0" />
+   </children>
+</Pane>
