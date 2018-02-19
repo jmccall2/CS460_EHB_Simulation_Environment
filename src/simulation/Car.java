@@ -21,6 +21,7 @@ public class Car extends RenderEntity
     private double actual_brake_force;
     private double brake_percentage;
     private boolean pressure_set = false;
+    private boolean first_start = false;
 
     private BarEntity _SpeedGauge;
     private BarEntity _PressureGauge;
@@ -69,7 +70,7 @@ public class Car extends RenderEntity
         // lol
         int particlesPerSecond = 1000;
         int iterations = (int)(speed);
-        System.out.println("SPEED = " + speed);
+//        System.out.println("SPEED = " + speed);
         for (int i = 0; i < iterations; ++i) {
             Fire fire = new Fire(particlesPerSecond, getLocationX(), getLocationY() + getHeight() / 2, getDepth() + 1,getHeight() / 2, -1, 0);
             fire.addToWorld();
@@ -105,11 +106,14 @@ public class Car extends RenderEntity
 
         float idle_a = 1;
         if(gear == GearTypes.REVERSE){
-            idle_a = -2.196f;
+//            idle_a = -2.196f;
+            idle_a = -(float)(4.0f*(drag_c/mass)) + (9.81f*.02f);
         } else if(gear == GearTypes.NEUTRAL){
             idle_a = 0.0f;
         } else if(gear == GearTypes.DRIVE){
-            idle_a = 2.196f;
+//            idle_a = 2.196f;
+//            idle_a = 5.0f;
+            idle_a = (float)(4.0f*(drag_c/mass)) + (9.81f*.02f);
         } else if(gear == GearTypes.PARK){
             idle_a = 0.0f;
         }
@@ -128,44 +132,48 @@ public class Car extends RenderEntity
         double actual_acceleration;
 
         int brake;
-        if(speed==0) brake = 0;
-        else brake = 1;
 
-        if(!pressure_set && gear != GearTypes.NEUTRAL){
+        brake = 1;
+        if(speed==0) brake = 0;
+
+        if(!pressure_set && gear != GearTypes.NEUTRAL && !first_start){
             actual_acceleration=0;
-            System.out.println("pressure not set");
         }
         else{
-            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.8))+idle_a;
+            actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.81))+idle_a;
         }
 
+        double lastSpeed = speed;
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
-
+        System.out.println("acceleration : " + actual_acceleration);
+        System.out.println("idle_a : " + idle_a);
+        System.out.println("speedMod: " + speedMod);
+        System.out.println("Brake : " + brake);
         if(gear == GearTypes.REVERSE){
             if(speed <= 0 && nextSpeed >= 0)speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && actual_acceleration < 0) speed=0;
             else speed = nextSpeed;
-            System.out.println("reverse");
+//            System.out.println("reverse");
         } else if(gear == GearTypes.NEUTRAL){
             if(speed >= 0 && nextSpeed <= 0) speed = 0;
             else if(speed <= 0 && nextSpeed >= 0) speed = 0;
             else if(speed == 0 && pressure_set) speed = 0;
             else if(atomic_active && Math.abs(speed) < 1) speed=0;
             else speed = nextSpeed;
-            System.out.println("neutral");
+//            System.out.println("neutral");
         } else if(gear == GearTypes.DRIVE){
-            if(speed >= 0 && nextSpeed <= 0)speed = 0;
-            else if(speed == 0 && pressure_set) speed = 0;
-            else if(atomic_active && actual_acceleration > 0) speed=0;
+            if(speed >= 0 && nextSpeed < 0) speed = 0;
+            else if(speed == 0 && pressure_set)speed = 0;
+            else if(atomic_active && actual_acceleration > 0)speed=0;
             else speed = nextSpeed;
-            System.out.println("drive");
+//            System.out.println("drive");
         } else if(gear == GearTypes.PARK){
             speed = 0;
-            System.out.println("park");
+//            System.out.println("park");
         }
         System.out.println(speed);
-//        speed = speed + actual_acceleration * deltaSeconds;
+//        System.out.println("change in momentum = " + (mass*lastSpeed - mass*speed));
     }
 
     // This variables are just for an example. TEMPORARY until data is available.
@@ -231,13 +239,16 @@ public class Car extends RenderEntity
 		    break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
-                    if(brake_percentage != 0)  pressure_set = true;
-                    System.out.println("Brake: " + brake_percentage);
+                    if(brake_percentage != 0) {
+                        pressure_set = true;
+                        if(!first_start) first_start = true;
+                    }
+//                    System.out.println("Brake: " + brake_percentage);
 		    break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
-                    System.out.println("Speed set: " + speed);
+//                    System.out.println("Speed set: " + speed);
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
