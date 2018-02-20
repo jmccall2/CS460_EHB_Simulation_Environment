@@ -82,11 +82,11 @@ public class Car extends RenderEntity
 
         if(first_start) {
             if (gear == GearTypes.REVERSE) {
-                idle_a = -(float) ((4.0f * (drag_c / mass)) + (9.81f * .02f));
+                idle_a = -(float) ((9.0f * (drag_c / mass)) + (9.81f * .02f));
             } else if (gear == GearTypes.NEUTRAL) {
                 idle_a = 0.0f;
             } else if (gear == GearTypes.DRIVE) {
-                idle_a = (float) (4.0f * (drag_c / mass)) + (9.81f * .02f);
+                idle_a = (float) (9.0f * (drag_c / mass)) + (9.81f * .02f);
             } else if (gear == GearTypes.PARK) {
                 idle_a = 0.0f;
             }
@@ -124,7 +124,10 @@ public class Car extends RenderEntity
 
         if(!_isActive) brake = 0;
 
-        actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - rolling_friction*(.02 * 9.81))+idle_a;
+        double drag_c_ = drag_c;
+        if(speed < 2) drag_c_ = 0;
+
+        actual_acceleration = speedMod*(-(drag_c_ * speed * speed)/mass - brake*(actual_brake_force / mass) - rolling_friction*(.02 * 9.81))+idle_a;
 
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
 //        System.out.println("acc :" + actual_acceleration);
@@ -140,7 +143,7 @@ public class Car extends RenderEntity
 
         } else
         {
-            System.out.println("here");
+//            System.out.println("here");
             speed= nextSpeed;
         }
 //        if(gear == GearTypes.REVERSE){
@@ -166,7 +169,7 @@ public class Car extends RenderEntity
 //            speed = 0;
 //            System.out.println("park");
 //        }
-        System.out.println(speed);
+//        System.out.println(speed);
 
         double speedToDisplay = speed/0.448;
         guiRef.setSpeed(speedToDisplay);
@@ -237,7 +240,7 @@ public class Car extends RenderEntity
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
-                    System.out.println("##### speed: "+ speed);
+//                    System.out.println("##### speed: "+ speed);
                     if(gear == GearTypes.REVERSE){
                         idle_a = -(float)((speed*speed*(drag_c/mass)) + (9.81f*.02f));
                     } else if(gear == GearTypes.NEUTRAL){
@@ -254,7 +257,7 @@ public class Car extends RenderEntity
                     _simulationOn = true;
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
-                    System.out.println("activate brake");
+//                    System.out.println("activate brake");
                     _isActive = true;
                     break;
                 case SimGlobals.DEACTIVATE_BRAKE:

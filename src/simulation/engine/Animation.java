@@ -51,13 +51,23 @@ public class Animation implements MessageHandler {
         if (_currentAnimationSequence == null) return; // No images specified
         if (!_animate) return;
         _elapsedSeconds += deltaSeconds;
-        if (_elapsedSeconds >= _changeRate)
+        if (_elapsedSeconds >= _changeRate && _changeRate>0)
         {
             _elapsedSeconds = 0.0;
             ++_currentAnimIndex;
             if (_currentAnimIndex >= _currentAnimationSequence.size())
             {
                 _currentAnimIndex = 0;
+            }
+            _managedEntity.setTexture(_currentAnimationSequence.get(_currentAnimIndex));
+        }
+        else if(_changeRate<0 && _elapsedSeconds>= Math.abs(_changeRate))
+        {
+            _elapsedSeconds = 0.0;
+            --_currentAnimIndex;
+            if (_currentAnimIndex < 0)
+            {
+                _currentAnimIndex =  _currentAnimationSequence.size()-1;
             }
             _managedEntity.setTexture(_currentAnimationSequence.get(_currentAnimIndex));
         }
