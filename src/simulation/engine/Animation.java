@@ -36,7 +36,7 @@ public class Animation implements MessageHandler {
     public Animation(RenderEntity entity, double rateOfChange)
     {
         _managedEntity = entity;
-        _changeRate = rateOfChange;
+        setAnimationRate(rateOfChange);
         Engine.getMessagePump().signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
         _animate = Boolean.parseBoolean(Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
     }
@@ -51,23 +51,13 @@ public class Animation implements MessageHandler {
         if (_currentAnimationSequence == null) return; // No images specified
         if (!_animate) return;
         _elapsedSeconds += deltaSeconds;
-        if (_elapsedSeconds >= _changeRate && _changeRate>0)
+        if (_elapsedSeconds >= _changeRate)
         {
             _elapsedSeconds = 0.0;
             ++_currentAnimIndex;
             if (_currentAnimIndex >= _currentAnimationSequence.size())
             {
                 _currentAnimIndex = 0;
-            }
-            _managedEntity.setTexture(_currentAnimationSequence.get(_currentAnimIndex));
-        }
-        else if(_changeRate<0 && _elapsedSeconds>= Math.abs(_changeRate))
-        {
-            _elapsedSeconds = 0.0;
-            --_currentAnimIndex;
-            if (_currentAnimIndex < 0)
-            {
-                _currentAnimIndex =  _currentAnimationSequence.size()-1;
             }
             _managedEntity.setTexture(_currentAnimationSequence.get(_currentAnimIndex));
         }
@@ -79,6 +69,7 @@ public class Animation implements MessageHandler {
      */
     public void setAnimationRate(double rateOfChange)
     {
+        if (rateOfChange < 0.0) rateOfChange *= -1;
         _changeRate = rateOfChange;
     }
 

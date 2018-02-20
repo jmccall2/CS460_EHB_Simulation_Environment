@@ -73,7 +73,10 @@ public class Car extends RenderEntity
 
     private void _buildFrames()
     {
+        // First register the car_drive frames
         for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
+        // Now register the same frames as car_drive but in reverse order to create car_reverse
+        for(int i = 13; i >=1; i--) _animationSequence.addAnimationFrame("car_reverse", "resources/img/car/car" + i + ".png");
         _animationSequence.setCategory("car_drive");
     }
 
@@ -228,6 +231,9 @@ public class Car extends RenderEntity
             {
                 case SimGlobals.GEAR_CHANGE:
                     gear = (GearTypes) message.getMessageData();
+                    // Determine which animation sequence category to use based on the gear
+                    if (gear == GearTypes.REVERSE) _animationSequence.setCategory("car_reverse");
+                    else if (gear == GearTypes.DRIVE) _animationSequence.setCategory("car_drive");
                     first_start = true;
 		            break;
                 case SimGlobals.SET_PRESSURE:
