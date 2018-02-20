@@ -36,6 +36,7 @@ in the todo as:
 to go into a bad state.**
 * Tiretrack animations/wobble do not work in reverse (simple fix)
 * Speed gauge does not work in reverse (simple fix)
+* The sun follows the car onto the land 
 
 
 GUI:
