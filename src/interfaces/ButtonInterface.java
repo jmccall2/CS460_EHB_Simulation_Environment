@@ -1,12 +1,12 @@
 package interfaces;
 
+import java.net.URL;
+
 import javafx.scene.media.AudioClip;
 import simulation.SimGlobals;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
-
-import java.net.URL;
 
 public class ButtonInterface
 {

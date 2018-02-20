@@ -1,9 +1,15 @@
 package ehb;
 
-import interfaces.*;
-
 import java.util.Map;
 import java.util.TreeMap;
+
+import interfaces.BrakeInterface;
+import interfaces.ButtonColorTypes;
+import interfaces.ButtonInterface;
+import interfaces.ButtonSoundTypes;
+import interfaces.GearInterface;
+import interfaces.GearTypes;
+import interfaces.SpeedInterface;
 
 
 public class EHB
@@ -12,6 +18,8 @@ public class EHB
   private double _speed;
   private GearTypes _gear;
   private boolean _isActive;
+  private boolean wasEngaged = false;
+  private int alertPlayed = 0;
 
   //Max pressure is considered to be at 6 kPa.
   //first is speed. second is pressure
@@ -54,8 +62,12 @@ public class EHB
   {
     if (ButtonInterface.isDown()) {
         ButtonInterface.setColor(ButtonColorTypes.RED);
-        ButtonInterface.play(ButtonSoundTypes.ENGAGED);
-
+        if(alertPlayed == 0)
+        {
+          ButtonInterface.play(ButtonSoundTypes.ENGAGED);
+          wasEngaged = true;
+          alertPlayed ++;
+        }
         _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
         _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
 
@@ -88,7 +100,12 @@ public class EHB
     else
     {
         ButtonInterface.setColor(ButtonColorTypes.BLUE);
-        ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
+        if(wasEngaged)
+        {
+          ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
+          wasEngaged = false;
+          alertPlayed --;
+        }
 
         BrakeInterface.setPressure(0.0);
     }

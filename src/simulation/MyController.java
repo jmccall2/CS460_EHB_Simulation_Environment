@@ -106,33 +106,23 @@ public class MyController implements Initializable
       } 
     });
 
-
-    // For Jeff: Here is how the message should be sent, I don't know how to intergrate it
-    // in with all other logic in this class, like the text etc.
-//    handBrake.setOnMouseReleased(event -> {
-//      Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
-//    });
-//    handBrake.setOnMousePressed(event -> {
-//      Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-//    });
-
-    handBrake.setOnAction((event) -> {
+    handBrake.setOnMouseReleased(event -> {
       if(!stopped)
       {
-        if(brakeOff)
-        {
-          brakeOff = false;
-          handBrake.setText("Deactivate");
-          Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-        }
-        else if(!brakeOff)
-        {
-          brakeOff = true;
-          handBrake.setText("Activate Brake");
-          Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
-        }
+        brakeOff = true;
+        handBrake.setText("Activate Brake");
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       }
     });
+    handBrake.setOnMousePressed(event -> {
+      if(!stopped)
+      {
+        brakeOff = false;
+        handBrake.setText("Deactivate");
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+      }
+    });
+
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       public void changed(ObservableValue<? extends Toggle> ov,
                           Toggle old_toggle, Toggle new_toggle) {
