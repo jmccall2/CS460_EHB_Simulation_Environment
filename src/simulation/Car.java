@@ -187,17 +187,7 @@ public class Car extends RenderEntity
         }
 
     }
-
-    // Add later to support restarting the simulation.
-    private void _resetState()
-    {
-        //Reset Speed to initial speed locally and send message.
-        //Reset pressure to 0 and send message.
-        // Restart everything and send messages out that reset everything.
-
-    }
-
-
+    
     class Helper implements MessageHandler
     {
         @Override
