@@ -78,6 +78,7 @@ public class Car extends RenderEntity
     private void _buildFrames()
     {
         for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
+        for(int i = 13; i >= 1; i--) _animationSequence.addAnimationFrame("car_reverse", "resources/img/car/car" + i + ".png");
         _animationSequence.setCategory("car_drive");
     }
 
