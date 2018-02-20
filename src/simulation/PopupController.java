@@ -50,18 +50,18 @@ public class PopupController implements Initializable
   private void addStates()
   {
     ArrayList<String> gearStates = new ArrayList<>();
-    gearStates.add("Drive -> Park");
-    gearStates.add("Drive -> Reverse");
-    gearStates.add("Drive -> Neutral");
-    gearStates.add("Park -> Reverse");
-    gearStates.add("Park -> Neutral");
-    gearStates.add("Park -> Drive");
-    gearStates.add("Reverse -> Park");
-    gearStates.add("Reverse -> Neutral");
-    gearStates.add("Reverse -> Drive");
-    gearStates.add("Neutral -> Park");
-    gearStates.add("Neutral -> Reverse");
-    gearStates.add("Neutral -> Drive");
+    gearStates.add("Drive->Park");
+    gearStates.add("Drive->Reverse");
+    gearStates.add("Drive->Neutral");
+    gearStates.add("Park->Reverse");
+    gearStates.add("Park->Neutral");
+    gearStates.add("Park->Drive");
+    gearStates.add("Reverse->Park");
+    gearStates.add("Reverse->Neutral");
+    gearStates.add("Reverse->Drive");
+    gearStates.add("Neutral->Park");
+    gearStates.add("Neutral->Reverse");
+    gearStates.add("Neutral->Drive");
     newList2 = gearStates;
   }
   
