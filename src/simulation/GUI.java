@@ -68,13 +68,13 @@ public class GUI
     
     public void setSpeed(double speed)
     {
-      String speedStr = Double.toString(speed);
+      String speedStr = String.format("%.1f", speed);
       currSpeedField.setText(speedStr);
     }
     
     public void setPressure(double pressure)
     {
-      String pressureStr = Double.toString(pressure);
+      String pressureStr = String.format("%.1f", pressure);
       pressureField.setText(pressureStr);
     }
 
