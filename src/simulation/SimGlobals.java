@@ -21,7 +21,7 @@ public class SimGlobals
     //Start the simulation.
     public static final String START_SIM = "Start simulation.";
     //Stop the simulation.
-    public static final String STOP_SIM = "Stop simulation.";
+    public static final String RESET_SIM = "Reset simulation.";
     //Hand brake activated.
     public static final String ACTIVATE_BRAKE = "Activate brake.";
     //Hand brake deactivated.

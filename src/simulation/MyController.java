@@ -94,7 +94,7 @@ public class MyController implements Initializable
       {
         stopped = true;
         start_stop_sim.setText("Start simulation");
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.STOP_SIM));
+        Engine.getMessagePump().sendMessage(new Message(SimGlobals.RESET_SIM));
         // Start simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         setSpeedField.setDisable(false);

@@ -56,13 +56,13 @@ public class ApplicationEntryPoint implements PulseEntity{
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_PRESSURE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.START_SIM));
-        Engine.getMessagePump().registerMessage(new Message(SimGlobals.STOP_SIM));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.RESET_SIM));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.GEAR_CHANGE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_BUTTON_COLOR));
-        Engine.getMessagePump().signalInterest(SimGlobals.STOP_SIM, helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.RESET_SIM, helper);
     }
 
 
@@ -133,7 +133,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         @Override
         public void handleMessage(Message message)
         {
-            if(message.getMessageName().equals(SimGlobals.STOP_SIM))
+            if(message.getMessageName().equals(SimGlobals.RESET_SIM))
             {
                 wasRestarted = false;
                 restart = true;

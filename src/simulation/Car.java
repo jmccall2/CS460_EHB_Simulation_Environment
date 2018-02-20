@@ -54,7 +54,7 @@ public class Car extends RenderEntity
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
-        Engine.getMessagePump().signalInterest(SimGlobals.STOP_SIM,helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.RESET_SIM,helper);
 
         _SpeedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240, BarEntityModes.SPEED);
         _SpeedGauge.setAsStaticActor(true);
@@ -237,7 +237,7 @@ public class Car extends RenderEntity
                     _isActive = false;
                     pressure_set = false;
                     break;
-                case SimGlobals.STOP_SIM:
+                case SimGlobals.RESET_SIM:
                     _simulationOn = false;
 //                    first_start = false;
                     sim_is_active = false;
