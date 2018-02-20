@@ -150,11 +150,6 @@ public class MyController implements Initializable
     });
   }
   
-  public void setMaxSpeed(double speed)
-  {
-    this.max_speed = speed;
-  }
-  
   private void setGearTransitions()
   {
     for(int i = 0; i < invalidTransitions.size(); i ++)

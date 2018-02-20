@@ -78,23 +78,4 @@ public class PopupController implements Initializable
     this.guiRef = gui;
   }
   
-  public double getMaxSpeed()
-  {
-    double maxSpeed = 140;
-    if(maxSpeedField.getText() != null && !maxSpeedField.getText().isEmpty())
-    {
-      try
-      {
-
-        maxSpeed = Double.parseDouble(maxSpeedField.getText());
-        return maxSpeed;
-      }
-      catch(NumberFormatException ex)
-      {
-        System.out.println(ex);
-      }
-    }
-    return maxSpeed;
-  }
-  
 }

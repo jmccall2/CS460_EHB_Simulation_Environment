@@ -42,11 +42,9 @@ public class GUI
       popUpStage.setScene(new Scene(popupBox));
       popUpStage.setOnCloseRequest(event ->
       {
-        controller.setMaxSpeed(controller2.getMaxSpeed());
         popUpStage.close();
       });
       popUpStage.setTitle("Set Gear States");
-      popUpStage.show();
       Pane newPane = new Pane();
       newPane.getChildren().add(_gPane);
       newPane.setLayoutX(110);
@@ -129,10 +127,4 @@ public class GUI
     {
       controller.removeRestrictedGear(state);
     }
-    
-    public void setMaxSpeed(double speed)
-    {
-      controller.setMaxSpeed(speed);
-    }
-
 }
