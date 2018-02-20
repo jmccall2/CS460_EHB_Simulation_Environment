@@ -5,11 +5,7 @@ import interfaces.BrakeInterface;
 import interfaces.ButtonInterface;
 import interfaces.GearInterface;
 import interfaces.SpeedInterface;
-import simulation.engine.Camera;
-import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.PulseEntity;
-import simulation.engine.Singleton;
+import simulation.engine.*;
 
 
 /**
@@ -28,6 +24,9 @@ public class ApplicationEntryPoint implements PulseEntity{
     EHB _ehb;
     Car _car;
     boolean init = true;
+    boolean restart = false;
+    boolean wasRestarted = false;
+    Helper helper = new Helper();
 
     public void init()
     {
@@ -63,6 +62,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.GEAR_CHANGE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_BUTTON_COLOR));
+        Engine.getMessagePump().signalInterest(SimGlobals.STOP_SIM, helper);
     }
 
 
@@ -121,5 +121,24 @@ public class ApplicationEntryPoint implements PulseEntity{
         if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
+        if (restart && !wasRestarted)
+        {
+            init();
+            wasRestarted = true;
+        }
+    }
+
+    class Helper implements MessageHandler
+    {
+        @Override
+        public void handleMessage(Message message)
+        {
+            if(message.getMessageName().equals(SimGlobals.STOP_SIM))
+            {
+                wasRestarted = false;
+                restart = true;
+            }
+            else restart = false;
+        }
     }
 }
