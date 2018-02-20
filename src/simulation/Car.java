@@ -82,31 +82,6 @@ public class Car extends RenderEntity
       this.guiRef = gui;
     }
 
-    private void _insertFire()
-    {
-        _removeFire();
-        // lol
-        int particlesPerSecond = 1000;
-        int iterations = (int)(speed);
-        System.out.println("SPEED = " + speed);
-        for (int i = 0; i < iterations; ++i) {
-            Fire fire = new Fire(particlesPerSecond, getLocationX(), getLocationY() + getHeight() / 2, getDepth() + 1,getHeight() / 2, -1, 0);
-            fire.addToWorld();
-            attachActor(fire);
-            _bringTheFire.add(fire);
-        }
-    }
-
-    private void _removeFire()
-    {
-        for (Fire fire : _bringTheFire)
-        {
-            removeActor(fire);
-            fire.removeFromWorld();
-        }
-        _bringTheFire.clear();
-    }
-
     private void _buildFrames()
     {
         // In this case, "car_drive" specifies a set of animation frames that go together.
@@ -217,26 +192,6 @@ public class Car extends RenderEntity
     public void pulse(double deltaSeconds) {
         _animationSequence.update(deltaSeconds); // Make sure we call this!
         update(deltaSeconds);
-        // Add the fire
-        // we should probably remove this lol
-        boolean calcMovement = Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).getcvarAsBool();
-        if (calcMovement && speed < 2)
-        {
-            _removeFire();
-        }
-        else if (calcMovement && _bringTheFire.size() == 0)
-        {
-            _insertFire();
-        }
-        else if (calcMovement && oldSpeed != speed)
-        {
-            _insertFire();
-            oldSpeed = speed;
-        }
-        else if (!calcMovement && _bringTheFire.size() > 0)
-        {
-            _removeFire();
-        }
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
         setSpeedXY(speed*45,0);
         _animationSequence.setAnimationRate(1.91/(13*((speed == 0) ? 0.0001 : speed)));
