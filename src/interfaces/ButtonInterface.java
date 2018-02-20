@@ -11,7 +11,7 @@ import java.net.URL;
 public class ButtonInterface
 {
     Helper helper = new Helper();
-    private static boolean _wasPressed;
+    private static boolean _isDown;
 
     public ButtonInterface()
     {
@@ -30,12 +30,11 @@ public class ButtonInterface
         sound.play(1, 0, 1, 0, 1);
     }
 
-    public static boolean wasPressed() {
-        boolean tmp = _wasPressed;
-        if(_wasPressed) _wasPressed = !_wasPressed;
-        return tmp;
-
+    public static boolean isDown()
+    {
+        return _isDown;
     }
+
 
     private static String _mapToSoundFile(ButtonSoundTypes sound)
     {
@@ -59,8 +58,12 @@ public class ButtonInterface
             switch (message.getMessageName())
             {
                 case SimGlobals.ACTIVATE_BRAKE:
+                    System.out.println("active");
+                    _isDown = true;
+                    break;
                 case SimGlobals.DEACTIVATE_BRAKE:
-                    _wasPressed  = !_wasPressed;
+                    System.out.println("unactive");
+                    _isDown = false;
                     break;
             }
         }

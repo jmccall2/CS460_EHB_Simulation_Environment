@@ -52,87 +52,47 @@ public class EHB
 
   public void update()
   {
-    if (ButtonInterface.wasPressed())
-    {
-      _isActive = !_isActive;
-      if (_isActive)
-      {
+    if (ButtonInterface.isDown()) {
         ButtonInterface.setColor(ButtonColorTypes.RED);
         ButtonInterface.play(ButtonSoundTypes.ENGAGED);
-      }
-      else
-      {
-        ButtonInterface.setColor(ButtonColorTypes.BLUE);
-        ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
-      }
-    }
 
-    //Use the Button interface to see if the button is active or not.
-    if (_isActive)
-    {
-      //Why do all variables have an underscore before them?!!!
-
-      //Start a while loop to continuously keep getting speed and gear and calculate
-      //pressure accordingly/
-
-      _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
-      _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
-
-      //Using MKS units, pressure [=] N/m^2 or kg m /s^2
-
-      //     For immediate testing purposes just set the pressure to 100%.
-//        BrakeInterface.setPressure(100.0); // Set the pressure using the brake interface.
-
-//        First of all, we are going to check the "base" cases where where the "parking" break
-//        or emergency break should be applied.
-
-      //If the gear is on park and the button is pressed, then full pressure is applied.
-//        if the gear is on anything other than reverse and the speed is negative then this means
-//        the car is sliding back so we also apply max pressure as a safety mechanism.
-
-      //        We are going to make two attempts at calculating the parking brake pressure. Once, using
-//        a good pressure profile and the other using a bad pressure profile.
-      if (_gear.toString().equals("Park"))
-      {
-        BrakeInterface.setPressure(100.00);
-      }
-      else if ((!_gear.toString().equals("Reverse")) && _speed < 0)
-      {
-        BrakeInterface.setPressure(100.00);
-      }
-      else
-      {
+        _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
+        _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
 
 
-        //This uses the max and low values of the tree map to get the closest value in the
-        //pressure profile
-        Long key = Long.valueOf((int)_speed);
-        Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
-        Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
+        if (_gear.toString().equals("Park")) {
+            BrakeInterface.setPressure(100.00);
+        } else if ((!_gear.toString().equals("Reverse")) && _speed < 0) {
+            BrakeInterface.setPressure(100.00);
+        } else {
 
-        double closestResult;
-        if (floor != null && ceiling != null)
-        {
-          closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
+
+            //This uses the max and low values of the tree map to get the closest value in the
+            //pressure profile
+            Long key = Long.valueOf((int) _speed);
+            Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
+            Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
+
+            double closestResult;
+            if (floor != null && ceiling != null) {
+                closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
+            } else if (floor != null) {
+                closestResult = floor.getValue();
+            } else {
+                closestResult = ceiling.getValue();
+            }
+
+            BrakeInterface.setPressure((closestResult / 6.0) * 100);
         }
-        else if (floor != null)
-        {
-          closestResult = floor.getValue();
-        }
-        else
-        {
-          closestResult = ceiling.getValue();
-        }
-
-//        System.out.println("speed is " + _speed);
-//        System.out.println("Pressure perc is " + (closestResult/6.0)*100);
-        BrakeInterface.setPressure((closestResult/6.0)*100);
-
-      }
     }
     else
     {
-      BrakeInterface.setPressure(0.0);
+        ButtonInterface.setColor(ButtonColorTypes.BLUE);
+        ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
+
+        BrakeInterface.setPressure(0.0);
     }
+
+
   }
 }

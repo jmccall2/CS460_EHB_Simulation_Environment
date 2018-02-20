@@ -105,6 +105,17 @@ public class MyController implements Initializable
         gearButton.setDisable(false);
       } 
     });
+
+
+    // For Jeff: Here is how the message should be sent, I don't know how to intergrate it
+    // in with all other logic in this class, like the text etc.
+//    handBrake.setOnMouseReleased(event -> {
+//      Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+//    });
+//    handBrake.setOnMousePressed(event -> {
+//      Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+//    });
+
     handBrake.setOnAction((event) -> {
       if(!stopped)
       {
