@@ -130,7 +130,7 @@ public class MyController implements Initializable
           String gearString = group.getSelectedToggle().getUserData().toString();
           currGear = gearString;
           Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, _getGear(gearString)));
-          setGearTransitions();
+          if(!stopped)setGearTransitions();
           if(gearString == "D")
           {
             carDriving = true;
