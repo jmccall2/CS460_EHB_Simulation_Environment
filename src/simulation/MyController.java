@@ -57,6 +57,7 @@ public class MyController implements Initializable
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   { 
+    Engine.getConsoleVariables().loadConfigFile("/resources/gearStates.cfg");
     Engine.getMessagePump().signalInterest(SimGlobals.SET_BUTTON_COLOR, _buttonMessageHelper);
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
@@ -101,9 +102,6 @@ public class MyController implements Initializable
         neutralButton.setDisable(false);
         driveButton.setDisable(false);
         gearButton.setDisable(false);
-        brakeOff = true;
-        handBrake.setText("Activate Brake");
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
       } 
     });
     handBrake.setOnAction((event) -> {
