@@ -48,7 +48,8 @@ public class BarEntity extends RenderEntity
 
     public void updateState(double mapVal)
     {
-        if(mapVal < 0) mapVal = 0;
+        //System.out.println(mapVal);
+        if(mapVal < 0) mapVal = -mapVal;
         _yLoc =_yInit - (int)(mapVal*((_Mode == BarEntityModes.SPEED) ? SPEED_TO_Y_CONST : PRESSURE_TO_Y_CONST));
         int index = (int)(mapVal * _speedToColorIndexMult);
         if(index >= _colors.size()) index = _colors.size() - 1;

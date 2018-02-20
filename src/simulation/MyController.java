@@ -306,6 +306,12 @@ public class MyController implements Initializable
       {
 
         speed = Double.parseDouble(setSpeedField.getText());
+        if (speed < 0)
+        {
+          speed *= -1;
+          String speedStr = String.format("%.1f", speed);
+          setSpeedField.setText(speedStr);
+        }
       }
       catch(NumberFormatException ex)
       {

@@ -81,11 +81,9 @@ public class Car extends RenderEntity
         deltaSeconds=0.0217;
         if(!sim_is_active) return;
 
-//        System.out.println("first start: " + first_start);
         if(first_start) {
             if (gear == GearTypes.REVERSE) {
                 idle_a = -(float) ((9.0f * (drag_c / mass)) + (9.81f * .02f));
-//                speed = -speed;
             } else if (gear == GearTypes.NEUTRAL) {
                 idle_a = 0.0f;
             } else if (gear == GearTypes.DRIVE) {
@@ -94,7 +92,6 @@ public class Car extends RenderEntity
                 idle_a = 0.0f;
             }
         }
-//        System.out.println(speed);
 
         // todo disallow negative numbers
         int speedMod = 1;
@@ -110,6 +107,8 @@ public class Car extends RenderEntity
             if (applied_brake_force > friction_threshold - 4000) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
         }else _startTractionLossAnimation = false;
+
+
 
         double actual_acceleration;
 
@@ -181,6 +180,7 @@ public class Car extends RenderEntity
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
+//            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
             _SpeedGauge.updateState(speed);
             _PressureGauge.updateState(brake_percentage);
             if (speed > 5 && _startTractionLossAnimation) {
@@ -207,7 +207,6 @@ public class Car extends RenderEntity
                     brake_percentage = (Double) message.getMessageData();
                     if(brake_percentage != 0 && _isActive) {
                         pressure_set = true;
-//                        System.out.println("set here");
                         if(!first_start) first_start = true;
                     }
 		            break;

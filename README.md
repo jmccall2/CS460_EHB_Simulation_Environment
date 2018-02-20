@@ -21,39 +21,44 @@ http://code.makery.ch/library/javafx-8-tutorial/part4/
 
 TODO:
 
-Config:
-* Add another config file to store information about the initial state of the simulation (Not needed for setting disallowed
-gear changes, since this can be done before the simulation using the Set Gear States tool. There is no limit on the amount of states
-that can be added or removed using this tool when the simulation is not running. Max speed can be set with this tool as well).
+Questions for Tuseday:
+* Should the speed only be enterable upon initial startup and if not then what should occur when the user pauses
+the simulation and then changes the speed. 
+* Should their be a delay from the pressure being set to the pressure being activated. Currently it's done
+immidiately in the simulations. 
+* Are our interfaces correct.
+.. Add more here, this is all I had. 
 
-GUI:
-* Grey out park gear when appropriate. (Need to update logic once velocity is avaliable.)
-* Add popup graph pane that can pane graphs on data gathered from the simulation. 
-* Need to update speed and pressure fields with values.
-
-GUI/Animation:
-* Add pressure bars to the speed/pressure values being reported. (Added, needs to scale with actual values now).
+Bugs (most important):
+* I found bad states the simulation can go into when stress testing the GUI, this is the most important bullet point
+in the todo as:
+#**No combination of the GUI's input and the EHB's interaction with the interfaces should cause the simulation
+to go into a bad state.**
+* Tiretrack animations/wobble do not work in reverse (simple fix)
+* Speed gauge does not work in reverse (simple fix)
 
 GUI/Simulation binding:
-* Initial parameters do nothing when you set them.
-
-Animations:
-* Need more tiretrack svg's for various traction loss levels. (only two exist)
-* Need to add car wobble for the traction loss levels.
-* Need to add the final animaion of complete traction loss.
+* Data from simulation needs to be plotted on graph(s)/update real time. 
 
 Simulation:
-* Need to calculate new traction/speed values for each engine tick and make the information avaliable
-to the appropriate entitys. 
-
-Simulation/Animation binding:
-* Need to take in the traction values and map it to different animations, including change of car
-wheel rpm, traction loss level animations.
-
-Engine:
-* Figure out issue with background wrapping. ***DONE
+* ? Not sure if there was anything else
 
 EHB:
-* We need to add an example EHB software package, right now it's very basic.
+* Add example to show what happens when you incorrectly apply pressure. 
+
+Interfaces:
+* Colors in color enum should be: Blue, Red, Green, Yellow, Orange, and Light Blue according to the SRS"s
+* Sounds in the sound enum should be: Engaged, Disengaged, long beep, and short beep according tot he SRS"s. 
+
+Presentation/Release:
+* Need powerpoint
+* Need to produce java docs for the interfaces.
+* Need way to package and deliver library, either through interfacable jar, pre-made intellij/eclipse projects, or build scripts.
+
+Optional:
+* Fix the clouds so their speed is correct given their perspective. 
+* Impove traction loss animations/add variety
+
+
 
 
