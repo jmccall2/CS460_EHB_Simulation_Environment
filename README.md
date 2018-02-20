@@ -46,6 +46,10 @@ Simulation:
 EHB:
 * Add example to show what happens when you incorrectly apply pressure. 
 
+Interfaces:
+* Colors in color enum should be: Blue, Red, Green, Yellow, Orange, and Light Blue according to the SRS"s
+* Sounds in the sound enum should be: Engaged, Disengaged, long beep, and short beep according tot he SRS"s. 
+
 Presentation/Release:
 * Need powerpoint
 * Need to produce java docs for the interfaces.
