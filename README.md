@@ -24,7 +24,7 @@ TODO:
 Summary of what Roman said:
 * The button interface should be returning whether the button is held down or not. I.e to have the brake activated
 the user will have to have their mouse click held on the button.
-* There is no pause simulation there is only start/restart. Restart should wipe all state. 
+* There is no pause simulation there is only start/reset. reset should wipe all state. 
 * The logic in the ehb needs to be more robust, *High pressure should be applied at low speeds and low pressure at high speeds*
 * Make GUI buttons all same size and aligned horizontally and vertically.
 * Make corrections to the diagram to show in class. 
@@ -43,9 +43,7 @@ GUI:
 * Change button to send active signal to the engine while the button is pressed, and send a message to the engine when
 the button is unpressed. (Meaning a click of the mouse triggers both events, the user has to hold down their mouse on the button
 to brake.
-* Change the start/stop button to just be a start button and then add another button that is called "reset", when the
-user clicks reset all state will be wiped out and everything in the GUI should be cleared. Then the user can enter a new speed and 
-click start again. Reset should only stop the simulation and clear state, not start the simulation. 
+* Change the Start/Stop simulation button to be Start/Reset. Reset wipes all states and creates new instanes of everything. 
 
 Interfaces:
 * Accept new messages sent by GUI from button and make it avaliable to the EHB. 
