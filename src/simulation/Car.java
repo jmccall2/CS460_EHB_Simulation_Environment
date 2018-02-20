@@ -147,7 +147,6 @@ public class Car extends RenderEntity
         }
 
         double speedToDisplay = speed/0.448;
-        System.out.println("Speed:"+speedToDisplay);
         guiRef.setSpeed(speedToDisplay);
         guiRef.setPressure(brake_percentage);
     }
