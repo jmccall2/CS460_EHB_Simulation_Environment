@@ -37,6 +37,10 @@ to go into a bad state.**
 * Tiretrack animations/wobble do not work in reverse (simple fix)
 * Speed gauge does not work in reverse (simple fix)
 * The sun follows the car onto the land 
+* When the sim is started and stopped without having activated the handbrake, a new car and clouds are spawned on the screen
+when the reset of the sim happens.
+* When the car has come to a complete stop and the gear is then shifted to neutral, the speed starts to alternate between a very small positive
+and negative number infinitely. This results in an unreadable blur on the speed text field. Should it be that the speed just remains 0 when this happens?
 
 
 GUI:

@@ -4,7 +4,11 @@ import interfaces.GearInterface;
 import interfaces.GearTypes;
 import interfaces.SpeedInterface;
 import javafx.scene.paint.Color;
-import simulation.engine.*;
+import simulation.engine.Animation;
+import simulation.engine.Engine;
+import simulation.engine.Message;
+import simulation.engine.MessageHandler;
+import simulation.engine.RenderEntity;
 
 public class Car extends RenderEntity
 {
@@ -143,6 +147,7 @@ public class Car extends RenderEntity
         }
 
         double speedToDisplay = speed/0.448;
+        System.out.println("Speed:"+speedToDisplay);
         guiRef.setSpeed(speedToDisplay);
         guiRef.setPressure(brake_percentage);
     }
