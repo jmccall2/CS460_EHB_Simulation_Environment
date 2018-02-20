@@ -63,7 +63,8 @@ Interfaces:
 * Sounds in the sound enum should be: Engaged, Disengaged, long beep, and short beep according tot he SRS"s. 
 
 Presentation/Release:
-* Need powerpoint
+* No powerpoint for the presentation: focus on showing the interfaces and the demo EHB package so they know how to 
+inteface with it. And then demo using the GUI/running the simulation. 
 * Need to produce java docs for the interfaces.
 * Need way to package and deliver library, either through interfacable jar, pre-made intellij/eclipse projects, or build scripts.
 
