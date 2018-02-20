@@ -57,7 +57,8 @@ public class MyController implements Initializable
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   { 
-    Engine.getConsoleVariables().loadConfigFile("/resources/gearStates.cfg");
+    Engine.getConsoleVariables().loadConfigFile("src/resources/gearStates.cfg");
+    setDefaultStates();
     Engine.getMessagePump().signalInterest(SimGlobals.SET_BUTTON_COLOR, _buttonMessageHelper);
     parkButton.setToggleGroup(group);
     parkButton.setUserData("P");
@@ -105,17 +106,20 @@ public class MyController implements Initializable
       } 
     });
     handBrake.setOnAction((event) -> {
-      if(brakeOff)
+      if(!stopped)
       {
-        brakeOff = false;
-        handBrake.setText("Deactivate");
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
-      }
-      else if(!brakeOff)
-      {
-        brakeOff = true;
-        handBrake.setText("Activate Brake");
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+        if(brakeOff)
+        {
+          brakeOff = false;
+          handBrake.setText("Deactivate");
+          Engine.getMessagePump().sendMessage(new Message(SimGlobals.ACTIVATE_BRAKE));
+        }
+        else if(!brakeOff)
+        {
+          brakeOff = true;
+          handBrake.setText("Activate Brake");
+          Engine.getMessagePump().sendMessage(new Message(SimGlobals.DEACTIVATE_BRAKE));
+        }
       }
     });
     group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -146,6 +150,26 @@ public class MyController implements Initializable
         }
       }
     });
+  }
+  
+  private void setDefaultStates()
+  {
+    if(Engine.getConsoleVariables().contains("default1"))
+    {
+      setRestrictedGear(Engine.getConsoleVariables().find("default1").getcvarValue());
+    }
+    if(Engine.getConsoleVariables().contains("default2"))
+    {
+      setRestrictedGear(Engine.getConsoleVariables().find("default2").getcvarValue());
+    }
+    if(Engine.getConsoleVariables().contains("default3"))
+    {
+      setRestrictedGear(Engine.getConsoleVariables().find("default3").getcvarValue());
+    }
+    if(Engine.getConsoleVariables().contains("default4"))
+    {
+      setRestrictedGear(Engine.getConsoleVariables().find("default4").getcvarValue());
+    }
   }
   
   private void setGearTransitions()
@@ -180,40 +204,40 @@ public class MyController implements Initializable
   {
     switch(gearString)
     {
-      case "Drive -> Park":
+      case "Drive->Park":
         invalidTransitions.add("DP");
         break;
-      case "Drive -> Reverse":
+      case "Drive->Reverse":
         invalidTransitions.add("DR");
         break;
-      case "Drive -> Neutral":
+      case "Drive->Neutral":
         invalidTransitions.add("DN");
         break;
-      case "Park -> Reverse":
+      case "Park->Reverse":
         invalidTransitions.add("PR");
         break;
-      case "Park -> Neutral":
+      case "Park->Neutral":
         invalidTransitions.add("PN");
         break;
-      case "Park -> Drive":
+      case "Park->Drive":
         invalidTransitions.add("PD");
         break;
-      case "Reverse -> Park":
+      case "Reverse->Park":
         invalidTransitions.add("RP");
         break;
-      case "Reverse -> Neutral":
+      case "Reverse->Neutral":
         invalidTransitions.add("RN");
         break;
-      case "Reverse -> Drive":
+      case "Reverse->Drive":
         invalidTransitions.add("RD");
         break;
-      case "Neutral -> Park":
+      case "Neutral->Park":
         invalidTransitions.add("NP");
         break;
-      case "Neutral -> Reverse":
+      case "Neutral->Reverse":
         invalidTransitions.add("NR");
         break;
-      case "Neutral -> Drive":
+      case "Neutral->Drive":
         invalidTransitions.add("ND");
         break;
       default:
@@ -226,40 +250,40 @@ public class MyController implements Initializable
     String stringToRemove = "";
     switch(gearString)
     {
-      case "Drive -> Park":
+      case "Drive->Park":
         stringToRemove = "DP";
         break;
-      case "Drive -> Reverse":
+      case "Drive->Reverse":
         stringToRemove = "DR";
         break;
-      case "Drive -> Neutral":
+      case "Drive->Neutral":
         stringToRemove = "DN";
         break;
-      case "Park -> Reverse":
+      case "Park->Reverse":
         stringToRemove = "PR";
         break;
-      case "Park -> Neutral":
+      case "Park->Neutral":
         stringToRemove = "PN";
         break;
-      case "Park -> Drive":
+      case "Park->Drive":
         stringToRemove = "PD";
         break;
-      case "Reverse -> Park":
+      case "Reverse->Park":
         stringToRemove = "RP";
         break;
-      case "Reverse -> Neutral":
+      case "Reverse->Neutral":
         stringToRemove = "RN";
         break;
-      case "Reverse -> Drive":
+      case "Reverse->Drive":
         stringToRemove = "RD";
         break;
-      case "Neutral -> Park":
+      case "Neutral->Park":
         stringToRemove = "NP";
         break;
-      case "Neutral -> Reverse":
+      case "Neutral->Reverse":
         stringToRemove = "NR";
         break;
-      case "Neutral -> Drive":
+      case "Neutral->Drive":
         stringToRemove = "ND";
         break;
       default:
