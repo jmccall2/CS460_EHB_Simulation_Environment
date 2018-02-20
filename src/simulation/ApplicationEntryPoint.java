@@ -104,7 +104,6 @@ public class ApplicationEntryPoint implements PulseEntity{
         SingleFrameEntity blockingPanel = new SingleFrameEntity("resources/img/panelback.png",0,635,2,0,0,1020,70);
         blockingPanel.setAsStaticActor(true);
         blockingPanel.addToWorld();
-
     }
 
 
@@ -119,7 +118,7 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     @Override
     public void pulse(double deltaSeconds) {
-        _ehb.update();
+        if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
     }
