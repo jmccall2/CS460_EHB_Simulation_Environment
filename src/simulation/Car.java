@@ -78,11 +78,14 @@ public class Car extends RenderEntity
     }
 
     private void update(double deltaSeconds){
+        deltaSeconds=0.0217;
         if(!sim_is_active) return;
 
+//        System.out.println("first start: " + first_start);
         if(first_start) {
             if (gear == GearTypes.REVERSE) {
                 idle_a = -(float) ((9.0f * (drag_c / mass)) + (9.81f * .02f));
+//                speed = -speed;
             } else if (gear == GearTypes.NEUTRAL) {
                 idle_a = 0.0f;
             } else if (gear == GearTypes.DRIVE) {
@@ -91,9 +94,9 @@ public class Car extends RenderEntity
                 idle_a = 0.0f;
             }
         }
+//        System.out.println(speed);
 
-        boolean atomic_active = _isActive;
-
+        // todo disallow negative numbers
         int speedMod = 1;
         if(speed < 0) speedMod = -1;
         if(speed == 0) speedMod = 0;
@@ -107,8 +110,6 @@ public class Car extends RenderEntity
             if (applied_brake_force > friction_threshold - 4000) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
         }else _startTractionLossAnimation = false;
-
-
 
         double actual_acceleration;
 
@@ -125,16 +126,12 @@ public class Car extends RenderEntity
         if(!_isActive) brake = 0;
 
         double drag_c_ = drag_c;
-        if(speed < 2) drag_c_ = 0;
+        if(Math.abs(speed) < 2) drag_c_ = 0;
 
-        actual_acceleration = speedMod*(-(drag_c_ * speed * speed)/mass - brake*(actual_brake_force / mass) - rolling_friction*(.02 * 9.81))+idle_a;
+        actual_acceleration = speedMod*(-(drag_c_ * Math.pow(speed,2))/mass - brake*(actual_brake_force / mass) - rolling_friction*(.02 * 9.81))+idle_a;
 
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
 //        System.out.println("acc :" + actual_acceleration);
-//        System.out.println("idle :" + idle_a);
-//        System.out.println("speedmod : " + speedMod);
-//        System.out.println("brake : " + brake);
-//        System.out.println("brake force : " + actual_brake_force);
 
         if(brake == 1){
             if(speed <= 0 && nextSpeed > 0)speed = 0;
@@ -143,33 +140,8 @@ public class Car extends RenderEntity
 
         } else
         {
-//            System.out.println("here");
             speed= nextSpeed;
         }
-//        if(gear == GearTypes.REVERSE){
-//            if(speed <= 0 && nextSpeed > 0)speed = 0;
-//            else if(speed == 0 && pressure_set)speed = 0;
-//            else if(atomic_active && actual_acceleration < 0)speed=0;
-//            else speed = nextSpeed;
-//            System.out.println("reverse");
-//        } else if(gear == GearTypes.NEUTRAL){
-//            if(speed >= 0 && nextSpeed < 0) speed = 0;
-//            else if(speed <= 0 && nextSpeed > 0) speed = 0;
-//            else if(speed == 0 && pressure_set) speed = 0;
-//            else if(pressure_set && Math.abs(speed) < 1) speed=0;
-//            else speed = nextSpeed;
-//            System.out.println("neutral");
-//        } else if(gear == GearTypes.DRIVE){
-//            if(speed >= 0 && nextSpeed < 0) speed = 0;
-//            else if(speed == 0 && pressure_set)speed = 0;
-//            else if(pressure_set && actual_acceleration > 0)speed=0;
-//            else speed = nextSpeed;
-//            System.out.println("drive");
-//        } else if(gear == GearTypes.PARK){
-//            speed = 0;
-//            System.out.println("park");
-//        }
-//        System.out.println(speed);
 
         double speedToDisplay = speed/0.448;
         guiRef.setSpeed(speedToDisplay);
@@ -228,12 +200,14 @@ public class Car extends RenderEntity
             {
                 case SimGlobals.GEAR_CHANGE:
                     gear = (GearTypes) message.getMessageData();
-                    first_start = true;
+//                    System.out.println("set gear");
+                    if(sim_is_active) first_start = true;
 		            break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
                     if(brake_percentage != 0 && _isActive) {
                         pressure_set = true;
+//                        System.out.println("set here");
                         if(!first_start) first_start = true;
                     }
 		            break;
@@ -250,9 +224,9 @@ public class Car extends RenderEntity
                     } else if(gear == GearTypes.PARK){
                         idle_a = 0.0f;
                     }
-                    first_start = false;
-                    pressure_set = false;
-                    _isActive = false;
+//                    first_start = false;
+//                    pressure_set = false;
+//                    _isActive = false;
                     sim_is_active = true;
                     _simulationOn = true;
                     break;
@@ -266,11 +240,11 @@ public class Car extends RenderEntity
                     break;
                 case SimGlobals.STOP_SIM:
                     _simulationOn = false;
-                    first_start = false;
+//                    first_start = false;
                     sim_is_active = false;
-                    speed = 0;
-                    pressure_set = false;
-                    _isActive = false;
+//                    speed = 0;
+//                    pressure_set = false;
+//                    _isActive = false;
             }
         }
     }
