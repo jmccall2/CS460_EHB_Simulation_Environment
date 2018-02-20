@@ -1,17 +1,10 @@
 package simulation;
 
-import java.util.ArrayList;
-
 import interfaces.GearInterface;
 import interfaces.GearTypes;
 import interfaces.SpeedInterface;
 import javafx.scene.paint.Color;
-import simulation.engine.Animation;
-import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.MessageHandler;
-import simulation.engine.RenderEntity;
-import simulation.engine.Singleton;
+import simulation.engine.*;
 
 public class Car extends RenderEntity
 {
@@ -19,10 +12,10 @@ public class Car extends RenderEntity
     Helper helper = new Helper();
     private Animation _animationSequence;
     private double speed;
-    private double oldSpeed; // feel free to delete this later
     private GearTypes gear;
     //acceleration due to engine, max ~ 5 m/s^2
     private boolean _isActive;
+    private boolean _simulationOn = true;
     private double applied_brake_force = 0;
     private double actual_brake_force;
     private double brake_percentage;
@@ -47,15 +40,10 @@ public class Car extends RenderEntity
     private static final double friction_threshold = us * 9.81 * mass;
     private GUI guiRef;
 
-    private ArrayList<Fire> _bringTheFire = new ArrayList<>();
 
     public Car()
     {
-        // The second parameter to the Animation is the rate of change
-        // If the rate is 5.0, it means that every 5 seconds we move
-        // to a new animation frame
          _animationSequence = new Animation(this, 0);
-
         _buildFrames();
         setLocationXYDepth(0, START_Y, -1);
         setSpeedXY(speed, 0);
@@ -65,7 +53,7 @@ public class Car extends RenderEntity
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.GEAR_CHANGE,helper);
         Engine.getMessagePump().signalInterest(SimGlobals.START_SIM,helper);
-        oldSpeed = speed;
+        Engine.getMessagePump().signalInterest(SimGlobals.STOP_SIM,helper);
 
         _SpeedGauge = new BarEntity(Color.GREEN,22,625,3,0,0,75,240, BarEntityModes.SPEED);
         _SpeedGauge.setAsStaticActor(true);
@@ -84,13 +72,7 @@ public class Car extends RenderEntity
 
     private void _buildFrames()
     {
-        // In this case, "car_drive" specifies a set of animation frames that go together.
-        // We can create different categories within the same animation object so that
-        // we can have the car play different animations under different circumstances if we want.
         for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
-
-        // This part isn't completely necessary since we only have one category,
-        // but I guess it's good to be explicit
         _animationSequence.setCategory("car_drive");
     }
 
@@ -99,13 +81,10 @@ public class Car extends RenderEntity
 
         float idle_a = 1;
         if(gear == GearTypes.REVERSE){
-//            idle_a = -2.196f;
             idle_a = -(float)(4.0f*(drag_c/mass)) + (9.81f*.02f);
         } else if(gear == GearTypes.NEUTRAL){
             idle_a = 0.0f;
         } else if(gear == GearTypes.DRIVE){
-//            idle_a = 2.196f;
-//            idle_a = 5.0f;
             idle_a = (float)(4.0f*(drag_c/mass)) + (9.81f*.02f);
         } else if(gear == GearTypes.PARK){
             idle_a = 0.0f;
@@ -135,7 +114,6 @@ public class Car extends RenderEntity
             actual_acceleration = speedMod*(-(drag_c * speed * speed)/mass - brake*(actual_brake_force / mass) - brake*(.02 * 9.81))+idle_a;
         }
 
-        double lastSpeed = speed;
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
 
         if(gear == GearTypes.REVERSE){
@@ -165,7 +143,12 @@ public class Car extends RenderEntity
         double speedToDisplay = speed/0.448;
         guiRef.setSpeed(speedToDisplay);
         guiRef.setPressure(brake_percentage);
-//        System.out.println("change in momentum = " + (mass*lastSpeed - mass*speed));
+    }
+
+
+    public boolean running()
+    {
+        return _simulationOn;
     }
 
 
@@ -186,24 +169,25 @@ public class Car extends RenderEntity
     }
 
 
-    int delay = 0;
     int xOffset = 0;
     @Override
     public void pulse(double deltaSeconds) {
-        _animationSequence.update(deltaSeconds); // Make sure we call this!
-        update(deltaSeconds);
-        Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED,speed));
-        setSpeedXY(speed*45,0);
-        _animationSequence.setAnimationRate(1.91/(13*((speed == 0) ? 0.0001 : speed)));
-        _SpeedGauge.updateState(speed);
-        _PressureGauge.updateState(brake_percentage);
-        if(speed > 5 && _startTractionLossAnimation) {
-            new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
-            _wobble();
+        if(_simulationOn) {
+            _animationSequence.update(deltaSeconds); // Make sure we call this!
+            update(deltaSeconds);
+            Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
+            setSpeedXY(speed * 45, 0);
+            _animationSequence.setAnimationRate(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
+            _SpeedGauge.updateState(speed);
+            _PressureGauge.updateState(brake_percentage);
+            if (speed > 5 && _startTractionLossAnimation) {
+                new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
+                _wobble();
+            }
         }
 
     }
-
+    
     class Helper implements MessageHandler
     {
         @Override
@@ -213,7 +197,7 @@ public class Car extends RenderEntity
             {
                 case SimGlobals.GEAR_CHANGE:
                     gear = (GearTypes) message.getMessageData();
-		    break;
+		            break;
                 case SimGlobals.SET_PRESSURE:
                     brake_percentage = (Double) message.getMessageData();
                     if(brake_percentage != 0)  pressure_set = true;
@@ -221,11 +205,14 @@ public class Car extends RenderEntity
                         pressure_set = true;
                         if(!first_start) first_start = true;
                     }
-//                    System.out.println("Brake: " + brake_percentage);
-		    break;
+		            break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     gear = GearInterface.getGear();
+                    _simulationOn = true;
+                    break;
+                case SimGlobals.STOP_SIM:
+                    _simulationOn = false;
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     _isActive = true;
