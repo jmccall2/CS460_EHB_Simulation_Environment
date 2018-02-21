@@ -71,10 +71,11 @@ inteface with it. And then demo using the GUI/running the simulation.
 * Need to produce java docs for the interfaces.
 * Need way to package and deliver library, either through interfacable jar, pre-made intellij/eclipse projects, or build scripts.
 
-Optional:
+Stretch:
 * Fix the clouds so their speed is correct given their perspective. 
 * Impove traction loss animations/add variety
-
+* When the user presses the brake display the distance traveled real time while the brake is pressed, then when the
+brake is unpressed stop updating the distance and leave it in the text box until the user engadges the brake again. 
 
 
 
