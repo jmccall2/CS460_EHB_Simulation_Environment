@@ -18,7 +18,7 @@
       <RadioButton fx:id="parkButton" layoutX="505.0" layoutY="61.0" mnemonicParsing="false" text="Park" textFill="WHITE" />
       <RadioButton fx:id="neutralButton" layoutX="505.0" layoutY="109.0" mnemonicParsing="false" text="Neutral" textFill="WHITE" />
       <RadioButton fx:id="driveButton" layoutX="505.0" layoutY="133.0" mnemonicParsing="false" text="Drive" textFill="WHITE" />
-      <Button fx:id="start_stop_sim" layoutX="14.0" layoutY="34.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="153.0" text="Start Simulation" />
+      <Button fx:id="start_stop_sim" layoutX="14.0" layoutY="34.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="153.0" text="Start" />
       <Button fx:id="handBrake" layoutX="262.0" layoutY="46.0" mnemonicParsing="false" prefHeight="154.0" prefWidth="153.0" style="-fx-background-radius: 100; -fx-background-color: blue; -fx-border-style: none; -fx-border-width: 0;" text="Activate Brake">
          <effect>
             <DropShadow />
