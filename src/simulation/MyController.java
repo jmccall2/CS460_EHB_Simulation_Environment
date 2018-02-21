@@ -83,7 +83,7 @@ public class MyController implements Initializable
         gearButton.setDisable(true);
         setGearTransitions();
         stopped = false;
-        start_stop_sim.setText("Reset simulation");
+        start_stop_sim.setText("Reset");
         _setInitSpeed();
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
@@ -93,7 +93,7 @@ public class MyController implements Initializable
       else if(!stopped)
       {
         stopped = true;
-        start_stop_sim.setText("Start simulation");
+        start_stop_sim.setText("Start");
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.RESET_SIM));
         // Start simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
