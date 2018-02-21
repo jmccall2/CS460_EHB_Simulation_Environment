@@ -24,7 +24,7 @@ public class GUI
     private UITextField pressureField;
     HBox popupBox;
     Stage popUpStage;
-    PopupController controller2;
+    PopupController2 controller2;
     
     public GUI()
     {
@@ -35,8 +35,8 @@ public class GUI
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
       controller = new MyController();
       controller.setGui(this);
-      controller2 = new PopupController();
-      controller2.setGui(this);
+      controller2 = new PopupController2();
+      controller2.setGUI(this);
       _addFXMLCode1();
       _addFXMLCode2();
       popUpStage.setScene(new Scene(popupBox));
@@ -44,7 +44,7 @@ public class GUI
       {
         popUpStage.close();
       });
-      popUpStage.setTitle("Set Gear States");
+      popUpStage.setTitle("Error");
       Pane newPane = new Pane();
       newPane.getChildren().add(_gPane);
       newPane.setLayoutX(110);
@@ -82,6 +82,16 @@ public class GUI
     {
       controller.setInitButtonColor();
     }
+    
+    public void closePopup()
+    {
+      popUpStage.close();
+    }
+    
+    public void showPopup()
+    {
+      popUpStage.show();
+    }
 
     private void _addFXMLCode1()
     {
@@ -103,7 +113,7 @@ public class GUI
       Parent page = null;
       try
       {
-        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("initPopup.fxml"));
+        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("errorPopup.fxml"));
         loader.setController(controller2);
         page = loader.load();
       } catch (IOException e)

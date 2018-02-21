@@ -33,7 +33,6 @@ public class MyController implements Initializable
   @FXML private Button start_stop_sim;
   @FXML private Button handBrake;
   @FXML private Button statsButton;
-  @FXML private Button gearButton;
   @FXML private RadioButton parkButton;
   @FXML private RadioButton reverseButton;
   @FXML private RadioButton neutralButton;
@@ -54,6 +53,7 @@ public class MyController implements Initializable
   String currGear = "D";
   double max_speed = 140;
   StatCollector _statCollector;
+  boolean invalidSpeed = false;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
@@ -76,17 +76,14 @@ public class MyController implements Initializable
     statsButton.setOnAction((event) ->{
       _InvokeOtherStage();
     });
-    gearButton.setOnAction((event)->{
-      guiRef.activatePopup();
-    });
     start_stop_sim.setOnAction((event) -> {
-      if(stopped)
+      if(stopped)_setInitSpeed();
+      if(stopped && !invalidSpeed)
       {
-        gearButton.setDisable(true);
         setGearTransitions();
         stopped = false;
         start_stop_sim.setText("Reset");
-        _setInitSpeed();
+        //_setInitSpeed();
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
@@ -106,8 +103,11 @@ public class MyController implements Initializable
         reverseButton.setDisable(false);
         neutralButton.setDisable(false);
         driveButton.setDisable(false);
-        gearButton.setDisable(false);
       } 
+      else if(invalidSpeed && stopped)
+      {
+        guiRef.showPopup();
+      }
     });
 
     handBrake.setOnMouseReleased(event -> {
@@ -311,23 +311,27 @@ public class MyController implements Initializable
       {
 
         speed = Double.parseDouble(setSpeedField.getText());
-        if (speed < 0)
-        {
-          speed *= -1;
-          String speedStr = String.format("%.1f", speed);
-          setSpeedField.setText(speedStr);
-        }
       }
       catch(NumberFormatException ex)
       {
+        invalidSpeed = true;
         System.out.println(ex);
       }
       if(speed >= 0 && speed <= max_speed)
       {
+        invalidSpeed = false;
         if(inReverse)speed *=-1;
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed*MPH_TO_MS));
         System.out.println("SENDING SPEED " + speed);
       }
+      else
+      {
+        invalidSpeed = true;
+      }
+    }
+    else if(setSpeedField.getText().isEmpty())
+    {
+      invalidSpeed = false;
     }
   }
   
