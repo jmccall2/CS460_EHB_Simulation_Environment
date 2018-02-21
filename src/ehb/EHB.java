@@ -94,8 +94,7 @@ public class EHB
                 closestResult = ceiling.getValue();
             }
 
-            //BrakeInterface.setPressure((closestResult / 6.0) * 100);
-            BrakeInterface.setPressure(100.0);
+            BrakeInterface.setPressure((closestResult / 6.0) * 100);
         }
     }
     else

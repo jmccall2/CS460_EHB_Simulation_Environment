@@ -68,7 +68,7 @@ public class GUI
     
     public void setSpeed(double speed)
     {
-      String speedStr = String.format("%.1f", speed);
+      String speedStr = String.format("%.1f", Math.abs(speed));
       currSpeedField.setText(speedStr);
     }
     
