@@ -174,9 +174,13 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     }
 
     /**
-     * This allows a partial restart to take place. Some key ideas is that the
-     * minimum number of memory allocations will take place and all submodules
-     * (including the ApplicationEntryPoint) will be re-initialized.
+     * This allows a partial restart to take place. The
+     * minimum number of memory allocations to perform this will take place
+     * and all submodules (including the ApplicationEntryPoint) will be re-initialized.
+     *
+     * This will ensure the removal of all render entities, all pulse entities,
+     * and all GUI elements. Along with this it will reset the console variables
+     * and the entire message pump.
      */
     private void _softRestart()
     {
