@@ -28,16 +28,34 @@ public class EHB
   static
   {
     goodPressureProfile = new TreeMap<Long, Integer>();
-    goodPressureProfile.put(Long.valueOf(20), 2);
-    goodPressureProfile.put(Long.valueOf(30), 3);
-    goodPressureProfile.put(Long.valueOf(40), 4);
-    goodPressureProfile.put(Long.valueOf(50), 4);
-    goodPressureProfile.put(Long.valueOf(60), 5);
-    goodPressureProfile.put(Long.valueOf(70), 6);
-    goodPressureProfile.put(Long.valueOf(80), 6);
-    goodPressureProfile.put(Long.valueOf(90), 5);
-    goodPressureProfile.put(Long.valueOf(100), 5);
+    goodPressureProfile.put(Long.valueOf(20), 6);
+    goodPressureProfile.put(Long.valueOf(30), 6);
+    goodPressureProfile.put(Long.valueOf(40), 5);
+    goodPressureProfile.put(Long.valueOf(50), 5);
+    goodPressureProfile.put(Long.valueOf(60), 4);
+    goodPressureProfile.put(Long.valueOf(70), 4);
+    goodPressureProfile.put(Long.valueOf(80), 3);
+    goodPressureProfile.put(Long.valueOf(90), 3);
+    goodPressureProfile.put(Long.valueOf(100), 2);
   }
+
+  //the car should crash on high speeds with the bad pressure profiler
+  static TreeMap<Long, Integer> badPressureProfile;
+
+  static
+  {
+    badPressureProfile = new TreeMap<Long, Integer>();
+    badPressureProfile.put(Long.valueOf(20), 2);
+    badPressureProfile.put(Long.valueOf(30), 2);
+    badPressureProfile.put(Long.valueOf(40), 3);
+    badPressureProfile.put(Long.valueOf(50), 3);
+    badPressureProfile.put(Long.valueOf(60), 4);
+    badPressureProfile.put(Long.valueOf(70), 4);
+    badPressureProfile.put(Long.valueOf(80), 5);
+    badPressureProfile.put(Long.valueOf(90), 5);
+    badPressureProfile.put(Long.valueOf(100), 6);
+  }
+
   //The plot is not supposed to be perfectly linear. These values only serve as
   //an approximation of what the graph should be.
 
