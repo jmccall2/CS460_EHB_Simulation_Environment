@@ -25,7 +25,7 @@ public class ButtonInterface
     }
     static public void play(ButtonSoundTypes s)
     {
-        URL url = ButtonInterface.class.getResource(_mapToSoundFile(s));
+        URL url = ButtonInterface.class.getResource(s.toString());
         AudioClip sound = new AudioClip(url.toExternalForm());
         sound.play(1, 0, 1, 0, 1);
     }
@@ -33,21 +33,6 @@ public class ButtonInterface
     public static boolean isDown()
     {
         return _isDown;
-    }
-
-
-    private static String _mapToSoundFile(ButtonSoundTypes sound)
-    {
-        switch(sound)
-        {
-            case ENGAGED:
-                return "/resources/sounds/engaged.wav";
-            case DISENGAGED:
-                return "/resources/sounds/disengaged.wav";
-            default:
-                System.err.println("WARNING: Invalid color provided");
-                return "";
-        }
     }
 
     class Helper implements MessageHandler
