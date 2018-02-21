@@ -21,10 +21,12 @@ import java.util.HashMap;
  */
 public class Animation implements MessageHandler {
     private RenderEntity _managedEntity;
+    private HashMap<String, Integer> _animationIndexHistories = new HashMap<>();
     private HashMap<String, ArrayList<String>> _animationCategories = new HashMap<>();
     private double _changeRate = 1.0; // If this is 1.0 (for example) it means that every second the frame will change
     private double _elapsedSeconds = 0.0;
     private int _currentAnimIndex = 0;
+    private String _currentCategory = "";
     private ArrayList<String> _currentAnimationSequence;
     private boolean _animate;
 
@@ -82,7 +84,9 @@ public class Animation implements MessageHandler {
         }
         _currentAnimationSequence = _animationCategories.get(category);
         //_elapsedSeconds = 0.0;
-        _currentAnimIndex = 0;
+        if (!_currentCategory.equals("")) _animationIndexHistories.put(_currentCategory, _currentAnimIndex);
+        _currentCategory = category;
+        _currentAnimIndex = _animationIndexHistories.get(category);
     }
 
     /**
@@ -96,6 +100,7 @@ public class Animation implements MessageHandler {
         if (!_animationCategories.containsKey(category))
         {
             _animationCategories.put(category, new ArrayList<>());
+            _animationIndexHistories.put(category, 0);
         }
         _animationCategories.get(category).add(file);
         Engine.getMessagePump().sendMessage(new Message(Singleton.REGISTER_TEXTURE, file));
