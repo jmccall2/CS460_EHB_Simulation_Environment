@@ -1,5 +1,6 @@
 package simulation;
 
+import interfaces.SpeedInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -13,6 +14,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import simulation.engine.Engine;
+import simulation.engine.Message;
+import simulation.engine.MessageHandler;
+import simulation.engine.Pulsar;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class SimulationStats {
     @FXML
@@ -27,15 +37,20 @@ public class SimulationStats {
     private Label _title;
     private CategoryAxis _xAxis = new CategoryAxis();
     private NumberAxis _yAxis = new NumberAxis();
-    private LineChart<String,Number> _lineChart =
-            new LineChart<String,Number>(_xAxis,_yAxis);
+    private LineChart<String, Number> _lineChart =
+            new LineChart<String, Number>(_xAxis, _yAxis);
+    private LinkedList<Double> _deltaXValues = new LinkedList<>();
+    private Map<Double, LinkedList<Double>> _deltaXSpeedData = new HashMap<>();
+    private Map<Double, LinkedList<Double>> _deltaXPressureData = new HashMap<>();
+    private Map<Double, String> _timeAxisLabels = new HashMap<>();
     private XYChart.Series _data = new XYChart.Series();
-
+    private double _pressure = 0.0;
     private int _nCharts = 3;
     private int _currentChart = 0;
+    private Helper _helper = new Helper();
 
-    public void init()
-    {
+
+    public void init() {
         initializeButtons();
         _title.setTextFill(Color.web("#FFFFFF"));
         _lineChart.getStylesheets().add(
@@ -45,9 +60,22 @@ public class SimulationStats {
         _lineChart.setLayoutX(20.0);
         _lineChart.setLayoutY(30.0);
         _lineChart.setLegendVisible(false);
-        displayNewGraph();
-    }
 
+        Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE, _helper);
+
+        // Initialize data containers.
+        for (double deltaX : _deltaXValues) {
+            _deltaXPressureData.put(deltaX, new LinkedList<>());
+            _deltaXSpeedData.put(deltaX, new LinkedList<>());
+            _timeAxisLabels.put(deltaX, "(" + deltaX + " Second Intervals)");
+        }
+        // Generate Pulsars to get data from the engine.
+        new Pulsar(1.0, () -> _updateData(1.0)).start();
+        new Pulsar(10.0, () -> _updateData(10.0)).start();
+        new Pulsar(30.0, () -> _updateData(30.0)).start();
+        new Pulsar(60.0, () -> _updateData(60.0)).start();
+
+    }
 
     // Get resources.
     private ImageView _left = new ImageView(
@@ -61,7 +89,16 @@ public class SimulationStats {
         stage.close();
     }
 
-    public void updateButtonVisibility()
+
+    private void _updateData(double deltaX)
+    {
+        if(_deltaXSpeedData.get(deltaX).size() >= 20) _deltaXSpeedData.get(deltaX).pop();
+        if(_deltaXPressureData.get(deltaX).size() >= 20) _deltaXPressureData.get(deltaX).pop();
+        _deltaXSpeedData.get(deltaX).add(SpeedInterface.getSpeed());
+        _deltaXPressureData.get(deltaX).add(_pressure); // Not available through the interfaces.
+    }
+
+    private void updateButtonVisibility()
     {
         if (_title.getText().equals("Speed vs Time"))
         {
@@ -92,31 +129,13 @@ public class SimulationStats {
     private void displayNewGraph()
     {
         _lineChart.getData().clear();
-        switch(_currentChart)
-        {
-            case 0:
-                _buildFakeSpeedData();
-                _xAxis.setLabel("Time (Minutes)");
-                _yAxis.setLabel("Speed (MPH)");
-                _title.setText("Speed vs Time");
-                break;
-            case 1:
-                _buildFakePressureData();
-                _xAxis.setLabel("Time (Minutes)");
-                _yAxis.setLabel("Pressure %");
-                _title.setText("Pressure vs Time");
-                break;
-            case 2:
-                _buildFakeSpeedVsPressureData();
-                _xAxis.setLabel("Speed");
-                _yAxis.setLabel("Pressure %");
-                _title.setText("Speed vs Pressure");
-                break;
-        }
-        _lineChart.getData().setAll(_data);
-
+        double deltaX = _deltaXValues.get(_currentChart);
+        String timeInterval =  _timeAxisLabels.get(deltaX);
+        _xAxis.setLabel(timeInterval);
+        _yAxis.setLabel(_currentChart < 3 ? "Speed (MPH)" : "Pressure %");
+        _title.setText((_currentChart < 3 ? "Speed vs " : "Pressure vs ") + " Time " + timeInterval);
+        _lineChart.getData().setAll(_currentChart < 3 ? _mapToSeries(_deltaXSpeedData) : _mapToSeries(_deltaXPressureData));
     }
-
 
     /**
      * Initialize the buttons.
@@ -138,53 +157,27 @@ public class SimulationStats {
         _leftButton.setVisible(false); // Can't go left to start.
     }
 
-
-    // This is for testing purposes.. real data will be used later.
-    // Note so I don't forget: choose time interval to check /add new graph nodes, like one minute.
-    // Interval must match x axis incrementation.
-    private void _buildFakeSpeedData()
+    private XYChart.Series _mapToSeries(Map<Double, LinkedList<Double>> rawData)
     {
-        _data = new XYChart.Series(); // _data.getData().clear(); does not work, new instance must be created.
-        _data.getData().add(new XYChart.Data("0", 23));
-        _data.getData().add(new XYChart.Data("1", 14));
-        _data.getData().add(new XYChart.Data("2", 15));
-        _data.getData().add(new XYChart.Data("3", 24));
-        _data.getData().add(new XYChart.Data("4", 34));
-        _data.getData().add(new XYChart.Data("5", 36));
-        _data.getData().add(new XYChart.Data("6", 22));
-        _data.getData().add(new XYChart.Data("7", 45));
-        _data.getData().add(new XYChart.Data("8", 43));
-        _data.getData().add(new XYChart.Data("9", 17));
-    }
-    private void _buildFakePressureData()
-    {
-        _data = new XYChart.Series();
-        _data.getData().add(new XYChart.Data("0", 23));
-        _data.getData().add(new XYChart.Data("1", 74));
-        _data.getData().add(new XYChart.Data("2", 45));
-        _data.getData().add(new XYChart.Data("3", 24));
-        _data.getData().add(new XYChart.Data("4", 64));
-        _data.getData().add(new XYChart.Data("5", 36));
-        _data.getData().add(new XYChart.Data("6", 22));
-        _data.getData().add(new XYChart.Data("7", 45));
-        _data.getData().add(new XYChart.Data("8", 13));
-        _data.getData().add(new XYChart.Data("9", 17));
-    }
-    private void _buildFakeSpeedVsPressureData()
-    {
-        _data = new XYChart.Series();
-        _data.getData().add(new XYChart.Data("0", 23));
-        _data.getData().add(new XYChart.Data("1", 14));
-        _data.getData().add(new XYChart.Data("2", 15));
-        _data.getData().add(new XYChart.Data("3", 24));
-        _data.getData().add(new XYChart.Data("4", 64));
-        _data.getData().add(new XYChart.Data("5", 26));
-        _data.getData().add(new XYChart.Data("6", 72));
-        _data.getData().add(new XYChart.Data("7", 25));
-        _data.getData().add(new XYChart.Data("8", 83));
-        _data.getData().add(new XYChart.Data("9", 17));
+        XYChart.Series series = new XYChart.Series();
+        for(Map.Entry<Double,LinkedList<Double>> entry : rawData.entrySet()) series.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
+        return series;
     }
 
 
+    class Helper implements MessageHandler
+    {
+        @Override
+        public void handleMessage(Message message)
+        {
+            switch (message.getMessageName())
+            {
+                case SimGlobals.SET_PRESSURE:
+                    _pressure = (Double) message.getMessageData();
+                    break;
+
+            }
+        }
+    }
 
 }
