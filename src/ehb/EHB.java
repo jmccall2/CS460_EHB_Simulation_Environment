@@ -89,7 +89,7 @@ public class EHB
       _speed = (SpeedInterface.getSpeed() / 0.44704); // Get the speed from the speed interface.
       _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
 
-      System.out.println("speed is " + (SpeedInterface.getSpeed() / 0.44704));
+//      System.out.println("speed is " + (SpeedInterface.getSpeed() / 0.44704));
 
       if (_gear.toString().equals("Park"))
       {
