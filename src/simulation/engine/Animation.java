@@ -69,7 +69,7 @@ public class Animation implements MessageHandler {
      */
     public void setAnimationRate(double rateOfChange)
     {
-        if (rateOfChange < 0.0) rateOfChange *= -1;
+//        if (rateOfChange < 0.0) rateOfChange *= -1;
         _changeRate = rateOfChange;
     }
 
