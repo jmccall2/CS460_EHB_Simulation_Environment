@@ -25,6 +25,7 @@ public class EHB
 //  static Map<Integer, Integer> goodPressureProfile;
   static TreeMap<Long, Integer> goodPressureProfile;
 
+  //The units for the profiler is miles per hour to kPascal
   static
   {
     goodPressureProfile = new TreeMap<Long, Integer>();
@@ -85,10 +86,10 @@ public class EHB
         wasEngaged = true;
         alertPlayed++;
       }
-      _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
+      _speed = (SpeedInterface.getSpeed() / 0.44704); // Get the speed from the speed interface.
       _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
 
-      System.out.println("speed is " + SpeedInterface.getSpeed());
+      System.out.println("speed is " + (SpeedInterface.getSpeed() / 0.44704));
 
       if (_gear.toString().equals("Park"))
       {
@@ -100,23 +101,17 @@ public class EHB
       }
       else
       {
-
-
         //This uses the max and low values of the tree map to get the closest value in the
         //pressure profile
         Long key = Long.valueOf((int) _speed);
-//        System.out.println("key is " + key);
         Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
         Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
 
-//        System.out.println("floor is " + floor);
-//        System.out.println("ceiling is " + ceiling);
 
         double closestResult;
         if (floor != null && ceiling != null)
         {
           closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
-//          System.out.println("avg is " + closestResult);
         }
         else if (floor != null)
         {
@@ -127,6 +122,7 @@ public class EHB
           closestResult = ceiling.getValue();
         }
 
+//        System.out.println("Pressure applied is " + (closestResult / 6.0) * 100);
         BrakeInterface.setPressure((closestResult / 6.0) * 100);
       }
     }
