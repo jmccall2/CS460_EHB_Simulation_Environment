@@ -47,9 +47,11 @@ public class Car extends RenderEntity
  //   private static final double h = 1.0/60; // update rate
     private static final double drag_c = 2; // drag coefficient
     private boolean _startTractionLossAnimation = false;
+    // Coefficient of kinetic friction. this is constant
     private static final double uk = .68; // coefficient of kinetic friction
-    private static final double us = .9; // coefficient of static friction
-    private static final double friction_threshold = us * 9.81 * mass;
+    // Coefficient of static friction. this changes with velocity
+    private static double us; // coefficient of static friction
+    private static double friction_threshold;
     private GUI guiRef;
 
 
@@ -123,6 +125,17 @@ public class Car extends RenderEntity
                 if(current_acc > target_acc) current_acc = target_acc;
             }
         }
+        if(gear == GearTypes.NEUTRAL){
+            if(current_acc == 0) return current_acc;
+            if(current_acc>0){
+                current_acc -= rate;
+                if (current_acc < target_acc) current_acc = 0;
+            }
+            if(current_acc<0){
+                current_acc += rate;
+                if (current_acc > target_acc) current_acc = 0;
+            }
+        }
         return current_acc;
     }
 
@@ -151,9 +164,14 @@ public class Car extends RenderEntity
 
         applied_brake_force = 167 * brake_percentage;
 
+        // found this by interpolating between known us/speed points
+        us = .9125 - .002796*speed;
+        friction_threshold = us * 9.81 * mass;
+
         if (applied_brake_force < friction_threshold) actual_brake_force = applied_brake_force;
         else actual_brake_force = uk * mass * g;
 
+        // todo change animation
         if(_isActive) {
             if (applied_brake_force > friction_threshold - 4000) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
