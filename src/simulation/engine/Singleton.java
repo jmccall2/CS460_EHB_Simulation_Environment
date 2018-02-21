@@ -19,6 +19,8 @@ public class Singleton {
     // is a reference to the UI element
     public static final String ADD_UI_ELEMENT = "add_ui_element";
     public static final String REMOVE_UI_ELEMENT = "remove_ui_element";
+    // Removes all UI elements currently part of the screen
+    public static final String REMOVE_ALL_UI_ELEMENTS = "remove_all_ui_elements";
 
     // This message is sent whenever any of the console variables changes - the data
     // will be a direct reference to the changed variable
@@ -29,16 +31,23 @@ public class Singleton {
     public static final String ADD_PULSE_ENTITY = "add_pulse_entity";
     // Removes the pulse entity (which should be included as the data portion of the message).
     public static final String REMOVE_PULSE_ENTITY = "remove_pulse_entity";
+    // Removes all registered pulse entities
+    public static final String REMOVE_ALL_PULSE_ENTITIES = "remove_all_pulse_entities";
     // Informs the rendering system to add the given entity to the world - the data
     // part of your message should contain the entity to add
     public static final String ADD_RENDER_ENTITY = "add_render_entity";
     public static final String REMOVE_RENDER_ENTITY = "remove_render_entity";
+    // Removes all currently registered render entities
+    public static final String REMOVE_ALL_RENDER_ENTITIES = "remove_all_render_entities";
     // Tells the renderer to register the texture and cache it - the data part
     // of your message should be a string to a file
     public static final String REGISTER_TEXTURE = "register_texture";
     // Sets the main camera of the scene - the data part of the object
     // should be a reference to a Camera object
     public static final String SET_MAIN_CAMERA = "set_main_camera";
+    // Tells the engine to perform a soft reset (does not reallocate everything,
+    // but does call init() for all submodules)
+    public static final String PERFORM_SOFT_RESET = "perform_soft_reset";
 
     /**
      * The following are console variables that will be registered at startup

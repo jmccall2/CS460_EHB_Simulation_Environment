@@ -107,6 +107,16 @@ public class ConsoleVariables {
     }
 
     /**
+     * Removes all console variables
+     */
+    public void clear()
+    {
+        _cvars.clear();
+        _cvarEditCounts.clear();
+        _editedCvars.clear();
+    }
+
+    /**
      * Loads a key-value config file and registers each one as
      * a console variable that can be retrieved later.
      * @param configFile path to the config file to load

@@ -87,6 +87,7 @@ public class Car extends RenderEntity
     private void _buildFrames()
     {
         for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
+        for(int i = 13; i >= 1; i--) _animationSequence.addAnimationFrame("car_reverse", "resources/img/car/car" + i + ".png");
         _animationSequence.setCategory("car_drive");
     }
 
@@ -166,16 +167,17 @@ public class Car extends RenderEntity
 
     private void _wobble()
     {
+        double absSpeed = Math.abs(speed);
         double wobblePeriod;
         double wobble;
         _wobbleCurrentInput+=_wobbleInputStepSize;
         if(_wobbleCurrentInput > _wobbleMaxInput) _wobbleCurrentInput = _wobbleMinInput;
-        if(speed < 63 && speed > 50) wobblePeriod = 1;
-        else if(speed < 50 && speed > 35) wobblePeriod = 5;
-        else if (speed < 35 && speed > 20) wobblePeriod = 10;
-        else if (speed < 20 && speed > 10) wobblePeriod = 15;
+        if(absSpeed < 63 && absSpeed > 50) wobblePeriod = 1;
+        else if(absSpeed < 50 && absSpeed > 35) wobblePeriod = 5;
+        else if (absSpeed < 35 && absSpeed > 20) wobblePeriod = 10;
+        else if (absSpeed < 20 && absSpeed > 10) wobblePeriod = 15;
         else wobblePeriod = 20;
-        wobble  =(speed/20)*Math.sin(wobblePeriod*_wobbleCurrentInput);
+        wobble  =(absSpeed/20)*Math.sin(wobblePeriod*_wobbleCurrentInput);
         setRotation(wobble);
         setLocationXYDepth(getLocationX(), getLocationY() + wobble, -1);
     }
@@ -193,7 +195,7 @@ public class Car extends RenderEntity
 //            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
             _SpeedGauge.updateState(speed);
             _PressureGauge.updateState(brake_percentage);
-            if (speed > 5 && _startTractionLossAnimation) {
+            if (Math.abs(speed) > 5 && _startTractionLossAnimation) {
                 new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
                 _wobble();
             }

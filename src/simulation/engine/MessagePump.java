@@ -15,7 +15,17 @@ import java.util.Map;
 public class MessagePump {
     private final HashMap<String, Message> _registeredMessages = new HashMap<>();
     private final HashMap<Message, LinkedList<MessageHandler>> _registeredHandlers = new HashMap<>();
-    private final LinkedList<Message> _messageDispatchBuffer = new LinkedList<>();
+    private LinkedList<Message> _messageDispatchBuffer = new LinkedList<>();
+    private LinkedList<Message> _messageDispatchBackBuffer = new LinkedList<>();
+
+    /**
+     * Gets rid of all registered message handlers, meaning no references will
+     * be kept to them
+     */
+    public void clearAllMessageHandlers()
+    {
+        _registeredHandlers.clear();
+    }
 
     /**
      * Tells the message pump that you are interested in receiving event
@@ -137,7 +147,13 @@ public class MessagePump {
      */
     void dispatchMessages()
     {
-        for (Message msg : _messageDispatchBuffer)
+        // We swap these buffers to allow new messages to be added while dispatch
+        // is taking place
+        LinkedList<Message> buffer = _messageDispatchBuffer;
+        _messageDispatchBuffer = _messageDispatchBackBuffer;
+        _messageDispatchBuffer.clear();
+        _messageDispatchBackBuffer = buffer;
+        for (Message msg : buffer)
         {
             LinkedList<MessageHandler> interested = _registeredHandlers.get(msg);
             for (MessageHandler handler : interested)
@@ -145,7 +161,5 @@ public class MessagePump {
                 handler.handleMessage(msg);
             }
         }
-        // Make sure we get rid of all recently-dispatched messages
-        _messageDispatchBuffer.clear();
     }
 }

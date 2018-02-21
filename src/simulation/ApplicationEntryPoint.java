@@ -121,11 +121,13 @@ public class ApplicationEntryPoint implements PulseEntity{
         if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
+        /*
         if (restart && !wasRestarted)
         {
             init();
             wasRestarted = true;
         }
+        */
     }
 
     class Helper implements MessageHandler
@@ -135,10 +137,8 @@ public class ApplicationEntryPoint implements PulseEntity{
         {
             if(message.getMessageName().equals(SimGlobals.RESET_SIM))
             {
-                wasRestarted = false;
-                restart = true;
+                Engine.getMessagePump().sendMessage(new Message(Singleton.PERFORM_SOFT_RESET));
             }
-            else restart = false;
         }
     }
 }
