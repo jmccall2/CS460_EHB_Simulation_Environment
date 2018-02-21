@@ -188,7 +188,7 @@ public class Car extends RenderEntity
 //            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
             _SpeedGauge.updateState(speed);
             _PressureGauge.updateState(brake_percentage);
-            if (speed > 5 && _startTractionLossAnimation) {
+            if (Math.abs(speed) > 5 && _startTractionLossAnimation) {
                 new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
                 _wobble();
             }
