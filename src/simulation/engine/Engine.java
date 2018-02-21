@@ -16,6 +16,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     static final String R_RENDER_SCENE = "r_render_screen";
     static final String R_UPDATE_ENTITIES = "r_update_entities";
 
+    private Stage _initialStage;
     private HashSet<PulseEntity> _pulseEntities;
     private ApplicationEntryPoint _application;
     private MessagePump _messageSystem;
@@ -49,6 +50,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
 
     @Override
     public void start(Stage stage) {
+        _initialStage = stage;
         // Initialize the simulation.engine
         _init(stage);
         // Initialize the game loop
@@ -103,6 +105,9 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
             case Singleton.REMOVE_PULSE_ENTITY:
                 _deregisterPulseEntity((PulseEntity)message.getMessageData());
                 break;
+            case Singleton.REMOVE_ALL_PULSE_ENTITIES:
+                _pulseEntities.clear();
+                break;
             case Singleton.CONSOLE_VARIABLE_CHANGED:
             {
                 ConsoleVariable cvar = (ConsoleVariable)message.getMessageData();
@@ -112,6 +117,10 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
                 }
                 break;
             }
+            case Singleton.PERFORM_SOFT_RESET:
+                System.err.println("Engine: performing an in-place soft reset");
+                _softRestart();
+                break;
         }
     }
 
@@ -121,32 +130,65 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _application.shutdown();
     }
 
+    // Performs memory allocation of core submodules and then initializes
+    // the system
     private void _init(Stage stage)
     {
         if (_isInitialized) return; // Already initialized
         _isInitialized = true;
         _engine = this; // This is a static variable
         _cvarSystem = new ConsoleVariables();
+        _messageSystem = new MessagePump();
+        _pulseEntities = new HashSet<>();
+        _window = new Window();
+        _renderer = new Renderer();
+        _application = new ApplicationEntryPoint();
+        _isRunning = true;
+        _initSubmodules(stage);
+    }
+
+    // Performs minimal allocations but initializes all submodules in the
+    // correct order
+    private void _initSubmodules(Stage stage)
+    {
+        // Just for sanity, make sure these are cleared before proceeding
+        //getConsoleVariables().clear();
+        //getMessagePump().clearAllMessageHandlers();
         _cvarSystem.loadConfigFile("src/resources/engine.cfg");
         _registerDefaultCVars();
         _updateEntities = Boolean.parseBoolean(_cvarSystem.find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
-        _messageSystem = new MessagePump();
         // Make sure we register all of the message types
         _registerMessageTypes();
         // Signal interest in the things the simulation.engine needs to know about
         _messageSystem.signalInterest(Singleton.ADD_PULSE_ENTITY, this);
         _messageSystem.signalInterest(Singleton.REMOVE_PULSE_ENTITY, this);
         _messageSystem.signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
+        _messageSystem.signalInterest(Singleton.REMOVE_ALL_PULSE_ENTITIES, this);
+        _messageSystem.signalInterest(Singleton.PERFORM_SOFT_RESET, this);
         _pulseEntities = new HashSet<>();
-        _window = new Window();
-        _renderer = new Renderer();
-        _application = new ApplicationEntryPoint();
-        _isRunning = true;
         _lastFrameTimeMS = System.currentTimeMillis();
         GraphicsContext gc = _window.init(stage);
         _renderer.init(gc);
         _application.init();
         _maxFrameRate = _cvarSystem.find(Singleton.ENG_MAX_FPS).getcvarAsInt();
+    }
+
+    /**
+     * This allows a partial restart to take place. Some key ideas is that the
+     * minimum number of memory allocations will take place and all submodules
+     * (including the ApplicationEntryPoint) will be re-initialized.
+     */
+    private void _softRestart()
+    {
+        getMessagePump().sendMessage(new Message(Singleton.REMOVE_ALL_RENDER_ENTITIES));
+        getMessagePump().sendMessage(new Message(Singleton.REMOVE_ALL_PULSE_ENTITIES));
+        getMessagePump().sendMessage(new Message(Singleton.REMOVE_ALL_UI_ELEMENTS));
+        // Dispatch the messages immediately
+        getMessagePump().dispatchMessages();
+        // Reallocate these only
+        _cvarSystem = new ConsoleVariables();
+        _messageSystem = new MessagePump();
+        _initSubmodules(_initialStage);
     }
 
     private void _registerDefaultCVars()
@@ -176,6 +218,10 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _messageSystem.registerMessage(new Message(Singleton.CONSOLE_VARIABLE_CHANGED));
         _messageSystem.registerMessage(new Message(R_RENDER_SCENE));
         _messageSystem.registerMessage(new Message(R_UPDATE_ENTITIES));
+        _messageSystem.registerMessage(new Message(Singleton.REMOVE_ALL_UI_ELEMENTS));
+        _messageSystem.registerMessage(new Message(Singleton.REMOVE_ALL_PULSE_ENTITIES));
+        _messageSystem.registerMessage(new Message(Singleton.REMOVE_ALL_RENDER_ENTITIES));
+        _messageSystem.registerMessage(new Message(Singleton.PERFORM_SOFT_RESET));
     }
 
     /**

@@ -68,6 +68,7 @@ public class Window implements MessageHandler, PulseEntity {
         Engine.getMessagePump().signalInterest(Singleton.ADD_UI_ELEMENT, this);
         Engine.getMessagePump().signalInterest(Singleton.REMOVE_UI_ELEMENT, this);
         Engine.getMessagePump().signalInterest(Singleton.CONSOLE_VARIABLE_CHANGED, this);
+        Engine.getMessagePump().signalInterest(Singleton.REMOVE_ALL_UI_ELEMENTS, this);
         stage.setFullScreen(_isFullscreen);
         stage.setResizable(_resizeable);
         if (_isFullscreen)
@@ -124,6 +125,11 @@ public class Window implements MessageHandler, PulseEntity {
             case Singleton.REMOVE_UI_ELEMENT:
             {
                 _stack.getChildren().remove((Node)message.getMessageData());
+                break;
+            }
+            case Singleton.REMOVE_ALL_UI_ELEMENTS:
+            {
+                _stack.getChildren().clear();
                 break;
             }
         }

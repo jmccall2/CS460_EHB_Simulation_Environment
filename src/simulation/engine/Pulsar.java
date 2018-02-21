@@ -9,7 +9,7 @@ package simulation.engine;
  *
  * If the engine is paused then the Pulsar will not update.
  *
- * @autho Justin Hall
+ * @author Justin Hall
  */
 public class Pulsar implements PulseEntity {
     private double _intervalSeconds;

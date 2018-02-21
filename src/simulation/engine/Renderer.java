@@ -33,6 +33,7 @@ public class Renderer implements MessageHandler {
         Engine.getMessagePump().signalInterest(Singleton.SET_MAIN_CAMERA, this);
         Engine.getMessagePump().signalInterest(Engine.R_RENDER_SCENE, this);
         Engine.getMessagePump().signalInterest(Engine.R_UPDATE_ENTITIES, this);
+        Engine.getMessagePump().signalInterest(Singleton.REMOVE_ALL_RENDER_ENTITIES, this);
     }
 
     @Override
@@ -50,6 +51,9 @@ public class Renderer implements MessageHandler {
                 break;
             case Singleton.REMOVE_RENDER_ENTITY:
                 _entities.remove((RenderEntity)message.getMessageData());
+                break;
+            case Singleton.REMOVE_ALL_RENDER_ENTITIES:
+                _entities.clear();
                 break;
             case Singleton.REGISTER_TEXTURE: {
                 String texture = (String)message.getMessageData();
