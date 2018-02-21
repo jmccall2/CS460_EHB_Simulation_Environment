@@ -81,7 +81,7 @@ public class Animation implements MessageHandler {
             return;
         }
         _currentAnimationSequence = _animationCategories.get(category);
-        _elapsedSeconds = 0.0;
+        //_elapsedSeconds = 0.0;
         _currentAnimIndex = 0;
     }
 
