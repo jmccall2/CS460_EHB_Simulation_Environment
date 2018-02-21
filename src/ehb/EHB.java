@@ -17,7 +17,6 @@ public class EHB
 
   private double _speed;
   private GearTypes _gear;
-  private boolean _isActive;
   private boolean wasEngaged = false;
   private int alertPlayed = 0;
 
@@ -50,11 +49,7 @@ public class EHB
     init();
   }
 
-  public void init()
-  {
-    ButtonInterface.setColor(ButtonColorTypes.BLUE);
-    _isActive = false;
-  }
+  public void init() { }
 
   //Add timer to class to demo how they can measure. time between button clicks.
 

@@ -15,6 +15,7 @@ https://pixabay.com/p-1844227/?no_redirect
 http://www.publicdomainpictures.net/pictures/190000/velka/the-sun-30.jpg
 https://commons.wikimedia.org/wiki/File:Linecons_small-cloud.svg
 http://clipart-library.com/images/kc8o9GEoi.jpg
+https://www.soundjay.com/beep-sounds-2.html
 
 GUI theme source (DarkTheme.css):
 http://code.makery.ch/library/javafx-8-tutorial/part4/
@@ -28,11 +29,6 @@ to go into a bad state.**
 
 * The sun follows the car onto the land 
 
-GUI: 
-* Make GUI buttons all same size and aligned horizontally and vertically.
-
-GUI/Simulation binding:
-* Data from simulation needs to be plotted on graph(s)/update real time. 
 
 Simulation:
 * ? 
@@ -40,9 +36,6 @@ Simulation:
 EHB:
 * Add example to show what happens when you incorrectly apply pressure. *High pressure should be applied at low speeds and low pressure at high speeds* 
 
-Interfaces:
-* Colors in color enum should be: Blue, Red, Green, Yellow, Orange, and Light Blue according to the SRS"s
-* Sounds in the sound enum should be: Engaged, Disengaged, long beep, and short beep according tot he SRS"s. 
 
 Presentation/Release:
 * No powerpoint for the presentation: focus on showing the interfaces and the demo EHB package so they know how to 
