@@ -67,60 +67,80 @@ public class EHB
     init();
   }
 
-  public void init() { }
+  public void init()
+  {
+  }
 
   //Add timer to class to demo how they can measure. time between button clicks.
 
   public void update()
   {
-    if (ButtonInterface.isDown()) {
-        ButtonInterface.setColor(ButtonColorTypes.RED);
-        if(alertPlayed == 0)
+    _speed = 0;
+    if (ButtonInterface.isDown())
+    {
+      ButtonInterface.setColor(ButtonColorTypes.RED);
+      if (alertPlayed == 0)
+      {
+        ButtonInterface.play(ButtonSoundTypes.ENGAGED);
+        wasEngaged = true;
+        alertPlayed++;
+      }
+      _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
+      _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
+
+      System.out.println("speed is " + SpeedInterface.getSpeed());
+
+      if (_gear.toString().equals("Park"))
+      {
+        BrakeInterface.setPressure(100.00);
+      }
+      else if ((!_gear.toString().equals("Reverse")) && _speed < 0)
+      {
+        BrakeInterface.setPressure(100.00);
+      }
+      else
+      {
+
+
+        //This uses the max and low values of the tree map to get the closest value in the
+        //pressure profile
+        Long key = Long.valueOf((int) _speed);
+//        System.out.println("key is " + key);
+        Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
+        Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
+
+//        System.out.println("floor is " + floor);
+//        System.out.println("ceiling is " + ceiling);
+
+        double closestResult;
+        if (floor != null && ceiling != null)
         {
-          ButtonInterface.play(ButtonSoundTypes.ENGAGED);
-          wasEngaged = true;
-          alertPlayed ++;
+          closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
+//          System.out.println("avg is " + closestResult);
         }
-        _speed = SpeedInterface.getSpeed(); // Get the speed from the speed interface.
-        _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
-
-
-        if (_gear.toString().equals("Park")) {
-            BrakeInterface.setPressure(100.00);
-        } else if ((!_gear.toString().equals("Reverse")) && _speed < 0) {
-            BrakeInterface.setPressure(100.00);
-        } else {
-
-
-            //This uses the max and low values of the tree map to get the closest value in the
-            //pressure profile
-            Long key = Long.valueOf((int) _speed);
-            Map.Entry<Long, Integer> floor = goodPressureProfile.floorEntry(key);
-            Map.Entry<Long, Integer> ceiling = goodPressureProfile.ceilingEntry(key);
-
-            double closestResult;
-            if (floor != null && ceiling != null) {
-                closestResult = (floor.getValue() + ceiling.getValue()) / 2.0;
-            } else if (floor != null) {
-                closestResult = floor.getValue();
-            } else {
-                closestResult = ceiling.getValue();
-            }
-
-            BrakeInterface.setPressure((closestResult / 6.0) * 100);
+        else if (floor != null)
+        {
+          closestResult = floor.getValue();
         }
+        else
+        {
+          closestResult = ceiling.getValue();
+        }
+
+        BrakeInterface.setPressure((closestResult / 6.0) * 100);
+      }
     }
     else
     {
-        ButtonInterface.setColor(ButtonColorTypes.BLUE);
-        if(wasEngaged)
-        {
-          ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
-          wasEngaged = false;
-          alertPlayed --;
-        }
+      ButtonInterface.setColor(ButtonColorTypes.BLUE);
+      if (wasEngaged)
+      {
+        ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
+        wasEngaged = false;
+        alertPlayed--;
+      }
 
-        BrakeInterface.setPressure(0.0);
+      BrakeInterface.setPressure(0.0);
     }
 
 
