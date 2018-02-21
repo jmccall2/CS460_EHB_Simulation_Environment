@@ -53,6 +53,7 @@ public class MyController implements Initializable
   ArrayList<String> invalidTransitions = new ArrayList<>();
   String currGear = "D";
   double max_speed = 140;
+  StatCollector _statCollector;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
@@ -71,6 +72,7 @@ public class MyController implements Initializable
     // We need to start in some gear.
     driveButton.setSelected(true);
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, GearTypes.DRIVE));
+    statsButton.setDisable(true); // Stats are not available until the simulation starts.
     statsButton.setOnAction((event) ->{
       _InvokeOtherStage();
     });
@@ -89,6 +91,8 @@ public class MyController implements Initializable
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
         setSpeedField.setDisable(true);
+        _statCollector = new StatCollector(); // Start gathering stats.
+        statsButton.setDisable(false); // Users is now allowed to view stats.
       }
       else if(!stopped)
       {
@@ -357,11 +361,11 @@ public class MyController implements Initializable
       FXMLLoader fxmlLoader = new FXMLLoader(
               getClass().getResource("/simulation/simData.fxml"));
       Parent root = fxmlLoader.load();
-      SimulationStats statController = (SimulationStats) fxmlLoader.getController();
+      StatsPopup statController = (StatsPopup) fxmlLoader.getController();
       Scene scene = new Scene(root);
       // Again needed for making the window
       // transparent.
-      statController.init();
+      statController.init(_statCollector);
       scene.setFill(Color.TRANSPARENT);
       newStage.setScene(scene);
       newStage.show();
