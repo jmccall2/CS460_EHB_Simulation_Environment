@@ -56,13 +56,7 @@ public class ButtonInterface
     }
 
     /**
-     * NOTE :: If you call this and receive a value of 'true' and then immediately
-     *         try to call it again, you will receive a value of 'false'. It is recommended
-     *         to only call this method once per EHB update sequence.
-     *
-     * Checks if the button is currently pressed down. This function modifies what minimal
-     * internal state that this interface maintains, so calling it twice during the same
-     * update will result in two different values so long as the first value was 'true'.
+     * Checks if the button is currently pressed down.
      *
      * @return true if the button is currently pressed down and false otherwise
      */
