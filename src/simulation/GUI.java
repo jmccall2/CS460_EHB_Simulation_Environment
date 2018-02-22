@@ -25,26 +25,40 @@ public class GUI
     HBox popupBox;
     Stage popUpStage;
     PopupController2 controller2;
+    HBox popupBox2;
+    Stage popUpStage2;
+    PopupController3 controller3;
     
     public GUI()
     {
       _gPane = new GridPane();
       popUpStage = new Stage();
       popupBox = new HBox();
+      popupBox2 = new HBox();
+      popUpStage2 = new Stage();
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_ACTIVATED_COLOR));
       Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_UNACTIVATED_COLOR));
       controller = new MyController();
       controller.setGui(this);
       controller2 = new PopupController2();
       controller2.setGUI(this);
+      controller3 = new PopupController3();
+      controller3.setGUI(this);
       _addFXMLCode1();
       _addFXMLCode2();
+      _addFXMLCode3();
       popUpStage.setScene(new Scene(popupBox));
       popUpStage.setOnCloseRequest(event ->
       {
         popUpStage.close();
       });
       popUpStage.setTitle("Error");
+      popUpStage2.setScene(new Scene(popupBox2));
+      popUpStage2.setOnCloseRequest(event ->
+      {
+        popUpStage2.close();
+      });
+      popUpStage2.setTitle("Error");
       Pane newPane = new Pane();
       newPane.getChildren().add(_gPane);
       newPane.setLayoutX(110);
@@ -92,6 +106,16 @@ public class GUI
     {
       popUpStage.show();
     }
+    
+    public void closePopup2()
+    {
+      popUpStage2.close();
+    }
+    
+    public void showPopup2()
+    {
+      popUpStage2.show();
+    }
 
     private void _addFXMLCode1()
     {
@@ -121,6 +145,21 @@ public class GUI
         e.printStackTrace();
       }
       popupBox.getChildren().setAll(page);
+    }
+    
+    private void _addFXMLCode3()
+    {
+      Parent page = null;
+      try
+      {
+        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("errorPopup2.fxml"));
+        loader.setController(controller3);
+        page = loader.load();
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+      popupBox2.getChildren().setAll(page);
     }
     
     public void activatePopup()

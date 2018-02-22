@@ -55,6 +55,7 @@ public class MyController implements Initializable
   StatCollector _statCollector;
   StatsPopup _statController;
   boolean invalidSpeed = false;
+  double currSpeed = 0;
   
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
@@ -79,7 +80,7 @@ public class MyController implements Initializable
     });
     start_stop_sim.setOnAction((event) -> {
       if(stopped)_setInitSpeed();
-      if(stopped && !invalidSpeed)
+      if(stopped && !invalidSpeed && !(currGear.equals("P") && currSpeed > 0))
       {
         setGearTransitions();
         stopped = false;
@@ -108,6 +109,10 @@ public class MyController implements Initializable
       else if(invalidSpeed && stopped)
       {
         guiRef.showPopup();
+      }
+      else if(currGear.equals("P") && currSpeed > 0)
+      {
+        guiRef.showPopup2();
       }
     });
 
@@ -322,6 +327,7 @@ public class MyController implements Initializable
       {
         invalidSpeed = false;
         if(inReverse)speed *=-1;
+        currSpeed = speed;
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed*MPH_TO_MS));
         System.out.println("SENDING SPEED " + speed);
       }
@@ -333,6 +339,7 @@ public class MyController implements Initializable
     else if(setSpeedField.getText().isEmpty())
     {
       invalidSpeed = false;
+      currSpeed = 0;
     }
   }
   
