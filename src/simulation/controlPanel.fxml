@@ -21,6 +21,6 @@
          </effect></Button>
       <Button fx:id="statsButton" layoutX="632.0" layoutY="88.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="124.0" text="Stats" />
       <RadioButton fx:id="reverseButton" layoutX="505.0" layoutY="85.0" mnemonicParsing="false" text="Reverse" textFill="WHITE" />
-      <Label layoutX="14.0" layoutY="110.0" text="Enter Speed" />
+      <Label layoutX="14.0" layoutY="110.0" text="Enter Speed (mph)" />
    </children>
 </Pane>
