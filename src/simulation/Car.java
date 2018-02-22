@@ -4,11 +4,7 @@ import interfaces.GearInterface;
 import interfaces.GearTypes;
 import interfaces.SpeedInterface;
 import javafx.scene.paint.Color;
-import simulation.engine.Animation;
-import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.MessageHandler;
-import simulation.engine.RenderEntity;
+import simulation.engine.*;
 
 import java.util.HashMap;
 
@@ -277,6 +273,10 @@ public class Car extends RenderEntity
         {
             _prevJerk = _jerk * magicConstant;
             setRotation(getRotation() + _prevJerk);
+        }
+        else
+        {
+            setRotation(0);
         }
         /*
         else if (brake_percentage == 0.0)
