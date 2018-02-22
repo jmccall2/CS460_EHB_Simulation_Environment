@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 import simulation.engine.RenderEntity;
 
-
+/**
+ * Class that handles all logic related
+ * to the speed or pressure bars.
+ */
 public class BarEntity extends RenderEntity
 {
 
@@ -22,7 +25,19 @@ public class BarEntity extends RenderEntity
     private double _speedToColorIndexMult;
     private BarEntityModes _Mode;
 
-    public BarEntity(Color initColor, int x, int y, int d, int xs, int ys, int w, int h, BarEntityModes mode)
+    /**
+     *
+     * @param initColor Start color of the bar.
+     * @param x coordinate in the world
+     * @param y coordinate in the world
+     * @param d depth in the world
+     * @param xs x speed
+     * @param ys y speed
+     * @param w width
+     * @param h height
+     * @param mode Bar type; Speed or Pressure.
+     */
+    BarEntity(Color initColor, int x, int y, int d, int xs, int ys, int w, int h, BarEntityModes mode)
     {
         _Mode = mode;
         _yInit=y;_yLoc=y;_xLoc=x;_depth=d;
@@ -34,6 +49,7 @@ public class BarEntity extends RenderEntity
         _setColors();
     }
 
+    // Update the color of the bar.
     private void _setColors()
     {
         int nColors = (_Mode == BarEntityModes.SPEED) ? 140 : 100;
@@ -46,8 +62,8 @@ public class BarEntity extends RenderEntity
         for(int i = 1; i <= nColorInc; i++) _colors.add(Color.rgb(255,255 - (int)(i*multiplier), 0));
     }
 
-
-    public void updateState(double mapVal)
+    // Update the state of the bar, this includes y location and color.
+    void updateState(double mapVal)
     {
         if(mapVal < 0) mapVal = -mapVal;
         _yLoc =_yInit - (int)(mapVal*((_Mode == BarEntityModes.SPEED) ? SPEED_TO_Y_CONST : PRESSURE_TO_Y_CONST));
@@ -57,7 +73,11 @@ public class BarEntity extends RenderEntity
 
     }
 
-
+    /**
+     * Based off updated state change the bar in the world.
+     * @param deltaSeconds Change in seconds since the last update.
+     *                     If the simulation.engine is running at 60 frames per second,
+     */
     @Override
     public void pulse(double deltaSeconds)
     {

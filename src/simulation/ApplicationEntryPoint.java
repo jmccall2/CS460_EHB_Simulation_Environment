@@ -42,6 +42,9 @@ public class ApplicationEntryPoint implements PulseEntity{
         _cloudXLocs = Arrays.asList(0, -400, 250, 100);
     }
 
+    /**
+     * Initialize interfaces, and actors in the world.
+     */
     public void init()
     {
         _clouds = new ArrayList<>();
@@ -67,6 +70,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         _buildMetricPanels();
     }
 
+    // Let the engine know which messages to listen for.
     private void _registerSimulationMessages()
     {
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
@@ -83,7 +87,7 @@ public class ApplicationEntryPoint implements PulseEntity{
     }
 
 
-
+    // Add all supporting actors to the world.
     private void _buildWorld()
     {
         assert(_cloudSpeeds.size() == _cloudYLocs.size());
@@ -105,6 +109,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         _sun.setAsStaticActor(true);
     }
 
+    // Add the speed/pressure gauges to the world.
     private void _buildMetricPanels()
     {
         SingleFrameEntity renderPanel = new SingleFrameEntity("resources/img/panelback.png",0,460,4,0,0,1020,240);
@@ -122,6 +127,12 @@ public class ApplicationEntryPoint implements PulseEntity{
      */
     public void shutdown() {}
 
+    /**
+     * Call's the EHB's main update procedure when the simulation is running and
+     * handles the sun actors translations.
+     * @param deltaSeconds Change in seconds since the last update.
+     *                     If the simulation.engine is running at 60 frames per second,
+     */
     @Override
     public void pulse(double deltaSeconds) {
         if(_car.running()) _ehb.update();
@@ -135,6 +146,9 @@ public class ApplicationEntryPoint implements PulseEntity{
         }
     }
 
+    /**
+     * Inner class to handle RESET_SIM messages relayed by the engine.
+     */
     class Helper implements MessageHandler
     {
         @Override

@@ -1,6 +1,8 @@
 package simulation;
 
-
+/**
+ * Enum holding GUI simulation initialization statuses.
+ */
 public enum InitStatus
 {
     NON_NUMBER_ERROR,
@@ -10,7 +12,10 @@ public enum InitStatus
     NO_INPUT_ENTERED_ERROR,
     GOOD;
 
-
+    /**
+     *  Enums toString.
+     * @return Description of error
+     */
     @Override
     public String toString() {
         switch(this)
