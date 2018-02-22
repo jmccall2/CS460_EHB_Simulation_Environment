@@ -135,7 +135,7 @@ public class ApplicationEntryPoint implements PulseEntity{
      */
     @Override
     public void pulse(double deltaSeconds) {
-        if(_car.running()) _ehb.update();
+        if(_car.running()) _ehb.update(deltaSeconds);
         if(_init)_gui.setInitColor();
         _init = false;
         double currCarY = _car.getLocationY();
