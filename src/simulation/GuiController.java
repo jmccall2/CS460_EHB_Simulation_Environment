@@ -1,5 +1,11 @@
 package simulation;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import interfaces.ButtonColorTypes;
+import interfaces.GearTypes;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -7,16 +13,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
-import interfaces.ButtonColorTypes;
-import interfaces.GearTypes;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
@@ -333,7 +337,7 @@ public class GuiController implements Initializable
       newStage.initStyle(StageStyle.TRANSPARENT);
 
       FXMLLoader fxmlLoader = new FXMLLoader(
-              getClass().getResource("/simulation/simData.fxml"));
+              getClass().getResource("/resources/fxml/simData.fxml"));
       Parent root = fxmlLoader.load();
       _statController = (StatsPopupController) fxmlLoader.getController();
       Scene scene = new Scene(root);

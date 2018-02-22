@@ -1,5 +1,7 @@
 package simulation;
 
+import java.io.IOException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,9 +10,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import java.io.IOException;
-
-import simulation.engine.*;
+import simulation.engine.Engine;
+import simulation.engine.Message;
+import simulation.engine.Singleton;
+import simulation.engine.UILabel;
+import simulation.engine.UITextField;
 
 public class GUI
 {
@@ -122,7 +126,7 @@ public class GUI
       Parent page = null;
       try
       {
-        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("controlPanel.fxml"));
+        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("/resources/fxml/controlPanel.fxml"));
         loader.setController(_controller);
         page = loader.load();
       } catch (IOException e)
@@ -138,7 +142,7 @@ public class GUI
       Parent page = null;
       try
       {
-        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("errorPopup.fxml"));
+        FXMLLoader loader = new FXMLLoader(GUI.class.getResource("/resources/fxml/errorPopup.fxml"));
         loader.setController(_errorPopupController);
         page = loader.load();
       } catch (IOException e)
