@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
+//Not currently used.
 public class PopupController implements Initializable
 {
   @FXML private TextField maxSpeedField;

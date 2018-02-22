@@ -16,6 +16,10 @@ import simulation.engine.Singleton;
 import simulation.engine.UILabel;
 import simulation.engine.UITextField;
 
+/**
+ * This represents the GUI for the simulation.
+ *
+ */
 public class GUI
 {
     private GridPane _gPane;
@@ -29,6 +33,9 @@ public class GUI
     Stage popUpStage2;
     PopupController3 controller3;
     
+    /**
+     * Constructor.
+     */
     public GUI()
     {
       _gPane = new GridPane();
@@ -44,6 +51,7 @@ public class GUI
       controller2.setGUI(this);
       controller3 = new PopupController3();
       controller3.setGUI(this);
+      //Load FXML files.
       _addFXMLCode1();
       _addFXMLCode2();
       _addFXMLCode3();
@@ -67,6 +75,7 @@ public class GUI
       currSpeedField.setWidthHeight(100, 10);
       currSpeedField.addToWindow();
       currSpeedField.setEditable(false);
+      //Create text field to display current speed.
       UILabel speedLabel = new UILabel("Current Speed", 11, 655);
       speedLabel.addToWindow();
       speedLabel.setColor(Color.WHITE);
@@ -74,49 +83,75 @@ public class GUI
       pressureField.setWidthHeight(100, 10);
       pressureField.addToWindow();
       pressureField.setEditable(false);
+      //Create text field to display current pressure.
       UILabel pressureLabel = new UILabel("Current Pressure", 889, 655);
       pressureLabel.addToWindow();
       pressureLabel.setColor(Color.WHITE);
+      //Add pane with GUI to simulation.
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
     }
     
+    /**
+     * Update speed text field with current speed.
+     * @param speed
+     */
     public void setSpeed(double speed)
     {
       String speedStr = String.format("%.1f", Math.abs(speed));
       currSpeedField.setText(speedStr);
     }
     
+    /**
+     * Update pressure text field with current pressure.
+     * @param pressure
+     */
     public void setPressure(double pressure)
     {
       String pressureStr = String.format("%.1f", pressure);
       pressureField.setText(pressureStr);
     }
 
+    /**
+     * Set initial color of the handbrake button.
+     */
     public void setInitColor()
     {
       controller.setInitButtonColor();
     }
     
+    /**
+     * Close error message pop up box.
+     */
     public void closePopup()
     {
       popUpStage.close();
     }
     
+    /**
+     * Display error message pop up box.
+     */
     public void showPopup()
     {
       popUpStage.show();
     }
     
+    /**
+     * Close error message pop up box.
+     */
     public void closePopup2()
     {
       popUpStage2.close();
     }
     
+    /**
+     * Display error message pop up box.
+     */
     public void showPopup2()
     {
       popUpStage2.show();
     }
-
+    
+    //Add FXML code.
     private void _addFXMLCode1()
     {
       Parent page = null;
@@ -132,6 +167,7 @@ public class GUI
       _gPane.getChildren().setAll(page);
     }
     
+    //Add FXML code.
     private void _addFXMLCode2()
     {
       Parent page = null;
@@ -147,6 +183,7 @@ public class GUI
       popupBox.getChildren().setAll(page);
     }
     
+    //Add FXML code.
     private void _addFXMLCode3()
     {
       Parent page = null;
@@ -162,16 +199,13 @@ public class GUI
       popupBox2.getChildren().setAll(page);
     }
     
-    public void activatePopup()
-    {
-      popUpStage.show();
-    }
-    
+    //Not currently used.
     public void setGearState(String state)
     {
       controller.setRestrictedGear(state);
     }
     
+    //Not currently used.
     public void removeGearState(String state)
     {
       controller.removeRestrictedGear(state);

@@ -26,20 +26,28 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
-//Controller for FXML pane.
+/**
+ * Controller for main GUI.
+ *
+ */
 public class MyController implements Initializable
 {
+  //Field that speed can be entered in.
   @FXML private TextField setSpeedField;
+  //Button that starts and resets the simulation.
   @FXML private Button start_stop_sim;
+  //The main handbrake button.
   @FXML private Button handBrake;
+  //Displays stats about the simulation.
   @FXML private Button statsButton;
+  //The following are the gear buttons.
   @FXML private RadioButton parkButton;
   @FXML private RadioButton reverseButton;
   @FXML private RadioButton neutralButton;
   @FXML private RadioButton driveButton;
+  
   private ButtonMessageHelper _buttonMessageHelper = new ButtonMessageHelper();
-
-
+  //Used to convert MPH speed to meters per second speed.
   private double MPH_TO_MS = 0.448;
   private boolean stopped = true;
   private ToggleGroup group = new ToggleGroup();
@@ -57,6 +65,9 @@ public class MyController implements Initializable
   boolean invalidSpeed = false;
   double currSpeed = 0;
   
+  /**
+   * Initialize and set action listeners for all components of the GUI.
+   */
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   { 
@@ -85,7 +96,6 @@ public class MyController implements Initializable
         setGearTransitions();
         stopped = false;
         start_stop_sim.setText("Reset");
-        //_setInitSpeed();
         Engine.getMessagePump().sendMessage(new Message(SimGlobals.START_SIM));
         // Stop simulating movement
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("true");
@@ -163,6 +173,7 @@ public class MyController implements Initializable
     });
   }
   
+  //This reads and interprets the default disallowed gear change states from gearStates.cfg.
   private void setDefaultStates()
   {
     if(Engine.getConsoleVariables().contains("default1"))
@@ -183,6 +194,7 @@ public class MyController implements Initializable
     }
   }
   
+  //Set the current disallowed gear changes by disabling the necessary gear buttons.
   private void setGearTransitions()
   {
     for(int i = 0; i < invalidTransitions.size(); i ++)
@@ -211,6 +223,10 @@ public class MyController implements Initializable
     }
   }
   
+  /**
+   * Set a disallowed gear change.
+   * @param gearString
+   */
   public void setRestrictedGear(String gearString)
   {
     switch(gearString)
@@ -256,6 +272,10 @@ public class MyController implements Initializable
     }
   }
   
+  /**
+   * Remove a disallowed gear change.
+   * @param gearString
+   */
   public void removeRestrictedGear(String gearString)
   {
     String stringToRemove = "";
@@ -303,11 +323,16 @@ public class MyController implements Initializable
     invalidTransitions.remove(stringToRemove);
   }
   
+  /**
+   * Add reference to the GUI.
+   * @param gui
+   */
   public void setGui(GUI gui)
   {
     this.guiRef = gui;
   }
   
+  //Set speed entered into speed field when simulation begins.
   private void _setInitSpeed()
   {
     if(setSpeedField.getText() != null && !setSpeedField.getText().isEmpty())
@@ -343,11 +368,19 @@ public class MyController implements Initializable
     }
   }
   
+  /**
+   * Set initial handbrake button color.
+   */
   public void setInitButtonColor()
   {
     handBrake.setStyle(_buildCSSString());
   }
 
+  /**
+   * Get gear enum value.
+   * @param s
+   * @return the gear enum
+   */
   private GearTypes _getGear(String s)
   {
     switch(s)
@@ -362,6 +395,7 @@ public class MyController implements Initializable
     }
   }
 
+  //Launches stats screen.
   private void _InvokeOtherStage()
   {
     try
@@ -388,6 +422,7 @@ public class MyController implements Initializable
 
   }
 
+  //String used to format the handbrake button.
   private String _buildCSSString()
   {
     return "-fx-background-color:" + ((_buttonColor == null) ? "grey" : _buttonColor.toString())+";"
@@ -396,6 +431,10 @@ public class MyController implements Initializable
             + "-fx-border-style:none;";
   }
 
+  /**
+   * Handles a SET_BUTTON_COLOR message by setting the color of the handbrake button.
+   *
+   */
   class ButtonMessageHelper implements MessageHandler
   {
     @Override
