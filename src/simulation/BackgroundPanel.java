@@ -4,7 +4,7 @@ import simulation.engine.RenderEntity;
 
 public class BackgroundPanel extends RenderEntity
 {
-    public BackgroundPanel(String texture, int x, int y, int depth, int w, int h)
+    BackgroundPanel(String texture, int x, int y, int depth, int w, int h)
     {
         setTexture(texture);
         setLocationXYDepth(x,y,depth);

@@ -79,11 +79,9 @@ public class ButtonInterface
             switch (message.getMessageName())
             {
                 case SimGlobals.ACTIVATE_BRAKE:
-                    System.out.println("active");
                     _isDown = true;
                     break;
                 case SimGlobals.DEACTIVATE_BRAKE:
-                    System.out.println("unactive");
                     _isDown = false;
                     break;
             }

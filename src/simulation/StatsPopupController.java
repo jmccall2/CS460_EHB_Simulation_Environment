@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StatsPopup
+public class StatsPopupController
 {
     @FXML
     private AnchorPane _anchorPane;
@@ -87,9 +87,9 @@ public class StatsPopup
         }
     }
 
-    public void masterEventLeft(ActionEvent event) { _update(); }
+    public void masterEventLeft(ActionEvent event) { _currentChart--; _update(); }
 
-    public void masterEventRight(ActionEvent event) { _update(); }
+    public void masterEventRight(ActionEvent event) { _currentChart++; _update(); }
 
     private void _update()
     {
@@ -104,11 +104,6 @@ public class StatsPopup
         if(_currentChart <= 1) gt = GraphTypes.SPEED_VS_TIME;
         else if(_currentChart == _nCharts-1) gt = GraphTypes.JERK_AVG_VS_TIME;
         else gt = GraphTypes.PRESSURE_VS_TIME;
-
-        System.out.println(_currentChart);
-        if(gt ==GraphTypes.SPEED_VS_TIME) System.out.println("speed vs time");
-        if(gt ==GraphTypes.PRESSURE_VS_TIME) System.out.println("pressure vs time");
-        if(gt ==GraphTypes.JERK_AVG_VS_TIME) System.out.println("jerk vs time");
         String yTitle = "";
         String graphTitle = "";
         XYChart.Series graphData = new XYChart.Series();
@@ -140,7 +135,6 @@ public class StatsPopup
         _title.setText(graphTitle);
         _lineChart.getData().setAll(graphData);
 
-        _currentChart++;
     }
 
     /**

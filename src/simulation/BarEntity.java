@@ -2,9 +2,10 @@ package simulation;
 
 
 import javafx.scene.paint.Color;
+import java.util.ArrayList;
+
 import simulation.engine.RenderEntity;
 
-import java.util.ArrayList;
 
 public class BarEntity extends RenderEntity
 {
@@ -48,7 +49,6 @@ public class BarEntity extends RenderEntity
 
     public void updateState(double mapVal)
     {
-        //System.out.println(mapVal);
         if(mapVal < 0) mapVal = -mapVal;
         _yLoc =_yInit - (int)(mapVal*((_Mode == BarEntityModes.SPEED) ? SPEED_TO_Y_CONST : PRESSURE_TO_Y_CONST));
         int index = (int)(mapVal * _speedToColorIndexMult);

@@ -18,14 +18,14 @@ public class Car extends RenderEntity
     // is the brake on?
     private boolean _isActive;
     private boolean _simulationOn = true;
-    private double _applied_brake_force = 0;
-    private double _actual_brake_force;
-    private double _brake_percentage;
-    private boolean _sim_is_active = false;
-    private double _engine_acceleration;
-    private double _previous_acceleration;
+    private double _appliedBrakeForce = 0;
+    private double _actualBrakeForce;
+    private double _brakePercentage;
+    private boolean _simIsActive = false;
+    private double _engineAcceleration;
+    private double _previousAcceleration;
     // this is the acceleration we want from the engine. Prevents sudden acceleration
-    private double _target_acceleration;
+    private double _targetAcceleration;
     private float _g = 9.81f;
     private int START_Y = 215;
     private double _wobbleMinInput = 0.0;
@@ -147,17 +147,17 @@ public class Car extends RenderEntity
         // as a result of different delta t
         deltaSeconds=0.0217;
         // sim is not active: return
-        if(!_sim_is_active) return;
+        if(!_simIsActive) return;
         // idle acceleration
         if(Math.abs(speed) < 2){
             if (_gear == GearTypes.REVERSE) {
-                _engine_acceleration = -(float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
+                _engineAcceleration = -(float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
             } else if (_gear == GearTypes.NEUTRAL) {
-                _engine_acceleration = 0.0f;
+                _engineAcceleration = 0.0f;
             } else if (_gear == GearTypes.DRIVE) {
-                _engine_acceleration = (float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
+                _engineAcceleration = (float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
             } else if (_gear == GearTypes.PARK) {
-                _engine_acceleration = 0.0f;
+                _engineAcceleration = 0.0f;
             }
         }
 
@@ -171,7 +171,7 @@ public class Car extends RenderEntity
         else if(speed == 0) speedMod = 0;
 
         // convert user input to actual force
-        _applied_brake_force = 167 * _brake_percentage;
+        _appliedBrakeForce = 167 * _brakePercentage;
 
         // found this by interpolating between known _us/speed points
         // this is the coefficient of static friction, which depends on speed
@@ -179,12 +179,12 @@ public class Car extends RenderEntity
         _friction_threshold = _us * 9.81 * _mass;
 
         // are we in the kinetic or static friction ?
-        if (_applied_brake_force < _friction_threshold) _actual_brake_force = _applied_brake_force;
-        else _actual_brake_force = _uk * _mass * _g;
+        if (_appliedBrakeForce < _friction_threshold) _actualBrakeForce = _appliedBrakeForce;
+        else _actualBrakeForce = _uk * _mass * _g;
 
         // Used for animation: determine when control is lost
         if(_isActive) {
-            if (_applied_brake_force > _friction_threshold) _startTractionLossAnimation = true;
+            if (_appliedBrakeForce > _friction_threshold) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
         } else _startTractionLossAnimation = false;
 
@@ -210,9 +210,9 @@ public class Car extends RenderEntity
         if(Math.abs(speed) < 2) drag_c_ = 0;
 
         // smooth engine acceleration
-        _engine_acceleration = nextAcc(_engine_acceleration, _target_acceleration, _gear);
+        _engineAcceleration = nextAcc(_engineAcceleration, _targetAcceleration, _gear);
 
-        actual_acceleration = speedMod*(-(drag_c_ * Math.pow(speed,2))/ _mass - brake*(_actual_brake_force / _mass) - rolling_friction*(.02 * _g))+ _engine_acceleration;
+        actual_acceleration = speedMod*(-(drag_c_ * Math.pow(speed,2))/ _mass - brake*(_actualBrakeForce / _mass) - rolling_friction*(.02 * _g))+ _engineAcceleration;
 
         // what is the proposed next speed
         double nextSpeed = speed + actual_acceleration * deltaSeconds;
@@ -230,20 +230,17 @@ public class Car extends RenderEntity
         }
 
         // keep speed at 0
-        if(speedMod == 0 && _applied_brake_force > 0) speed = 0;
+        if(speedMod == 0 && _appliedBrakeForce > 0) speed = 0;
 
         // calculate jerk
-        _jerk = (_previous_acceleration-(speed-lastSpeed))/deltaSeconds;
-        //if (brake_percentage > 0.0) setRotation(getSpeedX()*jerk);
-        //else setRotation(0);
-        //System.out.println("JERK " + jerk);
+        _jerk = (_previousAcceleration-(speed-lastSpeed))/deltaSeconds;
 
-        _previous_acceleration = (speed-lastSpeed);
+        _previousAcceleration = (speed-lastSpeed);
 
         // display stuff
         double speedToDisplay = speed/0.448;
         guiRef.setSpeed(speedToDisplay);
-        guiRef.setPressure(_brake_percentage);
+        guiRef.setPressure(_brakePercentage);
     }
 
     /**
@@ -277,7 +274,7 @@ public class Car extends RenderEntity
     private void _generateWhiplash(double deltaSeconds)
     {
         final double magicConstant = 0.8;
-        if (_brake_percentage > 0)
+        if (_brakePercentage > 0)
         {
             _prevJerk = _jerk * magicConstant;
             setRotation(getRotation() + _prevJerk);
@@ -311,11 +308,11 @@ public class Car extends RenderEntity
             _animationSequence.update(deltaSeconds); // Make sure we call this!
             update(deltaSeconds);
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-            if(_brake_percentage > 0) Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
+            if(_brakePercentage > 0) Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(Math.abs(1.91 / (13 * ((speed == 0) ? 0.0001 : speed))));
             _SpeedGauge.updateState(speed);
-            _PressureGauge.updateState(_brake_percentage);
+            _PressureGauge.updateState(_brakePercentage);
             if (Math.abs(speed) > 5 && _startTractionLossAnimation) {
                 new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
                 _wobble();
@@ -336,61 +333,61 @@ public class Car extends RenderEntity
                 case SimGlobals.GEAR_CHANGE:
                     _gear = (GearTypes) message.getMessageData();
                     if(_gear == GearTypes.REVERSE){
-                        _target_acceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
+                        _targetAcceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
                     } else if(_gear == GearTypes.NEUTRAL){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     } else if(_gear == GearTypes.DRIVE){
-                        _target_acceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
+                        _targetAcceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
                     } else if(_gear == GearTypes.PARK){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     }
 		            break;
                 case SimGlobals.SET_PRESSURE:
-                    _brake_percentage = (Double) message.getMessageData();
+                    _brakePercentage = (Double) message.getMessageData();
 		            break;
                 case SimGlobals.START_SIM:
                     speed = SpeedInterface.getSpeed();
                     _gear = GearInterface.getGear();
                     if(_gear == GearTypes.REVERSE){
-                        _engine_acceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
+                        _engineAcceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
                     } else if(_gear == GearTypes.NEUTRAL){
-                        _engine_acceleration = 0.0f;
+                        _engineAcceleration = 0.0f;
                     } else if(_gear == GearTypes.DRIVE){
-                        _engine_acceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
+                        _engineAcceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
                     } else if(_gear == GearTypes.PARK){
-                        _engine_acceleration = 0.0f;
+                        _engineAcceleration = 0.0f;
                     }
-                    _target_acceleration = _engine_acceleration;
-                    _sim_is_active = true;
+                    _targetAcceleration = _engineAcceleration;
+                    _simIsActive = true;
                     _simulationOn = true;
                     break;
                 case SimGlobals.ACTIVATE_BRAKE:
                     if(_gear == GearTypes.REVERSE){
-                        _target_acceleration = -(float)((2*(_drag_c / _mass)) + (_g *.02f));
+                        _targetAcceleration = -(float)((2*(_drag_c / _mass)) + (_g *.02f));
                     } else if(_gear == GearTypes.NEUTRAL){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     } else if(_gear == GearTypes.DRIVE){
-                        _target_acceleration = (float)(2*(_drag_c / _mass)) + (_g *.02f);
+                        _targetAcceleration = (float)(2*(_drag_c / _mass)) + (_g *.02f);
                     } else if(_gear == GearTypes.PARK){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     }
                     _isActive = true;
                     break;
                 case SimGlobals.DEACTIVATE_BRAKE:
                     _isActive = false;
                     if(_gear == GearTypes.REVERSE){
-                        _target_acceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
+                        _targetAcceleration = -(float)((speed*speed*(_drag_c / _mass)) + (_g *.02f));
                     } else if(_gear == GearTypes.NEUTRAL){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     } else if(_gear == GearTypes.DRIVE){
-                        _target_acceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
+                        _targetAcceleration = (float)(speed*speed*(_drag_c / _mass)) + (_g *.02f);
                     } else if(_gear == GearTypes.PARK){
-                        _target_acceleration = 0.0f;
+                        _targetAcceleration = 0.0f;
                     }
                     break;
                 case SimGlobals.RESET_SIM:
                     _simulationOn = false;
-                    _sim_is_active = false;
+                    _simIsActive = false;
             }
         }
     }

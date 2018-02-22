@@ -1,13 +1,11 @@
 package ehb;
 
-import interfaces.*;
-
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Dog to bowl: Mirror mirror, in the bowl, who's the goodest boy you know?
- */
+import interfaces.*;
+
+
 public class GoodProfile {
 
     private double _speed;
@@ -17,7 +15,6 @@ public class GoodProfile {
 
     //Max pressure is considered to be at 6 kPa.
     //first is speed. second is pressure
-//  static Map<Integer, Integer> goodPressureProfile;
     static TreeMap<Long, Double> goodPressureProfile;
 
     //The units for the profiler is miles per hour to kPascal
@@ -51,13 +48,8 @@ public class GoodProfile {
         goodPressureProfile.put(Long.valueOf(140), 0.00);
     }
 
-    //The plot is not supposed to be perfectly linear. These values only serve as
-    //an approximation of what the graph should be.
-
     //We use the pressure profile obtained from http://www.scielo.br/scielo.php?script=sci_arttext&pid=S0100-73862001000100007
     // with supplement http://www.optimumg.com/docs/Brake_tech_tip.pdf
-
-    //Add timer to class to demo how they can measure. time between button clicks.
 
     public void update()
     {
@@ -73,8 +65,6 @@ public class GoodProfile {
             }
             _speed = (SpeedInterface.getSpeed() / 0.44704); // Get the speed from the speed interface.
             _gear = GearInterface.getGear();  // Get the current gear from the Gear interface.
-
-//      System.out.println("speed is " + (SpeedInterface.getSpeed() / 0.44704));
 
             if (_gear.toString().equals("Park"))
             {
@@ -107,9 +97,7 @@ public class GoodProfile {
                     closestResult = ceiling.getValue();
                 }
 
-//        System.out.println("Pressure applied is " + (closestResult / 6.0) * 100);
                 BrakeInterface.setPressure((closestResult / 6.0) * 100);
-                //BrakeInterface.setPressure(100);
             }
         }
         else

@@ -24,29 +24,27 @@ public class ApplicationEntryPoint implements PulseEntity{
      * Initializes the application
      */
 
-    GUI _gui;
-    EHB _ehb;
-    Car _car;
-    Sun _sun;
-    boolean init = true;
-    boolean restart = false;
-    boolean wasRestarted = false;
-    Helper helper = new Helper();
-    private ArrayList<SingleFrameEntity> clouds;
-    private List<Integer> cloudSpeeds;
-    private List<Integer> cloudYLocs;
-    private List<Integer> cloudXLocs;
+    private GUI _gui;
+    private EHB _ehb;
+    private Car _car;
+    private Sun _sun;
+    private boolean _init = true;
+    private Helper _helper = new Helper();
+    private ArrayList<SingleFrameEntity> _clouds;
+    private List<Integer> _cloudSpeeds;
+    private List<Integer> _cloudYLocs;
+    private List<Integer> _cloudXLocs;
     private double _initialCarY = 0.0; // Used to correct the position of the sun
 
     {
-       cloudSpeeds = Arrays.asList(0, 8, 12, 20);
-       cloudYLocs = Arrays.asList(0, 5, 35, 0);
-       cloudXLocs = Arrays.asList(0, -400, 250, 100);
+        _cloudSpeeds = Arrays.asList(0, 8, 12, 20);
+        _cloudYLocs = Arrays.asList(0, 5, 35, 0);
+        _cloudXLocs = Arrays.asList(0, -400, 250, 100);
     }
 
     public void init()
     {
-        clouds = new ArrayList<>();
+        _clouds = new ArrayList<>();
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         _registerSimulationMessages();
         // instances of the interfaces so that they do get creates
@@ -81,34 +79,27 @@ public class ApplicationEntryPoint implements PulseEntity{
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_BUTTON_COLOR));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.JERK));
-        Engine.getMessagePump().signalInterest(SimGlobals.RESET_SIM, helper);
+        Engine.getMessagePump().signalInterest(SimGlobals.RESET_SIM, _helper);
     }
 
 
 
     private void _buildWorld()
     {
-        assert(cloudSpeeds.size() == cloudYLocs.size());
-        assert(cloudYLocs.size() == cloudXLocs.size());
+        assert(_cloudSpeeds.size() == _cloudYLocs.size());
+        assert(_cloudYLocs.size() == _cloudXLocs.size());
         String cloudPath = "resources/img/world/cloud.png";
        for(int i = 1; i <=6; i++)
        {
            BackgroundPanel bp = new BackgroundPanel("resources/img/world/background"+i+".jpeg",-1000 + (1000*(i-1)),-15,10,1000,700);
            bp.addToWorld();
            // There should probably be a better heuristic to decide where the clouds are placed.
-           for(int j = 0; j < cloudSpeeds.size(); j++) clouds.add(new SingleFrameEntity(cloudPath,cloudXLocs.get(j)+(1000*(i-1)), cloudYLocs.get(j),5, cloudSpeeds.get(j),0,100,100));
-           for(SingleFrameEntity cloud : clouds) cloud.addToWorld();
+           for(int j = 0; j < _cloudSpeeds.size(); j++) _clouds.add(new SingleFrameEntity(cloudPath,_cloudXLocs.get(j)+(1000*(i-1)), _cloudYLocs.get(j),5, _cloudSpeeds.get(j),0,100,100));
+           for(SingleFrameEntity cloud : _clouds) cloud.addToWorld();
        }
 
         _sun = new Sun();
         _sun.addToWorld();
-
-        // Constrain the sun's y movement so it always stays in the same
-        // spot along the y axis
-        //sun.setConstrainXYMovement(false, true);
-
-        // Attach the sun to the car so that it never gets left behind
-        //_car.attachActor(sun);
 
         // Make the sun static so it's always on screen
         _sun.setAsStaticActor(true);
@@ -129,17 +120,13 @@ public class ApplicationEntryPoint implements PulseEntity{
     /**
      * Tells the application we need to shutdown
      */
-    public void shutdown()
-    {
-
-
-    }
+    public void shutdown() {}
 
     @Override
     public void pulse(double deltaSeconds) {
         if(_car.running()) _ehb.update();
-        if(init)_gui.setInitColor();
-        init = false;
+        if(_init)_gui.setInitColor();
+        _init = false;
         double currCarY = _car.getLocationY();
         if (currCarY != _initialCarY) {
             double deltaCarY = _initialCarY - currCarY;

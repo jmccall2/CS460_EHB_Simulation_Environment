@@ -12,7 +12,6 @@ public class Sun extends RenderEntity
         _animationSequence = new Animation(this, .5);
         _buildFrames();
         setLocationXYDepth(25,15,8);
-        //setSpeedXY(100,0);
         setWidthHeight(100, 100);
     }
 
