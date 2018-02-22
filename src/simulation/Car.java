@@ -300,7 +300,7 @@ public class Car extends RenderEntity
             _animationSequence.update(deltaSeconds); // Make sure we call this!
             update(deltaSeconds);
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-            Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
+            if(_brake_percentage > 0) Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(Math.abs(1.91 / (13 * ((speed == 0) ? 0.0001 : speed))));
 //            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
