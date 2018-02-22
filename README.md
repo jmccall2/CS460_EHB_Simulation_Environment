@@ -3,21 +3,21 @@
 
 Simulation environment for EHB software.
 
-#EHB Package
+## EHB Package
 *All file created and code written for the EHB software should be located in the ehb packages.
 *You will be provided an empty shell class called EHB.java, inside said class there is a method called
 update. This method will be called at 60 times a second, and should not contain any loops as it will
 lock up the entire simulation.
 
 
-#Interfaces
+## Interfaces
 * The only external package you have access to is the interfaces package which contain the interfaces/drivers and
 public data structures (enum).
 * NOTE: These are static classes so you do not and should not create an instance of any of the interface classes. 
 All methods are static and available immediately, so you should never have the need to instantiate any of the interfaces.
 * Documentation for the interfaces can be found here: https://jmccall2.github.io/CS460_EHB_Simulation_Environment/
 
-#Interface Use Examples:
+## Interface Use Examples:
 ```java
 boolean active = ButtonInterface.isDown(); # Example how to check if the button is currently pressed down.
 ButtonInterface.play(ButtonSoundTypes.ENGAGED); # Example how to play a sound, this is played immediately.
@@ -28,7 +28,7 @@ GearTypes gear = GearInterface.getGear(); # Example how to get the current gear.
 ```
 
 
-#Third Party:
+## Third Party:
 Image Sources (All under CC license):
 http://maxpixel.freegreatpicture.com/Auto-Car-Sports-Car-Shelby-Mustang-Ford-158479
 https://pixnio.com/textures-and-patterns/textile-cloth/black-leather-texture-pattern-close
