@@ -167,8 +167,8 @@ public class Renderer implements MessageHandler {
             double x = graph.getLocationX();
             double y = graph.getLocationY();
             double depth = graph.getDepth();
-            graph.setLocationXYDepth(x + deltaSpeedX,
-                    y + deltaSpeedY,
+            graph.setLocationXYDepth(x + deltaSpeedX * (graph.shouldConstrainXMovement() ? 0 : 1),
+                    y + deltaSpeedY * (graph.shouldConstrainYMovement() ? 0 : 1),
                     depth);
             _checkAndCorrectOutOfBounds(graph, worldStartX, worldStartY, worldWidth, worldHeight);
             _rootSet.add(graph);
@@ -188,8 +188,9 @@ public class Renderer implements MessageHandler {
         // and has not been processed yet
         if (_entities.contains(actor) && !_rootSet.contains(actor))
         {
-            actor.setLocationXYDepth(actor.getLocationX() + deltaSpeedX,
-                    actor.getLocationY() + deltaSpeedY, actor.getDepth());
+            actor.setLocationXYDepth(actor.getLocationX() + deltaSpeedX * (actor.shouldConstrainXMovement() ? 0 : 1),
+                    actor.getLocationY() + deltaSpeedY * (actor.shouldConstrainYMovement() ? 0 : 1),
+                    actor.getDepth());
             _checkAndCorrectOutOfBounds(actor, worldStartX, worldStartY, worldWidth, worldHeight);
         }
         _rootSet.add(actor);

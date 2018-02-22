@@ -31,7 +31,7 @@ public class ApplicationEntryPoint implements PulseEntity{
     boolean restart = false;
     boolean wasRestarted = false;
     Helper helper = new Helper();
-    private ArrayList<SingleFrameEntity> clouds = new ArrayList<>();
+    private ArrayList<SingleFrameEntity> clouds;
     private List<Integer> cloudSpeeds;
     private List<Integer> cloudYLocs;
     private List<Integer> cloudXLocs;
@@ -44,6 +44,7 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     public void init()
     {
+        clouds = new ArrayList<>();
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         _registerSimulationMessages();
         // instances of the interfaces so that they do get creates
@@ -98,6 +99,10 @@ public class ApplicationEntryPoint implements PulseEntity{
 
         Sun sun = new Sun();
         sun.addToWorld();
+
+        // Constrain the sun's y movement so it always stays in the same
+        // spot along the y axis
+        //sun.setConstrainXYMovement(false, true);
 
         // Attach the sun to the car so that it never gets left behind
         //_car.attachActor(sun);
