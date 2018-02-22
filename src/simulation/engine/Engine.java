@@ -12,7 +12,7 @@ import java.util.HashSet;
 /**
  * The engine is a singleton class as there should never be more than
  * one instance during an application. It is responsible for the startup
- * and shutdown of all subsystems which comprise an application, and from
+ * and shutdown of all subsystems which comprise the application, and from
  * there it drives the system in real time (30-60+ updates per second).
  *
  * Notable functions include:

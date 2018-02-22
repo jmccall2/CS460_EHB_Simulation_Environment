@@ -56,6 +56,7 @@ public class Pulsar implements PulseEntity {
         Engine.getMessagePump().sendMessage(new Message(Singleton.REMOVE_PULSE_ENTITY, this));
     }
 
+    // Updates the pulsar
     @Override
     public void pulse(double deltaSeconds) {
         _elapsedSeconds += deltaSeconds;

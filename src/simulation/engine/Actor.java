@@ -117,61 +117,101 @@ public abstract class Actor {
         _constrainXMovement = constrainX;
         _constrainYMovement = constrainY;
     }
+
+    /**
+     * Sets the width and height (scale) of this actor
+     */
     public void setWidthHeight(double width, double height)
     {
         _scaleWidthHeight.setXYZ(width, height, 0);
     }
 
+    /**
+     * Sets the rotation (in degrees) of this actor
+     */
     public void setRotation(double angleDeg)
     {
         _rotationAngle = angleDeg;
     }
 
+    /**
+     * Gets the world x-location for this actor
+     */
     public double getLocationX()
     {
         return _translation.x();
     }
 
+    /**
+     * Gets the world y-location for this actor
+     */
     public double getLocationY()
     {
         return _translation.y();
     }
 
+    /**
+     * Gets the depth of the actor. While this does not affect how the
+     * actor ultimately looks, it does determine in what order this actor
+     * will be drawn in. Further back actors are drawn sooner and are
+     * eclipsed by closer actors and vice versa.
+     */
     public double getDepth()
     {
         return _depth;
     }
 
+    /**
+     * Gets the rotation in degrees.
+     */
     public double getRotation()
     {
         return _rotationAngle;
     }
 
+    /**
+     * @return the current speed of this actor along the x-axis
+     */
     public double getSpeedX()
     {
         return _speed.x();
     }
 
+    /**
+     * @return the current speed of this actor along the y-axis
+     */
     public double getSpeedY()
     {
         return _speed.y();
     }
 
+    /**
+     * @return the current acceleration of this actor for the x-component
+     */
     public double getAccelerationX()
     {
         return _acceleration.x();
     }
 
+    /**
+     * @return the current speed of this actor for the y-component
+     */
     public double getAccelerationY()
     {
         return _acceleration.y();
     }
 
+    /**
+     * @return the width of the actor
+     */
     public double getWidth()
     {
         return _scaleWidthHeight.x();
     }
 
+    /**
+     * @return the height of the actor
+     */
     public double getHeight()
     {
         return _scaleWidthHeight.y();

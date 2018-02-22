@@ -5,10 +5,21 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * The MessagePump is responsible for collecting messages
- * passed around the simulation.engine during a given frame. At some point
+ * The message pump is responsible for collecting messages
+ * passed around the application during a given frame. At some point
  * it can be asked to dispatch the messages (events) to any system
  * or other object which has expressed interest.
+ *
+ * This system effectively removes the need to pass around references
+ * to objects which manage a certain piece of functionality. Instead the
+ * message pump collects all relevant references and dispatches the messages
+ * to whoever has signaled interest.
+ *
+ * As an added benefit, since you are not passing around references to
+ * everyone that needs the functionality the underlying objects provide,
+ * you can move functionality around behind the scenes without having
+ * to change any of the code which sends the messages and signals interest
+ * in those messages.
  *
  * @author Justin Hall
  */

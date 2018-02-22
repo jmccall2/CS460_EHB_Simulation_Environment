@@ -2,6 +2,8 @@ package simulation.engine;
 
 /**
  * Interface implemented by all UI elements such as UIButton, UILabel, etc.
+ *
+ * @author Justin Hall
  */
 public interface UIElement {
     /**

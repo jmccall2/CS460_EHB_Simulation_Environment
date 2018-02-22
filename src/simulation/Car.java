@@ -180,7 +180,7 @@ public class Car extends RenderEntity
 
         // found this by interpolating between known _us/speed points
         // this is the coefficient of static friction, which depends on speed
-        _us = _g - COEFFICIENT_OF_ROLLING_FRICTION*speed;
+        _us = .9125 - COEFFICIENT_OF_ROLLING_FRICTION*speed;
         _friction_threshold = _us * 9.81 * _mass;
 
         // are we in the kinetic or static friction ?
