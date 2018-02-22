@@ -1,27 +1,40 @@
 package simulation;
 
-import interfaces.SpeedInterface;
+import java.util.*;
+import java.util.stream.Collectors;
 import javafx.scene.chart.XYChart;
+
+import interfaces.SpeedInterface;
 import simulation.engine.Engine;
 import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Pulsar;
 
-import java.util.*;
-import java.util.stream.Collectors;
 
-public class StatCollector {
+/**
+ * Class that collects statistics when the simulation is running to be
+ * displayed on the stats panel.
+ */
+class StatCollector {
+
 
     private List<Double> _deltaXValues = Arrays.asList(1.0,10.0,30.0,60.0);
+    // Data is gathered on speed, pressure and jerk.
     private Map<Double, LinkedList<Double>> _deltaXSpeedData = new HashMap<>();
     private Map<Double, LinkedList<Double>> _deltaXPressureData = new HashMap<>();
     private Map<Double, LinkedList<Double>> _deltaXJerkAverages = new HashMap<>();
+    // Jerk changes happen quickly so data points are averaged meaning
+    // we must buffer data between time intervals.
     private LinkedList<Double> _jerkBuffer = new LinkedList<>();
     private double _pressure = 0.0;
     private Helper _helper = new Helper();
     private double MS_TO_MPH = 2.23694;
     private double _jerkInterval = 1.0;
 
+    /**
+     * Initialize data structures used for storing gathered stats and spawn
+     * pulsars to collect the stats.
+     */
      StatCollector() {
         Engine.getMessagePump().signalInterest(SimGlobals.SET_PRESSURE, _helper);
         Engine.getMessagePump().signalInterest(SimGlobals.JERK, _helper);
@@ -38,10 +51,13 @@ public class StatCollector {
 
     }
 
+    // Data update method called by Pulsar engine callbacks.
     private void _updateData(double deltaX)
     {
+        // Only allow 20 data points max on a graph to reduce clutter.
         if(_deltaXSpeedData.get(deltaX).size() >= 20) _deltaXSpeedData.get(deltaX).pop();
         if(_deltaXPressureData.get(deltaX).size() >= 20) _deltaXPressureData.get(deltaX).pop();
+        // Average all jerk data to form this pulses data point.
         if(deltaX == _jerkInterval) {
             if (_deltaXJerkAverages.get(deltaX).size() >= 20) _deltaXJerkAverages.get(deltaX).pop();
             int nJerkPoints = _jerkBuffer.size();
@@ -55,7 +71,15 @@ public class StatCollector {
         _deltaXPressureData.get(deltaX).add(_pressure); // Not available through the interfaces.
     }
 
-    public XYChart.Series mapToSeries(double deltaX, GraphTypes gt)
+    /**
+     * Build XYChart.Series with relevant data since a request
+     * is being made.
+     *
+     * @param deltaX for grahp
+     * @param gt GraphTypes
+     * @return XYChart.Series data to be plotted on Line chart.
+     */
+    XYChart.Series mapToSeries(double deltaX, GraphTypes gt)
     {
         LinkedList<Double> rawData;
         switch (gt)
@@ -78,8 +102,15 @@ public class StatCollector {
         return series;
     }
 
-    public List<Double> getDeltaXValues() { return _deltaXValues; }
+    /**
+     *
+     * @return DeltaX values.
+     */
+    List<Double> getDeltaXValues() { return _deltaXValues; }
 
+    /**
+     * Inner class to handle messages about pressure and jerk relayed from the engine.
+     */
     class Helper implements MessageHandler
     {
         @Override

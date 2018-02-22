@@ -28,6 +28,8 @@ public abstract class Actor {
     private double _depth = 0; // NOT the same as the translation z-component
     private boolean _isVisibleOnScreen = true; // Updated by renderer
     private boolean _isStaticActor = false; // If true it will not be transformed into camera space
+    private boolean _constrainXMovement = false;
+    private boolean _constrainYMovement = false;
 
     /**
      * Tells the renderer whether this actor should be transformed as the camera
@@ -103,6 +105,18 @@ public abstract class Actor {
     /*
      * Various setters and getters whose names reflect which data they work with
      */
+
+    /**
+     * Determines if the system should restrict this actor to movement along one
+     * axis or both axes (meaning it will remain stationary).
+     * @param constrainX true if the actor's movement in the x direction should be disallowed
+     * @param constrainY true if the actor's movement in the y direction should be disallowed
+     */
+    public void setConstrainXYMovement(boolean constrainX, boolean constrainY)
+    {
+        _constrainXMovement = constrainX;
+        _constrainYMovement = constrainY;
+    }
     public void setWidthHeight(double width, double height)
     {
         _scaleWidthHeight.setXYZ(width, height, 0);
@@ -184,5 +198,15 @@ public abstract class Actor {
     Vector3 getScaleVec()
     {
         return _scaleWidthHeight;
+    }
+
+    boolean shouldConstrainXMovement()
+    {
+        return _constrainXMovement;
+    }
+
+    boolean shouldConstrainYMovement()
+    {
+        return _constrainYMovement;
     }
 }

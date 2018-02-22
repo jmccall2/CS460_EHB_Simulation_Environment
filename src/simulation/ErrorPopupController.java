@@ -23,9 +23,9 @@ public class ErrorPopupController implements Initializable
     _okButton.setOnAction((event)->{_guiRef.closePopup();});
     
   }
-  public void setErrorMessage(String error) {_errorMessage.setText(error);}
+  void setErrorMessage(String error) {_errorMessage.setText(error);}
 
-  public void setGUI(GUI gui)
+  void setGUI(GUI gui)
   {
     this._guiRef = gui;
   }

@@ -1,10 +1,9 @@
-# CS460_HandBrake
+# CS460_EHB_Simulation_Environment
 
->>> TEMPORARY: Here is our current working outline for the structure of this program:
-        https://go.gliffy.com/go/share/sitm5q6uo5wgpeuxe8b6
 
-Simulation of electronic handbrake for CS 460.
+Simulation environment for EHB software.
 
+Third Party:
 
 Image Sources (All under CC license):
 http://maxpixel.freegreatpicture.com/Auto-Car-Sports-Car-Shelby-Mustang-Ford-158479
@@ -21,36 +20,4 @@ GUI theme source (DarkTheme.css):
 http://code.makery.ch/library/javafx-8-tutorial/part4/
 
 Source for engaged/disengaged sound clip: http://www.text2speech.org/
-
-TODO:
-
-Bugs (most important):
-* I found bad states the simulation can go into when stress testing the GUI, this is the most important bullet point
-in the todo as:#**No combination of the GUI's input and the EHB's interaction with the interfaces should cause the simulation
-to go into a bad state.**
-
-* The sun follows the car onto the land 
-
-
-Simulation:
-* ? 
-
-EHB:
-* Add example to show what happens when you incorrectly apply pressure. *High pressure should be applied at low speeds and low pressure at high speeds* 
-
-
-Presentation/Release:
-* No powerpoint for the presentation: focus on showing the interfaces and the demo EHB package so they know how to 
-inteface with it. And then demo using the GUI/running the simulation. 
-* Need to produce java docs for the interfaces.
-* Need way to package and deliver library, either through interfacable jar, pre-made intellij/eclipse projects, or build scripts.
-
-Stretch:
-* Fix the clouds so their speed is correct given their perspective. 
-* Impove traction loss animations/add variety
-* When the user presses the brake display the distance traveled real time while the brake is pressed, then when the
-brake is unpressed stop updating the distance and leave it in the text box until the user engadges the brake again. 
-* Worse wobble while in reverse. 
-
-
 

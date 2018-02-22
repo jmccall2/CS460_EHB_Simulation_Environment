@@ -22,18 +22,25 @@ import simulation.engine.Message;
 import simulation.engine.MessageHandler;
 import simulation.engine.Singleton;
 
-//Controller for FXML pane.
+/**
+ * Controller for main GUI.
+ */
 public class GuiController implements Initializable
 {
+  //Field that speed can be entered in.
   @FXML private TextField _setSpeedField;
+  //Button that starts and resets the simulation.
   @FXML private Button _startStopSim;
+  //The main handbrake button.
   @FXML private Button _handBrake;
+  //Displays stats about the simulation.
   @FXML private Button _statsButton;
+  //The following are the gear buttons.
   @FXML private RadioButton _parkButton;
   @FXML private RadioButton _reverseButton;
   @FXML private RadioButton _neutralButton;
   @FXML private RadioButton _driveButton;
-
+  //Used to convert MPH speed to meters per second speed.
   private final double MPH_TO_MS = 0.448;
   private final double MAX_SPEED = 140;
   private final double MAX_REVERSE_SPEED = 40;
@@ -51,7 +58,10 @@ public class GuiController implements Initializable
   private InitStatus _initStatus = InitStatus.GOOD;
   private GearTypes _initGear;
   private double _initSpeed;
-  
+
+  /**
+   * Initialize and set action listeners for all components of the GUI.
+   */
   @Override
   public void initialize(URL arg0, ResourceBundle arg1)
   {
@@ -62,6 +72,7 @@ public class GuiController implements Initializable
     _initStartResetButton();
   }
 
+  // Initialize stats components.
   private void _initStats()
   {
     _statsButton.setDisable(true); // Stats are not available until the simulation starts.
@@ -70,6 +81,7 @@ public class GuiController implements Initializable
     });
   }
 
+  // Initialize start/reset button.
   private void _initStartResetButton()
   {
 
@@ -108,6 +120,8 @@ public class GuiController implements Initializable
       }
     });
   }
+
+  // Initialize hand brake button.
   private void _initHandBrakeButton()
   {
     _handBrake.setOnMouseReleased(event -> {
@@ -125,6 +139,8 @@ public class GuiController implements Initializable
       }
     });
   }
+
+  // Initialize gears.
   private void _initGears()
   {
     Engine.getConsoleVariables().loadConfigFile("src/resources/gearStates.cfg");
@@ -159,7 +175,7 @@ public class GuiController implements Initializable
     });
   }
 
-
+  //This reads and interprets the default disallowed gear change states from gearStates.cfg.
   private void _setDefaultStates()
   {
     if(Engine.getConsoleVariables().contains("default1")) _setRestrictedGear(Engine.getConsoleVariables().find("default1").getcvarValue());
@@ -167,7 +183,7 @@ public class GuiController implements Initializable
     if(Engine.getConsoleVariables().contains("default3")) _setRestrictedGear(Engine.getConsoleVariables().find("default3").getcvarValue());
     if(Engine.getConsoleVariables().contains("default4")) _setRestrictedGear(Engine.getConsoleVariables().find("default4").getcvarValue());
   }
-  
+  //Set the current disallowed gear changes by disabling the necessary gear buttons.
   private void _setGearTransitions()
   {
     for(int i = 0; i < _invalidTransitions.size(); i ++)
@@ -183,7 +199,11 @@ public class GuiController implements Initializable
       }
     }
   }
-  
+
+  /**
+   *  Set a disallowed gear change.
+   * @param gearString
+   */
   private void _setRestrictedGear(String gearString)
   {
     switch(gearString)
@@ -228,12 +248,17 @@ public class GuiController implements Initializable
         System.err.println("Invalid gear transition.");
     }
   }
-  
+
+  /**
+   *  Add reference to the GUI.
+   * @param gui
+   */
   void setGui(GUI gui)
   {
     this._guiRef = gui;
   }
-  
+
+  //Set speed entered into speed field when simulation begins.
   private void _setInitSpeed()
   {
     if(_setSpeedField.getText() != null && !_setSpeedField.getText().isEmpty())
@@ -250,7 +275,10 @@ public class GuiController implements Initializable
       _initStatus = InitStatus.NO_INPUT_ENTERED_ERROR;
     }
   }
-  
+
+  /**
+   * Set initial handbrake button color.
+   */
   void setInitButtonColor()
   {
     _handBrake.setStyle(_buildCSSString());
@@ -272,8 +300,16 @@ public class GuiController implements Initializable
     if(_initSpeed < 0 || _initSpeed > MAX_SPEED) _initStatus = InitStatus.INVALID_DRIVE_NEUTRAL_SPEED_ERROR;
   }
 
+  /**
+   * Update status to GOOD since error box was closed.
+   */
   void errorPopupClosed() {_initStatus = InitStatus.GOOD;}
 
+  /**
+   * Get gear enum value.
+   * @param s
+   * @return the gear enum
+   */
   private GearTypes _getGear(String s)
   {
     switch(s)
@@ -287,7 +323,7 @@ public class GuiController implements Initializable
         return GearTypes.DRIVE;
     }
   }
-
+  //Launches stats screen.
   private void _InvokeOtherStage()
   {
     try
@@ -313,7 +349,7 @@ public class GuiController implements Initializable
     }
 
   }
-
+  //String used to format the handbrake button.
   private String _buildCSSString()
   {
     return "-fx-background-color:" + ((_buttonColor == null) ? "grey" : _buttonColor.toString())+";"
@@ -322,6 +358,10 @@ public class GuiController implements Initializable
             + "-fx-border-style:none;";
   }
 
+  /**
+   * Handles a SET_BUTTON_COLOR message by setting the color of the
+   * handbrake button.
+   */
   class ButtonMessageHelper implements MessageHandler
   {
     @Override

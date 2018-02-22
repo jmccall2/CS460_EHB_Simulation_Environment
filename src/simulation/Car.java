@@ -8,6 +8,11 @@ import simulation.engine.*;
 
 import java.util.HashMap;
 
+/**
+ * Main actor in the world.
+ *
+ * Physics calculations and animation updates for said actor occur in this class.
+ */
 public class Car extends RenderEntity
 {
 
@@ -52,7 +57,7 @@ public class Car extends RenderEntity
     /**
      * Primary visual component of the car and the physics.
      */
-    public Car()
+    Car()
     {
          _animationSequence = new Animation(this, 0);
         _buildFrames();
@@ -83,20 +88,19 @@ public class Car extends RenderEntity
     /**
      * set GUI
      */
-    public void setGUI(GUI gui)
+    void setGUI(GUI gui)
     {
       this.guiRef = gui;
     }
 
+    // Build animation frames for the car.
     private void _buildFrames()
     {
         for(int i = 1; i <= 13; i++) _animationSequence.addAnimationFrame("car_drive", "resources/img/car/car" + i + ".png");
         for(int i = 13; i >= 1; i--) _animationSequence.addAnimationFrame("car_reverse", "resources/img/car/car" + i + ".png");
     }
 
-    /*
-     *  updates engine acceleration based on current acceleration, target acceleration and current gear
-     */
+    // Updates engine acceleration based on current acceleration, target acceleration and current gear
     private static double nextAcc(double current_acc, double target_acc, GearTypes gear){
         double rate = .015;
         boolean slow = false;
@@ -141,7 +145,7 @@ public class Car extends RenderEntity
         return current_acc;
     }
 
-    // updates the state of the car + physics
+    // Updates the state of the car + physics
     private void update(double deltaSeconds){
         // instead of using simulation deltaSeconds, use an average. That way, we don't get unwanted jerk results
         // as a result of different delta t
@@ -247,12 +251,13 @@ public class Car extends RenderEntity
      * Checks if simulation is on
      * @return true if simulation is on
      */
-    public boolean running()
+    boolean running()
     {
         return _simulationOn;
     }
 
-
+    // Thread the cars speed through a sinusoidal function
+    // to produce the wobble animation.
     private void _wobble()
     {
         double absSpeed = Math.abs(speed);
@@ -323,6 +328,9 @@ public class Car extends RenderEntity
 
     }
 
+    /**
+     * Inner class to get updated state information relayed by the engine.
+     */
     class Helper implements MessageHandler
     {
         @Override

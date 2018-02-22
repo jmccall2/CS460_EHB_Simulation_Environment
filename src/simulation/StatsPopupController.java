@@ -13,10 +13,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * FXML Controller class for the statistics popup.
+ */
 public class StatsPopupController
 {
     @FXML
@@ -31,16 +33,29 @@ public class StatsPopupController
     private Label _title;
     private CategoryAxis _xAxis = new CategoryAxis();
     private NumberAxis _yAxis = new NumberAxis();
+    // Same instance of chart is used for each graph and data is cycled in and out.
     private LineChart<String, Number> _lineChart =
             new LineChart<String, Number>(_xAxis, _yAxis);
     private Map<Double, String> _timeIntervalLabels = new HashMap<>();
+    // Total number of charts/graphs.
     private int _nCharts = 5;
     private int _currentChart = 0;
     private StatCollector _stats;
 
-    public static boolean isUp = false;
+    // Get resources.
+    private ImageView _left = new ImageView(
+            new Image(getClass().getResourceAsStream("/resources/img/left.png")));
+    private ImageView _right = new ImageView(
+            new Image(getClass().getResourceAsStream("/resources/img/right.png")));
 
-    public void init(StatCollector stats) {
+    // Whether the stats page is up or not.
+    static boolean isUp = false;
+
+    /**
+     * Init method to setup the chart.
+     * @param stats StatsCollector instance.
+     */
+    void init(StatCollector stats) {
         isUp = true;
         initializeButtons();
         _title.setTextFill(Color.web("#FFFFFF"));
@@ -56,12 +71,10 @@ public class StatsPopupController
         displayNewGraph();
     }
 
-    // Get resources.
-    private ImageView _left = new ImageView(
-            new Image(getClass().getResourceAsStream("/resources/img/left.png")));
-    private ImageView _right = new ImageView(
-            new Image(getClass().getResourceAsStream("/resources/img/right.png")));
-
+    /**
+     * On click event for the panels exit button.
+     * @param event
+     */
     @FXML
     public void exit(ActionEvent event) {
         isUp = false;
@@ -69,6 +82,7 @@ public class StatsPopupController
         stage.close();
     }
 
+    // Update the left and right buttons visible as applicable.
     private void updateButtonVisibility()
     {
         if (_title.getText().equals("Speed vs Time (1.0 Second Intervals)"))
@@ -87,16 +101,27 @@ public class StatsPopupController
         }
     }
 
+    /**
+     * Movement to chart on the left event.
+     * @param event
+     */
     public void masterEventLeft(ActionEvent event) { _currentChart--; _update(); }
 
+    /**
+     * Movement to chart on the right event.
+     * @param event
+     */
     public void masterEventRight(ActionEvent event) { _currentChart++; _update(); }
 
+    // Update the displayed chart.
     private void _update()
     {
         displayNewGraph();
         updateButtonVisibility();
     }
 
+    // Gather the data for the graph to be displayed from the
+    // StatCollector and update other appropriate fields.
     private void displayNewGraph()
     {
         _lineChart.getData().clear();
@@ -108,6 +133,7 @@ public class StatsPopupController
         String graphTitle = "";
         XYChart.Series graphData = new XYChart.Series();
         double deltaX;
+        //  Graph data depends on the type.
         switch(gt)
         {
             case SPEED_VS_TIME:
@@ -137,9 +163,8 @@ public class StatsPopupController
 
     }
 
-    /**
-     * Initialize the buttons.
-     */
+
+    // Initialize left/right buttons.
     private void initializeButtons()
     {
         // Makes it round.

@@ -2,13 +2,23 @@ package simulation;
 
 import simulation.engine.RenderEntity;
 
+/**
+ * Tiretrack animations.
+ */
 public class TireTrack extends RenderEntity
 {
 
+    // Toggles images for each anonymous class instance added to the world.
     private static int _swerveToggle = 0;
 
-
-    public TireTrack(double x, double y, int tractionLossLevel)
+    /**
+     * Initialize tire track in the world.
+     *
+     * @param x world coordinate.
+     * @param y world coordinate.
+     * @param tractionLossLevel
+     */
+    TireTrack(double x, double y, int tractionLossLevel)
     {
         if(tractionLossLevel==1) setTexture("resources/img/car/tiretrack.png");
         if(tractionLossLevel==2)
@@ -23,7 +33,11 @@ public class TireTrack extends RenderEntity
         setWidthHeight(50, 50);
     }
 
-
+    /**
+     * Remove tire track once it is not visible on the screen.
+     * @param deltaSeconds Change in seconds since the last update.
+     *                     If the simulation.engine is running at 60 frames per second,
+     */
     @Override
     public void pulse(double deltaSeconds)
     {

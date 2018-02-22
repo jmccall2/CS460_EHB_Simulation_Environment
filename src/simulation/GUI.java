@@ -21,8 +21,11 @@ public class GUI
     private HBox _popupBox;
     private Stage _popUpStage;
     private ErrorPopupController _errorPopupController;
-    
-    public GUI()
+
+    /**
+     * This represents the GUI for the simulation.
+     */
+    GUI()
     {
       _gPane = new GridPane();
       _popUpStage = new Stage();
@@ -33,6 +36,7 @@ public class GUI
       _controller.setGui(this);
       _errorPopupController = new ErrorPopupController();
       _errorPopupController.setGUI(this);
+      //Load FXML files.
       _addGUIFXMLCode();
       _addErrorPopupFXMLCode();
       _popUpStage.setScene(new Scene(_popupBox));
@@ -49,6 +53,7 @@ public class GUI
       _currSpeedField.setWidthHeight(100, 10);
       _currSpeedField.addToWindow();
       _currSpeedField.setEditable(false);
+        //Create text field to display current speed.
       UILabel speedLabel = new UILabel("Current Speed", 11, 655);
       speedLabel.addToWindow();
       speedLabel.setColor(Color.WHITE);
@@ -56,41 +61,62 @@ public class GUI
       _pressureField.setWidthHeight(100, 10);
       _pressureField.addToWindow();
       _pressureField.setEditable(false);
+        //Create text field to display current pressure.
       UILabel pressureLabel = new UILabel("Current Pressure", 889, 655);
       pressureLabel.addToWindow();
       pressureLabel.setColor(Color.WHITE);
+        //Add pane with GUI to simulation.
       Engine.getMessagePump().sendMessage(new Message(Singleton.ADD_UI_ELEMENT, newPane));
     }
-    
+
+    /**
+     * Update speed text field with current speed.
+     * @param speed
+     */
     public void setSpeed(double speed)
     {
       String speedStr = String.format("%.1f", Math.abs(speed));
       _currSpeedField.setText(speedStr);
     }
-    
+
+    /**
+     * Update pressure text field with current pressure.
+     * @param pressure
+     */
     public void setPressure(double pressure)
     {
       String pressureStr = String.format("%.1f", pressure);
       _pressureField.setText(pressureStr);
     }
 
-    public void setInitColor()
+    /**
+     * Set initial color of the hand brake.
+     */
+    void setInitColor()
     {
         _controller.setInitButtonColor();
     }
-    
-    public void closePopup()
+
+    /**
+     * Close error message pop up box.
+     */
+    void closePopup()
     {
         _controller.errorPopupClosed();
       _popUpStage.close();
     }
-    
-    public void showPopup(String error)
+
+    /**
+     * Display error message.
+     * @param error
+     */
+    void showPopup(String error)
     {
         _errorPopupController.setErrorMessage(error);
       _popUpStage.show();
     }
 
+    // Add GUI FXML code.
     private void _addGUIFXMLCode()
     {
       Parent page = null;
@@ -105,7 +131,8 @@ public class GUI
       }
       _gPane.getChildren().setAll(page);
     }
-    
+
+    // Add Error popup FXML code.
     private void _addErrorPopupFXMLCode()
     {
       Parent page = null;
