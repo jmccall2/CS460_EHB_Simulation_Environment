@@ -29,12 +29,12 @@ public class EHB
   static
   {
     goodPressureProfile = new TreeMap<Long, Double>();
-    goodPressureProfile.put(Long.valueOf(20), 6.0);
-    goodPressureProfile.put(Long.valueOf(25), 5.75);
-    goodPressureProfile.put(Long.valueOf(30), 5.5);
-    goodPressureProfile.put(Long.valueOf(35), 5.25);
-    goodPressureProfile.put(Long.valueOf(40), 5.0);
-    goodPressureProfile.put(Long.valueOf(45), 4.75);
+    goodPressureProfile.put(Long.valueOf(20), 4.75);
+    goodPressureProfile.put(Long.valueOf(25), 4.75);
+    goodPressureProfile.put(Long.valueOf(30), 4.75);
+    goodPressureProfile.put(Long.valueOf(35), 4.5);
+    goodPressureProfile.put(Long.valueOf(40), 4.5);
+    goodPressureProfile.put(Long.valueOf(45), 4.5);
     goodPressureProfile.put(Long.valueOf(50), 4.5);
     goodPressureProfile.put(Long.valueOf(55), 4.25);
     goodPressureProfile.put(Long.valueOf(60), 4.0);
@@ -62,14 +62,14 @@ public class EHB
   static
   {
     badPressureProfile = new TreeMap<Long, Double>();
-    badPressureProfile.put(Long.valueOf(20), 2.0);
-    badPressureProfile.put(Long.valueOf(30), 2.5);
-    badPressureProfile.put(Long.valueOf(40), 3.0);
-    badPressureProfile.put(Long.valueOf(50), 3.5);
-    badPressureProfile.put(Long.valueOf(60), 4.0);
-    badPressureProfile.put(Long.valueOf(70), 4.5);
-    badPressureProfile.put(Long.valueOf(80), 5.0);
-    badPressureProfile.put(Long.valueOf(90), 5.5);
+    badPressureProfile.put(Long.valueOf(20), 6.0);
+    badPressureProfile.put(Long.valueOf(30), 6.0);
+    badPressureProfile.put(Long.valueOf(40), 6.0);
+    badPressureProfile.put(Long.valueOf(50), 6.0);
+    badPressureProfile.put(Long.valueOf(60), 6.0);
+    badPressureProfile.put(Long.valueOf(70), 6.0);
+    badPressureProfile.put(Long.valueOf(80), 6.0);
+    badPressureProfile.put(Long.valueOf(90), 6.0);
     badPressureProfile.put(Long.valueOf(100), 6.0);
   }
 
@@ -140,6 +140,7 @@ public class EHB
 
 //        System.out.println("Pressure applied is " + (closestResult / 6.0) * 100);
         BrakeInterface.setPressure((closestResult / 6.0) * 100);
+        //BrakeInterface.setPressure(100);
       }
     }
     else

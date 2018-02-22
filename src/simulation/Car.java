@@ -26,7 +26,6 @@ public class Car extends RenderEntity
     private double _actual_brake_force;
     private double _brake_percentage;
     private boolean _sim_is_active = false;
-    private double jerk;
     private double _engine_acceleration;
     private double _previous_acceleration;
     // this is the acceleration we want from the engine. Prevents sudden acceleration
@@ -40,6 +39,8 @@ public class Car extends RenderEntity
     private HashMap<GearTypes,Double> idle_accelerations = new HashMap();
     private BarEntity _SpeedGauge;
     private BarEntity _PressureGauge;
+    private double _jerk = 0.0;
+    private double _prevJerk = 0.0;
 
     private static final double _mass = 1600; // in kg
     private static final double _drag_c = 2; // drag coefficient
@@ -51,6 +52,7 @@ public class Car extends RenderEntity
     // boundary between kinetic and static friction
     private static double _friction_threshold;
     private GUI guiRef;
+
 
     public Car()
     {
@@ -231,7 +233,10 @@ public class Car extends RenderEntity
         if(speedMod == 0 && _applied_brake_force > 0) speed = 0;
 
         // calculate jerk
-        jerk = (_previous_acceleration-(speed-lastSpeed))/deltaSeconds;
+        _jerk = (_previous_acceleration-(speed-lastSpeed))/deltaSeconds;
+        //if (brake_percentage > 0.0) setRotation(getSpeedX()*jerk);
+        //else setRotation(0);
+        //System.out.println("JERK " + jerk);
 
         _previous_acceleration = (speed-lastSpeed);
 
@@ -265,6 +270,28 @@ public class Car extends RenderEntity
         setLocationXYDepth(getLocationX(), getLocationY() + wobble, -1);
     }
 
+    private void _generateWhiplash(double deltaSeconds)
+    {
+        final double magicConstant = 0.8;
+        if (_brake_percentage > 0)
+        {
+            _prevJerk = _jerk * magicConstant;
+            setRotation(getRotation() + _prevJerk);
+        }
+        /*
+        else if (brake_percentage == 0.0)
+        {
+            _prevJerk -= magicConstant2*deltaSeconds;
+            if (_prevJerk <= 0.0)
+            {
+                _prevJerk = 0.0;
+                setRotation(0.0);
+            }
+            else setRotation(getRotation() - magicConstant2*deltaSeconds);
+        }
+        */
+    }
+
 
     int xOffset = 0;
     @Override
@@ -273,7 +300,7 @@ public class Car extends RenderEntity
             _animationSequence.update(deltaSeconds); // Make sure we call this!
             update(deltaSeconds);
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-            Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, jerk));
+            Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(Math.abs(1.91 / (13 * ((speed == 0) ? 0.0001 : speed))));
 //            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
@@ -283,6 +310,8 @@ public class Car extends RenderEntity
                 new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
                 _wobble();
             }
+            else if (Math.abs(speed) > 5) _generateWhiplash(deltaSeconds);
+            else setRotation(0);
         }
 
     }
