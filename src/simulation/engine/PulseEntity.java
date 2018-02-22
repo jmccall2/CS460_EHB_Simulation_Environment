@@ -7,6 +7,8 @@ package simulation.engine;
  * allow it to update. So, if the simulation.engine is running at 60 frames
  * per second, each registered pulse entity should pulse 60 times
  * per second.
+ *
+ * @author Justin Hall
  */
 public interface PulseEntity {
     /**

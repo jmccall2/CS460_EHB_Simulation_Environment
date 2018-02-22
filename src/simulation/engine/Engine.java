@@ -9,6 +9,31 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * The engine is a singleton class as there should never be more than
+ * one instance during an application. It is responsible for the startup
+ * and shutdown of all subsystems which comprise an application, and from
+ * there it drives the system in real time (30-60+ updates per second).
+ *
+ * Notable functions include:
+ *      getMessagePump()
+ *      getConsoleVariables()
+ *
+ * A message pump is used to connect the various parts of the application without
+ * having to pass hard references to everyone that needs them. Instead, messages
+ * are registered and sent and those who are interested will signal interest in
+ * them.
+ *
+ * On the other hand, console variables provide a way to store global state. This
+ * state is made up of a variety of input sources which can include the command
+ * line, a config file, and input from various objects during initialization. A
+ * combination of all of these is well-supported and even expected.
+ *
+ * Be aware that this class is meant to be the central point of startup for
+ * the process, and as such it has implemented a main method.
+ *
+ * @author Justin Hall
+ */
 public class Engine extends Application implements PulseEntity, MessageHandler {
     private static Engine _engine; // Self-reference
     private static boolean _isInitialized = false;
@@ -51,7 +76,8 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
     @Override
     public void start(Stage stage) {
         _initialStage = stage;
-        // Initialize the simulation.engine
+        // Initialize the engine
+        _preInit();
         _init(stage);
         // Initialize the game loop
         new AnimationTimer()
@@ -130,9 +156,9 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _application.shutdown();
     }
 
-    // Performs memory allocation of core submodules and then initializes
-    // the system
-    private void _init(Stage stage)
+    // Performs memory allocation of core submodules so that
+    // the _init function can safely initialize everything
+    private void _preInit()
     {
         if (_isInitialized) return; // Already initialized
         _isInitialized = true;
@@ -144,16 +170,12 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         _renderer = new Renderer();
         _application = new ApplicationEntryPoint();
         _isRunning = true;
-        _initSubmodules(stage);
     }
 
     // Performs minimal allocations but initializes all submodules in the
     // correct order
-    private void _initSubmodules(Stage stage)
+    private void _init(Stage stage)
     {
-        // Just for sanity, make sure these are cleared before proceeding
-        //getConsoleVariables().clear();
-        //getMessagePump().clearAllMessageHandlers();
         _cvarSystem.loadConfigFile("src/resources/engine.cfg");
         _registerDefaultCVars();
         _updateEntities = Boolean.parseBoolean(_cvarSystem.find(Singleton.CALCULATE_MOVEMENT).getcvarValue());
@@ -192,7 +214,7 @@ public class Engine extends Application implements PulseEntity, MessageHandler {
         // Reallocate these only
         _cvarSystem = new ConsoleVariables();
         _messageSystem = new MessagePump();
-        _initSubmodules(_initialStage);
+        _init(_initialStage);
     }
 
     private void _registerDefaultCVars()

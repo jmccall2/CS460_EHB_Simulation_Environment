@@ -6,6 +6,8 @@ import simulation.engine.math.Vector3;
 /**
  * Implement this class for each object you want to be able to add to
  * the world, render it and have it move around.
+ *
+ * @author Justin Hall
  */
 public abstract class RenderEntity extends ActorGraph implements PulseEntity {
     private String _texture;

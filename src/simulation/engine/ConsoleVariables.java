@@ -10,9 +10,14 @@ import java.util.Map;
 
 /**
  * These are essentially global variables accessible to the
- * entire simulation.engine/application. They can be in part default-initialized
+ * entire engine/application. They can be in part default-initialized
  * via code, part overwritten by command line arguments, and part overwritten
  * by values read in from a file.
+ *
+ * This class also provides a function called loadConfigFile() which can be
+ * used to load a config file which is separate from the one that the engine
+ * loads. This is useful in the case where you wish to create your own
+ * default console variables to be used by your own code.
  *
  * @author Justin Hall
  */
@@ -21,6 +26,9 @@ public class ConsoleVariables {
     private HashMap<ConsoleVariable, Integer> _cvarEditCounts = new HashMap<>(); // Keeps track of how many times the cvars were edited
     private ArrayList<ConsoleVariable> _editedCvars = new ArrayList<>();
 
+    /**
+     * @return a list of references to all console variables currently managed by this object
+     */
     public LinkedList<ConsoleVariable> getAllConsoleVariables()
     {
         LinkedList<ConsoleVariable> cvars = new LinkedList<>();
@@ -31,6 +39,9 @@ public class ConsoleVariables {
         return cvars;
     }
 
+    /**
+     * Prints all console variables
+     */
     public void printAllConsoleVariables()
     {
         System.out.println("---Console Variable Listing---");

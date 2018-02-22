@@ -11,8 +11,16 @@ import simulation.engine.math.Vector3;
 import java.util.*;
 
 /**
- * Handles all the drawing, entity location updates based on
- * speed and acceleration, and
+ * The renderer manages all drawable entities in the scene and also
+ * simulates their movement based on location, speed and acceleration.
+ * Along with this, all textures are cached as needed by this class
+ * for fast lookup later on.
+ *
+ * The movement simulation and rendering are two distinct stages of
+ * the rendering pipeline which are triggered by separate engine messages.
+ * This means that disabling one or the other or both is very easy.
+ *
+ * @author Justin Hall
  */
 public class Renderer implements MessageHandler {
     private GraphicsContext _gc;
@@ -27,6 +35,7 @@ public class Renderer implements MessageHandler {
     {
         _gc = gc;
         _rotation.setAxis(new Point3D(0, 0, 1)); // In 2D we rotate about the z-axis
+        // Signal interest
         Engine.getMessagePump().signalInterest(Singleton.ADD_RENDER_ENTITY, this);
         Engine.getMessagePump().signalInterest(Singleton.REMOVE_RENDER_ENTITY, this);
         Engine.getMessagePump().signalInterest(Singleton.REGISTER_TEXTURE, this);
@@ -79,11 +88,13 @@ public class Renderer implements MessageHandler {
 
     private void _render(double deltaSeconds)
     {
+        // Clear the screen
         _gc.setFill(Color.WHITE);
         _gc.fillRect(0, 0,
                 Engine.getConsoleVariables().find(Singleton.SCR_WIDTH).getcvarAsFloat(),
                 Engine.getConsoleVariables().find(Singleton.SCR_HEIGHT).getcvarAsFloat());
 
+        // Reorder scene as needed so things are drawn in the proper order
         _determineDrawOrder();
         // What values to offset everything in the world by to
         // determine camera-space coordinates
@@ -152,6 +163,8 @@ public class Renderer implements MessageHandler {
         // Account for the fact that worldStartX/worldStartY may not simply be 0
         worldWidth += worldStartX;
         worldHeight += worldStartY;
+        // Actors form a graph so we need to start at the roots and move down to ensure
+        // that attached nodes inherit the base actor's speed and acceleration
         for (ActorGraph graph : _entities)
         {
             if (_rootSet.contains(graph)) continue; // Already processed this actor and its attached actors
@@ -180,6 +193,8 @@ public class Renderer implements MessageHandler {
         }
     }
 
+    // We need to do this because actors can be attached to other actors to form a graph
+    // structure which inherits speed/acceleration from the root actor
     private void _updateGraphEntitiesRecursive(ActorGraph actor, int worldStartX, int worldStartY,
                                                int worldWidth, int worldHeight,
                                                double deltaSpeedX, double deltaSpeedY)
@@ -221,6 +236,7 @@ public class Renderer implements MessageHandler {
         }
     }
 
+    // This performs wraparound for an object
     private void _checkAndCorrectOutOfBounds(Actor actor, int worldStartX, int worldStartY,
                                              int worldWidth, int worldHeight)
     {

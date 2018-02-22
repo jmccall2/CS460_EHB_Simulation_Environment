@@ -1,8 +1,23 @@
 package simulation.engine;
 
 /**
- * Represents an individual console variable and
- * corresponding helper functions.
+ * Represents an individual key-value console variable and
+ * corresponding helper functions. A console variable
+ * is a very simple means of storing some piece of data
+ * which is meant to be modified from a variety of different
+ * input streams. Such input streams include:
+ *
+ *      Command Line
+ *      External Config Files
+ *      Other Objects
+ *
+ * On top of storing the data as a raw string, a console variable
+ * will also attempt to cast the string to an integer, double, and
+ * boolean. You can then retrieve easily retrieve the pre-casted
+ * value via a couple of helper functions.
+ *
+ * If it fails to cast the data, this is not an issue. It will simply
+ * maintain the data as a raw string for later use/manual casting.
  *
  * @author Justin Hall
  */
@@ -15,6 +30,12 @@ public class ConsoleVariable {
     private boolean _cvarBoolVal = false; // Defaults to false
     private int _numEdits = 0; // Number of times this variable was edited
 
+    /**
+     * Creates a new console variable. Keep in mind that the actual value of the
+     * console variable will be determined by the default value given here.
+     * @param name name of the variable
+     * @param defaultValue default value in the form of a string (used during console variable reset)
+     */
     public ConsoleVariable(String name, String defaultValue)
     {
         _cvarName = name;
@@ -23,6 +44,12 @@ public class ConsoleVariable {
         _setValueNoMessageDispatch(_defaultValue);
     }
 
+    /**
+     * Creates a new, fully-specified console variable
+     * @param name name of the console variable
+     * @param defaultValue default value in the form of a string (used during console variable reset)
+     * @param value starting value of the console variable which is separate from the default value
+     */
     public ConsoleVariable(String name, String defaultValue, String value)
     {
         _cvarName = name;

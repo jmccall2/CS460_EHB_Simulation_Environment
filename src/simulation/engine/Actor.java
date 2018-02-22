@@ -100,6 +100,9 @@ public abstract class Actor {
         _depth = depth;
     }
 
+    /*
+     * Various setters and getters whose names reflect which data they work with
+     */
     public void setWidthHeight(double width, double height)
     {
         _scaleWidthHeight.setXYZ(width, height, 0);
