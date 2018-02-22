@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -33,11 +34,14 @@ public class StatsPopup
     private LineChart<String, Number> _lineChart =
             new LineChart<String, Number>(_xAxis, _yAxis);
     private Map<Double, String> _timeIntervalLabels = new HashMap<>();
-    private int _nCharts = 4;
+    private int _nCharts = 5;
     private int _currentChart = 0;
     private StatCollector _stats;
 
+    public static boolean isUp = false;
+
     public void init(StatCollector stats) {
+        isUp = true;
         initializeButtons();
         _title.setTextFill(Color.web("#FFFFFF"));
         _lineChart.getStylesheets().add(
@@ -60,6 +64,7 @@ public class StatsPopup
 
     @FXML
     public void exit(ActionEvent event) {
+        isUp = false;
         Stage stage = (Stage) _exitButton.getScene().getWindow();
         stage.close();
     }
@@ -73,7 +78,7 @@ public class StatsPopup
         {
             _leftButton.setVisible(true);
         }
-        if (_title.getText().equals("Pressure vs Time (10.0 Second Intervals)"))
+        if (_title.getText().equals("Jerk Avg vs Time (1.0 Second Intervals)"))
         {
             _rightButton.setVisible(false);
         } else
@@ -82,9 +87,9 @@ public class StatsPopup
         }
     }
 
-    public void masterEventLeft(ActionEvent event) { _currentChart--; _update(); }
+    public void masterEventLeft(ActionEvent event) { _update(); }
 
-    public void masterEventRight(ActionEvent event) { _currentChart++; _update(); }
+    public void masterEventRight(ActionEvent event) { _update(); }
 
     private void _update()
     {
@@ -95,16 +100,47 @@ public class StatsPopup
     private void displayNewGraph()
     {
         _lineChart.getData().clear();
-        int index = _currentChart <= 1 ? _currentChart : _currentChart - 2;
-        double deltaX = _stats.getDeltaXValues().get(index);
-        String timeInterval =  _timeIntervalLabels.get(deltaX);
+        GraphTypes gt;
+        if(_currentChart <= 1) gt = GraphTypes.SPEED_VS_TIME;
+        else if(_currentChart == _nCharts-1) gt = GraphTypes.JERK_AVG_VS_TIME;
+        else gt = GraphTypes.PRESSURE_VS_TIME;
+
+        System.out.println(_currentChart);
+        if(gt ==GraphTypes.SPEED_VS_TIME) System.out.println("speed vs time");
+        if(gt ==GraphTypes.PRESSURE_VS_TIME) System.out.println("pressure vs time");
+        if(gt ==GraphTypes.JERK_AVG_VS_TIME) System.out.println("jerk vs time");
+        String yTitle = "";
+        String graphTitle = "";
+        XYChart.Series graphData = new XYChart.Series();
+        double deltaX;
+        switch(gt)
+        {
+            case SPEED_VS_TIME:
+                deltaX = _stats.getDeltaXValues().get(_currentChart);
+                yTitle = "Speed (MPH)";
+                graphTitle = "Speed vs Time " + _timeIntervalLabels.get(deltaX);
+                graphData = _stats.mapToSeries(deltaX, GraphTypes.SPEED_VS_TIME);
+                break;
+            case PRESSURE_VS_TIME:
+                deltaX = _stats.getDeltaXValues().get(_currentChart-2);
+                yTitle = "Pressure %";
+                graphTitle = "Pressure vs Time " + _timeIntervalLabels.get(deltaX);
+                graphData = _stats.mapToSeries(deltaX, GraphTypes.PRESSURE_VS_TIME);
+                break;
+            case JERK_AVG_VS_TIME:
+                deltaX = _stats.getDeltaXValues().get(0);
+                yTitle = "Jerk Average (m/s^3)";
+                graphTitle = "Jerk Avg vs Time " + _timeIntervalLabels.get(deltaX);
+                graphData = _stats.mapToSeries(deltaX, GraphTypes.JERK_AVG_VS_TIME);
+                break;
+        }
         _xAxis.setTickLabelsVisible(false); // The ticks on the X-Axis do not resize to real time updates well.. so disable their visibility.
         _xAxis.setOpacity(0);
-        _yAxis.setLabel(_currentChart <= 1 ? "Speed (MPH)" : "Pressure %");
-        _title.setText((_currentChart <= 1 ? "Speed vs " : "Pressure vs") + " Time " + timeInterval);
-        _lineChart.getData().setAll(_currentChart <= 1 ?
-                _stats.mapToSeries(deltaX, GraphTypes.SPEED_VS_TIME) :
-                _stats.mapToSeries(deltaX, GraphTypes.PRESSURE_VS_TIME));
+        _yAxis.setLabel(yTitle);
+        _title.setText(graphTitle);
+        _lineChart.getData().setAll(graphData);
+
+        _currentChart++;
     }
 
     /**

@@ -7,6 +7,10 @@ import interfaces.GearInterface;
 import interfaces.SpeedInterface;
 import simulation.engine.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * This is the only part of the application that the simulation.engine
@@ -23,13 +27,26 @@ public class ApplicationEntryPoint implements PulseEntity{
     GUI _gui;
     EHB _ehb;
     Car _car;
+    Sun _sun;
     boolean init = true;
     boolean restart = false;
     boolean wasRestarted = false;
     Helper helper = new Helper();
+    private ArrayList<SingleFrameEntity> clouds;
+    private List<Integer> cloudSpeeds;
+    private List<Integer> cloudYLocs;
+    private List<Integer> cloudXLocs;
+    private double _initialCarY = 0.0; // Used to correct the position of the sun
+
+    {
+       cloudSpeeds = Arrays.asList(0, 8, 12, 20);
+       cloudYLocs = Arrays.asList(0, 5, 35, 0);
+       cloudXLocs = Arrays.asList(0, -400, 250, 100);
+    }
 
     public void init()
     {
+        clouds = new ArrayList<>();
         Engine.getConsoleVariables().find(Singleton.CALCULATE_MOVEMENT).setValue("false");
         _registerSimulationMessages();
         // instances of the interfaces so that they do get creates
@@ -44,6 +61,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         _car = new Car();
         _car.setGUI(_gui);
         _car.addToWorld();
+        _initialCarY = _car.getLocationY();
         Camera camera = new Camera();
         camera.attachToEntity(_car);
         camera.setAsMainCamera();
@@ -70,30 +88,30 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     private void _buildWorld()
     {
-        String cloud = "resources/img/world/cloud.png";
+        assert(cloudSpeeds.size() == cloudYLocs.size());
+        assert(cloudYLocs.size() == cloudXLocs.size());
+        String cloudPath = "resources/img/world/cloud.png";
        for(int i = 1; i <=6; i++)
        {
            BackgroundPanel bp = new BackgroundPanel("resources/img/world/background"+i+".jpeg",-1000 + (1000*(i-1)),-15,10,1000,700);
            bp.addToWorld();
            // There should probably be a better heuristic to decide where the clouds are placed.
-           SingleFrameEntity cloud1 = new SingleFrameEntity(cloud,0+ (1000*(i-1)),0,5,5,0,100,100);
-           SingleFrameEntity cloud2 = new SingleFrameEntity(cloud,-400+ (1000*(i-1)),10,5,8,0,100,100);
-           SingleFrameEntity cloud3 = new SingleFrameEntity(cloud,250+ (1000*(i-1)),35,5,12,0,100,100);
-           SingleFrameEntity cloud4 = new SingleFrameEntity(cloud,100+ (1000*(i-1)),0,5,20,0,100,100);
-           cloud1.addToWorld();
-           cloud2.addToWorld();
-           cloud3.addToWorld();
-           cloud4.addToWorld();
+           for(int j = 0; j < cloudSpeeds.size(); j++) clouds.add(new SingleFrameEntity(cloudPath,cloudXLocs.get(j)+(1000*(i-1)), cloudYLocs.get(j),5, cloudSpeeds.get(j),0,100,100));
+           for(SingleFrameEntity cloud : clouds) cloud.addToWorld();
        }
 
-        Sun sun = new Sun();
-        sun.addToWorld();
+        _sun = new Sun();
+        _sun.addToWorld();
+
+        // Constrain the sun's y movement so it always stays in the same
+        // spot along the y axis
+        //sun.setConstrainXYMovement(false, true);
 
         // Attach the sun to the car so that it never gets left behind
         //_car.attachActor(sun);
 
         // Make the sun static so it's always on screen
-        sun.setAsStaticActor(true);
+        _sun.setAsStaticActor(true);
     }
 
     private void _buildMetricPanels()
@@ -122,13 +140,12 @@ public class ApplicationEntryPoint implements PulseEntity{
         if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
-        /*
-        if (restart && !wasRestarted)
-        {
-            init();
-            wasRestarted = true;
+        double currCarY = _car.getLocationY();
+        if (currCarY != _initialCarY) {
+            double deltaCarY = _initialCarY - currCarY;
+            _sun.setLocationXYDepth(_sun.getLocationX(), _sun.getLocationY() + deltaCarY, _sun.getDepth());
+            _initialCarY = currCarY;
         }
-        */
     }
 
     class Helper implements MessageHandler

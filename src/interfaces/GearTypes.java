@@ -1,5 +1,9 @@
 package interfaces;
 
+/**
+ * This enum represents is used to represent the set of valid gear states
+ * that the car can be in. No other gear states are possible for this simulation.
+ */
 public enum GearTypes
 {
     PARK,

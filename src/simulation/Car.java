@@ -4,11 +4,7 @@ import interfaces.GearInterface;
 import interfaces.GearTypes;
 import interfaces.SpeedInterface;
 import javafx.scene.paint.Color;
-import simulation.engine.Animation;
-import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.MessageHandler;
-import simulation.engine.RenderEntity;
+import simulation.engine.*;
 
 import java.util.HashMap;
 
@@ -186,7 +182,7 @@ public class Car extends RenderEntity
 
         // Used for animation: determine when control is lost
         if(_isActive) {
-            if (_applied_brake_force > _friction_threshold - 4000) _startTractionLossAnimation = true;
+            if (_applied_brake_force > _friction_threshold) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
         } else _startTractionLossAnimation = false;
 
@@ -284,6 +280,22 @@ public class Car extends RenderEntity
             _prevJerk = _jerk * magicConstant;
             setRotation(getRotation() + _prevJerk);
         }
+        else
+        {
+            setRotation(0);
+        }
+        /*
+        else if (brake_percentage == 0.0)
+        {
+            _prevJerk -= magicConstant2*deltaSeconds;
+            if (_prevJerk <= 0.0)
+            {
+                _prevJerk = 0.0;
+                setRotation(0.0);
+            }
+            else setRotation(getRotation() - magicConstant2*deltaSeconds);
+        }
+        */
     }
 
 
@@ -297,7 +309,7 @@ public class Car extends RenderEntity
             _animationSequence.update(deltaSeconds); // Make sure we call this!
             update(deltaSeconds);
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.SPEED, speed));
-            Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
+            if(_brake_percentage > 0) Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(Math.abs(1.91 / (13 * ((speed == 0) ? 0.0001 : speed))));
             _SpeedGauge.updateState(speed);
