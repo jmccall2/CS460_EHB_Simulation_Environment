@@ -53,7 +53,9 @@ public class Car extends RenderEntity
     private static double _friction_threshold;
     private GUI guiRef;
 
-
+    /**
+     * Primary visual component of the car and the physics.
+     */
     public Car()
     {
          _animationSequence = new Animation(this, 0);
@@ -81,7 +83,10 @@ public class Car extends RenderEntity
         _PressureGauge.setAsStaticActor(true);
         _PressureGauge.addToWorld();
     }
-    
+
+    /**
+     * set GUI
+     */
     public void setGUI(GUI gui)
     {
       this.guiRef = gui;
@@ -93,12 +98,8 @@ public class Car extends RenderEntity
         for(int i = 13; i >= 1; i--) _animationSequence.addAnimationFrame("car_reverse", "resources/img/car/car" + i + ".png");
     }
 
-    /**
+    /*
      *  updates engine acceleration based on current acceleration, target acceleration and current gear
-     * @param current_acc the current acceleration of the engine
-     * @param target_acc the target acceleration of the engine
-     * @param gear current gear
-     * @return
      */
     private static double nextAcc(double current_acc, double target_acc, GearTypes gear){
         double rate = .015;
@@ -144,6 +145,7 @@ public class Car extends RenderEntity
         return current_acc;
     }
 
+    // updates the state of the car + physics
     private void update(double deltaSeconds){
         deltaSeconds=0.0217;
         // sim is not active: return
@@ -246,7 +248,10 @@ public class Car extends RenderEntity
         guiRef.setPressure(_brake_percentage);
     }
 
-
+    /**
+     * Checks if simulation is on
+     * @return true if simulation is on
+     */
     public boolean running()
     {
         return _simulationOn;
@@ -270,6 +275,7 @@ public class Car extends RenderEntity
         setLocationXYDepth(getLocationX(), getLocationY() + wobble, -1);
     }
 
+    // animates jerk
     private void _generateWhiplash(double deltaSeconds)
     {
         final double magicConstant = 0.8;
@@ -278,23 +284,14 @@ public class Car extends RenderEntity
             _prevJerk = _jerk * magicConstant;
             setRotation(getRotation() + _prevJerk);
         }
-        /*
-        else if (brake_percentage == 0.0)
-        {
-            _prevJerk -= magicConstant2*deltaSeconds;
-            if (_prevJerk <= 0.0)
-            {
-                _prevJerk = 0.0;
-                setRotation(0.0);
-            }
-            else setRotation(getRotation() - magicConstant2*deltaSeconds);
-        }
-        */
     }
 
 
     int xOffset = 0;
     @Override
+    /**
+     * Updates the physics simulation and graphics
+     */
     public void pulse(double deltaSeconds) {
         if(_simulationOn) {
             _animationSequence.update(deltaSeconds); // Make sure we call this!
@@ -303,7 +300,6 @@ public class Car extends RenderEntity
             Engine.getMessagePump().sendMessage(new Message(SimGlobals.JERK, _jerk));
             setSpeedXY(speed * 45, 0);
             _animationSequence.setAnimationRate(Math.abs(1.91 / (13 * ((speed == 0) ? 0.0001 : speed))));
-//            System.out.println(1.91 / (13 * ((speed == 0) ? 0.0001 : speed)));
             _SpeedGauge.updateState(speed);
             _PressureGauge.updateState(_brake_percentage);
             if (Math.abs(speed) > 5 && _startTractionLossAnimation) {
@@ -315,7 +311,7 @@ public class Car extends RenderEntity
         }
 
     }
-    
+
     class Helper implements MessageHandler
     {
         @Override
