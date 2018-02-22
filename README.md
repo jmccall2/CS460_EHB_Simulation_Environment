@@ -1,20 +1,16 @@
 # CS460_EHB_Simulation_Environment
 
 
-Simulation environment for EHB software.
+Simulation environment for the EHB software.
 
 ## EHB Package
-* All file created and code written for the EHB software should be located in the ehb packages.
-* You will be provided an empty shell class called EHB.java, inside said class there is a method called
-update. This method will be called at 60 times a second, and should not contain any loops as it will
-lock up the entire simulation.
+* All files created, and code written for the EHB software should be located in the ehb package.
+* You will be provided an empty shell class called EHB.java, inside said class there is a method called update. This method will be called at 60 times a second, and should not contain any loops as it will lock up the entire simulation.
 
 
 ## Interfaces
-* The only external package you have access to is the interfaces package which contain the interfaces/drivers and
-public data structures (enum).
-* NOTE: These are static classes so you do not and should not create an instance of any of the interface classes. 
-All methods are static and available immediately, so you should never have the need to instantiate any of the interfaces.
+* The only external package you have access to is the interfaces package which contains the interfaces/drivers and public data structures (enum).
+* NOTE: These are static classes so you do not and should not create an instance of any of the interfaces. All methods are static you can call them immediately. 
 * Documentation for the interfaces can be found here: https://jmccall2.github.io/CS460_EHB_Simulation_Environment/
 
 ## Interface Use Examples:
@@ -26,7 +22,6 @@ BrakeInterface.setPressure(50); # Set brake pressure, the simulation takes this 
 double speed = SpeedInterface.getSpeed(); # Example how to get the current speed (in meters/second)
 GearTypes gear = GearInterface.getGear(); # Example how to get the current gear. 
 ```
-
 
 ## Third Party:
 Image Sources (All under CC license):
