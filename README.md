@@ -3,6 +3,9 @@
 
 Simulation environment for EHB software.
 
+Javadoc link for the interfaces:
+https://jmccall2.github.io/CS460_EHB_Simulation_Environment/
+
 Third Party:
 
 Image Sources (All under CC license):
@@ -20,4 +23,5 @@ GUI theme source (DarkTheme.css):
 http://code.makery.ch/library/javafx-8-tutorial/part4/
 
 Source for engaged/disengaged sound clip: http://www.text2speech.org/
+
 
