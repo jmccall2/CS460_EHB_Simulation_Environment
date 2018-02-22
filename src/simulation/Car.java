@@ -143,17 +143,19 @@ public class Car extends RenderEntity
 
     // updates the state of the car + physics
     private void update(double deltaSeconds){
+        // instead of using simulation deltaSeconds, use an average. That way, we don't get unwanted jerk results
+        // as a result of different delta t
         deltaSeconds=0.0217;
         // sim is not active: return
         if(!_sim_is_active) return;
         // idle acceleration
         if(Math.abs(speed) < 2){
             if (_gear == GearTypes.REVERSE) {
-                _engine_acceleration = -(float) ((Math.pow(4,2) * (_drag_c / _mass)) + (9.81f * .02f));
+                _engine_acceleration = -(float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
             } else if (_gear == GearTypes.NEUTRAL) {
                 _engine_acceleration = 0.0f;
             } else if (_gear == GearTypes.DRIVE) {
-                _engine_acceleration = (float) ((Math.pow(4,2) * (_drag_c / _mass)) + (9.81f * .02f));
+                _engine_acceleration = (float) ((Math.pow(4,2) * (_drag_c / _mass)) + (_g * .02f));
             } else if (_gear == GearTypes.PARK) {
                 _engine_acceleration = 0.0f;
             }
