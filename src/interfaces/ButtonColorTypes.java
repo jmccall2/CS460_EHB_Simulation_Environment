@@ -1,7 +1,9 @@
 package interfaces;
 
-/* We can add however many colors we want, we just have to map them to actual FX colors later. */
-
+/**
+ * This enum represents the set of valid color types that can
+ * be used to set the color of the brake button.
+ */
 public enum ButtonColorTypes
 {
     BLUE,
@@ -10,7 +12,6 @@ public enum ButtonColorTypes
     ORANGE,
     YELLOW,
     LIGHTBLUE;
-
 
     @Override
     public String toString() {
