@@ -140,6 +140,7 @@ public class EHB
 
 //        System.out.println("Pressure applied is " + (closestResult / 6.0) * 100);
         BrakeInterface.setPressure((closestResult / 6.0) * 100);
+        //BrakeInterface.setPressure(100);
       }
     }
     else

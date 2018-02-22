@@ -42,6 +42,8 @@ public class Car extends RenderEntity
     private HashMap<GearTypes,Double> idle_accelerations = new HashMap();
     private BarEntity _SpeedGauge;
     private BarEntity _PressureGauge;
+    private double _jerk = 0.0;
+    private double _prevJerk = 0.0;
 
     private static final double mass = 1600; // in kg
  //   private static final double h = 1.0/60; // update rate
@@ -217,7 +219,10 @@ public class Car extends RenderEntity
 
         if(speedMod == 0 && applied_brake_force > 0) speed = 0;
 
-//        System.out.println((previous_acceleration-(speed-lastSpeed))/deltaSeconds);
+        _jerk = (previous_acceleration-(speed-lastSpeed))/deltaSeconds;
+        //if (brake_percentage > 0.0) setRotation(getSpeedX()*jerk);
+        //else setRotation(0);
+        //System.out.println("JERK " + jerk);
 
         previous_acceleration = (speed-lastSpeed);
 
@@ -250,6 +255,28 @@ public class Car extends RenderEntity
         setLocationXYDepth(getLocationX(), getLocationY() + wobble, -1);
     }
 
+    private void _generateWhiplash(double deltaSeconds)
+    {
+        final double magicConstant = 0.8;
+        if (brake_percentage > 0)
+        {
+            _prevJerk = _jerk * magicConstant;
+            setRotation(getRotation() + _prevJerk);
+        }
+        /*
+        else if (brake_percentage == 0.0)
+        {
+            _prevJerk -= magicConstant2*deltaSeconds;
+            if (_prevJerk <= 0.0)
+            {
+                _prevJerk = 0.0;
+                setRotation(0.0);
+            }
+            else setRotation(getRotation() - magicConstant2*deltaSeconds);
+        }
+        */
+    }
+
 
     int xOffset = 0;
     @Override
@@ -267,6 +294,8 @@ public class Car extends RenderEntity
                 new TireTrack(this.getLocationX() + xOffset, this.getLocationY() + 55, 1).addToWorld();
                 _wobble();
             }
+            else if (Math.abs(speed) > 5) _generateWhiplash(deltaSeconds);
+            else setRotation(0);
         }
 
     }
