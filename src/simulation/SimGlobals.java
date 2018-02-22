@@ -30,4 +30,6 @@ public class SimGlobals
     public static final String GEAR_CHANGE ="GearTypes change";
     //Speed entered by user.
     public static final String SPEED = "Speed.";
+    //Jerk (m/s^3)
+    public static final String JERK = "Jerk";
 }

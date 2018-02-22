@@ -62,6 +62,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.GEAR_CHANGE));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SPEED));
         Engine.getMessagePump().registerMessage(new Message(SimGlobals.SET_BUTTON_COLOR));
+        Engine.getMessagePump().registerMessage(new Message(SimGlobals.JERK));
         Engine.getMessagePump().signalInterest(SimGlobals.RESET_SIM, helper);
     }
 
