@@ -19,10 +19,15 @@ Simulation environment for the EHB software.
 ## Interface Use Examples:
 ```java
 boolean active = ButtonInterface.isDown(); # Example how to check if the button is currently pressed down.
+
 ButtonInterface.play(ButtonSoundTypes.ENGAGED); # Example how to play a sound, this is played immediately.
+
 ButtonInterface.setColor(ButtonColorTypes.RED); # Example how to set the color, this is changed immediately.
-BrakeInterface.setPressure(50); # Set brake pressure, the simulation takes this into account right away. 
+
+BrakeInterface.setPressure(50); # Set brake pressure, the simulation takes this into account right away.
+
 double speed = SpeedInterface.getSpeed(); # Example how to get the current speed (in meters/second)
+
 GearTypes gear = GearInterface.getGear(); # Example how to get the current gear. 
 ```
 
