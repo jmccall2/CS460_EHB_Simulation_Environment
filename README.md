@@ -4,8 +4,8 @@
 Simulation environment for EHB software.
 
 ## EHB Package
-*All file created and code written for the EHB software should be located in the ehb packages.
-*You will be provided an empty shell class called EHB.java, inside said class there is a method called
+* All file created and code written for the EHB software should be located in the ehb packages.
+* You will be provided an empty shell class called EHB.java, inside said class there is a method called
 update. This method will be called at 60 times a second, and should not contain any loops as it will
 lock up the entire simulation.
 
