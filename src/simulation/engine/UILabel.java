@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 
 /**
  * A label is simply a UI element with some text attached to it - non-clickable
+ *
+ * @author Justin Hall
  */
 public class UILabel implements UIElement {
     private Label _label;

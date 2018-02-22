@@ -75,6 +75,11 @@ public class Animation implements MessageHandler {
         _changeRate = rateOfChange;
     }
 
+    /**
+     * Sets the current category of animation. Since you can register multiple
+     * categories of animation which each have different sets of images, this
+     * function provides an easy way to switch between them.
+     */
     public void setCategory(String category)
     {
         if (!_animationCategories.containsKey(category))

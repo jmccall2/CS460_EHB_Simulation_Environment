@@ -27,26 +27,27 @@ public class Window implements MessageHandler, PulseEntity {
     private boolean _resizeable = true;
     private String _title = "Application";
 
+    /**
+     * @return current pixel width of the window
+     */
     public int getWidth()
     {
         return _width;
     }
 
+    /**
+     * @return current pixel height of the window
+     */
     public int getHeight()
     {
         return _height;
     }
 
-    public boolean isFullscreen()
-    {
-        return _isFullscreen;
-    }
-
-    public Scene getJFXScene()
-    {
-        return _jfxScene;
-    }
-
+    /**
+     * Initializes the window for use
+     * @param stage valid stage representing the window
+     * @return GraphicsContext which is created after initializing the nodes of the stage
+     */
     public GraphicsContext init(Stage stage)
     {
         // We want to update frequently to check for resizes, so tell the system to add us as a pulse entity

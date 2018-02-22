@@ -4,6 +4,8 @@ import javafx.scene.control.Button;
 
 /**
  * Generic button class which can be added and removed from the window
+ *
+ * @author Justin Hall
  */
 public class UIButton implements UIElement {
     private int _x, _y;
