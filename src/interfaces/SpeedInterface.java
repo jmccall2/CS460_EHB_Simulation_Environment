@@ -2,35 +2,26 @@ package interfaces;
 
 import simulation.SimGlobals;
 import simulation.engine.Engine;
-import simulation.engine.Message;
-import simulation.engine.MessageHandler;
-import simulation.engine.Singleton;
 
-
+/**
+ * This interface provides a way to query the current speed of the car in
+ * meters per second. It exposes one getter method, getSpeed().
+ */
 public class SpeedInterface
 {
+  private static double _speed = 0;
 
-  Helper helper = new Helper();
-
-  private static double speed = 0;
-
-  public SpeedInterface()
   {
-    Engine.getMessagePump().signalInterest(SimGlobals.SPEED, helper);
+    Engine.getMessagePump().signalInterest(SimGlobals.SPEED,
+            (message) -> _speed = (Double)message.getMessageData());
   }
 
+  /**
+   * @return the current speed of the car in meters per second
+   */
   public static double getSpeed()
   {
-    return speed;
-  }
-
-  class Helper implements MessageHandler
-  {
-    @Override
-    public void handleMessage(Message message)
-    {
-      speed = (Double)message.getMessageData();
-    }
+    return _speed;
   }
 }
 

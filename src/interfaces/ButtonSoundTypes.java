@@ -1,5 +1,9 @@
 package interfaces;
 
+/**
+ * This enum represents the set of sounds that are recognized by
+ * the system. Each of these maps directly to an internal sound file.
+ */
 public enum ButtonSoundTypes
 {
   ENGAGED,
