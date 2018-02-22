@@ -14,13 +14,13 @@ public class BadProfile {
         boolean active = ButtonInterface.isDown();
         if (active && !_isActive)
         {
-            ButtonInterface.play(ButtonSoundTypes.SHORT_BEEP_A);
+            //ButtonInterface.play(ButtonSoundTypes.SHORT_BEEP_A);
             ButtonInterface.play(ButtonSoundTypes.ENGAGED);
             _isActive = true;
         }
         else if (!active && _isActive)
         {
-            ButtonInterface.play(ButtonSoundTypes.SHORT_BEEP_B);
+            //ButtonInterface.play(ButtonSoundTypes.SHORT_BEEP_B);
             ButtonInterface.play(ButtonSoundTypes.DISENGAGED);
             _isActive = false;
         }
