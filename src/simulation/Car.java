@@ -33,6 +33,7 @@ public class Car extends RenderEntity
     private double _targetAcceleration;
     private float _g = 9.81f;
     private int START_Y = 215;
+    private double COEFFICIENT_OF_ROLLING_FRICTION = .002796;
     private double _wobbleMinInput = 0.0;
     private double _wobbleMaxInput = Math.PI*2;
     private double _wobbleCurrentInput = _wobbleMinInput;
@@ -179,7 +180,7 @@ public class Car extends RenderEntity
 
         // found this by interpolating between known _us/speed points
         // this is the coefficient of static friction, which depends on speed
-        _us = .9125 - .002796*speed;
+        _us = _g - COEFFICIENT_OF_ROLLING_FRICTION*speed;
         _friction_threshold = _us * 9.81 * _mass;
 
         // are we in the kinetic or static friction ?
@@ -278,10 +279,10 @@ public class Car extends RenderEntity
     // animates jerk
     private void _generateWhiplash(double deltaSeconds)
     {
-        final double magicConstant = 0.8;
+        final double jerk_ratio = 0.8;
         if (_brakePercentage > 0)
         {
-            _prevJerk = _jerk * magicConstant;
+            _prevJerk = _jerk * jerk_ratio;
             setRotation(getRotation() + _prevJerk);
         }
         else

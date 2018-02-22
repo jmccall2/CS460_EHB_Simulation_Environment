@@ -13,15 +13,20 @@ import simulation.engine.RenderEntity;
 public class BarEntity extends RenderEntity
 {
 
+    private final double SPEED_TO_Y_CONST = 2.3650793650793;
+    private final double PRESSURE_TO_Y_CONST = 1.587301587;
+    private final double INDEXER_CONST = 63;
+    private final int SPEED_BAR_MAX = 140;
+    private final int PRESSURE_BAR_MAX = 100;
+    private final int SPEED_BAR_GREEN_THRESH = 38;
+    private final int PRESSURE_BAR_GREEN_TRESH = 26;
+
     private int _xLoc;
     private int _yLoc;
     private int _yInit;
     private int _depth;
     private ArrayList<Color> _colors = new ArrayList<>();
     private Color _currentColor;
-    private double SPEED_TO_Y_CONST = 2.3650793650793;
-    private double PRESSURE_TO_Y_CONST = 1.587301587;
-    private double MAX_SPEED = 63;
     private double _speedToColorIndexMult;
     private BarEntityModes _Mode;
 
@@ -52,11 +57,11 @@ public class BarEntity extends RenderEntity
     // Update the color of the bar.
     private void _setColors()
     {
-        int nColors = (_Mode == BarEntityModes.SPEED) ? 140 : 100;
-        int nPureGreen = (_Mode == BarEntityModes.SPEED) ? 38 : 26;
+        int nColors = (_Mode == BarEntityModes.SPEED) ? SPEED_BAR_MAX : PRESSURE_BAR_MAX;
+        int nPureGreen = (_Mode == BarEntityModes.SPEED) ? SPEED_BAR_GREEN_THRESH : PRESSURE_BAR_GREEN_TRESH;
         int nColorInc = (nColors - nPureGreen)/2;
         double multiplier = (255.0/nColorInc);
-        _speedToColorIndexMult = ((double)nColors)/MAX_SPEED;
+        _speedToColorIndexMult = ((double)nColors)/INDEXER_CONST;
         for(int i = 0; i < nPureGreen; i++) _colors.add(Color.rgb(0,255,0)); // Keep a green color for most of the lower speeds.
         for(int i = 1; i <= nColorInc; i++) _colors.add(Color.rgb((int)(i*multiplier),255,0));
         for(int i = 1; i <= nColorInc; i++) _colors.add(Color.rgb(255,255 - (int)(i*multiplier), 0));
