@@ -100,6 +100,10 @@ public class ApplicationEntryPoint implements PulseEntity{
         Sun sun = new Sun();
         sun.addToWorld();
 
+        // Constrain the sun's y movement so it always stays in the same
+        // spot along the y axis
+        //sun.setConstrainXYMovement(false, true);
+
         // Attach the sun to the car so that it never gets left behind
         //_car.attachActor(sun);
 
