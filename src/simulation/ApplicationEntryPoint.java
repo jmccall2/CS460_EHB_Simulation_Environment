@@ -27,6 +27,7 @@ public class ApplicationEntryPoint implements PulseEntity{
     GUI _gui;
     EHB _ehb;
     Car _car;
+    Sun _sun;
     boolean init = true;
     boolean restart = false;
     boolean wasRestarted = false;
@@ -35,6 +36,7 @@ public class ApplicationEntryPoint implements PulseEntity{
     private List<Integer> cloudSpeeds;
     private List<Integer> cloudYLocs;
     private List<Integer> cloudXLocs;
+    private double _initialCarY = 0.0; // Used to correct the position of the sun
 
     {
        cloudSpeeds = Arrays.asList(0, 8, 12, 20);
@@ -59,6 +61,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         _car = new Car();
         _car.setGUI(_gui);
         _car.addToWorld();
+        _initialCarY = _car.getLocationY();
         Camera camera = new Camera();
         camera.attachToEntity(_car);
         camera.setAsMainCamera();
@@ -97,8 +100,8 @@ public class ApplicationEntryPoint implements PulseEntity{
            for(SingleFrameEntity cloud : clouds) cloud.addToWorld();
        }
 
-        Sun sun = new Sun();
-        sun.addToWorld();
+        _sun = new Sun();
+        _sun.addToWorld();
 
         // Constrain the sun's y movement so it always stays in the same
         // spot along the y axis
@@ -108,7 +111,7 @@ public class ApplicationEntryPoint implements PulseEntity{
         //_car.attachActor(sun);
 
         // Make the sun static so it's always on screen
-        sun.setAsStaticActor(true);
+        _sun.setAsStaticActor(true);
     }
 
     private void _buildMetricPanels()
@@ -137,6 +140,12 @@ public class ApplicationEntryPoint implements PulseEntity{
         if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
+        double currCarY = _car.getLocationY();
+        if (currCarY != _initialCarY) {
+            double deltaCarY = _initialCarY - currCarY;
+            _sun.setLocationXYDepth(_sun.getLocationX(), _sun.getLocationY() + deltaCarY, _sun.getDepth());
+            _initialCarY = currCarY;
+        }
     }
 
     class Helper implements MessageHandler
