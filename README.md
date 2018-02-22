@@ -1,7 +1,7 @@
-# CS460_EHB_Simulation_Enviroment
+# CS460_EHB_Simulation_Environment
 
 
-Simulation of electronic handbrake for CS 460.
+Simulation environment for EHB software.
 
 Third Party:
 
