@@ -38,7 +38,10 @@ public class StatsPopup
     private int _currentChart = 0;
     private StatCollector _stats;
 
+    public static boolean isUp = false;
+
     public void init(StatCollector stats) {
+        isUp = true;
         initializeButtons();
         _title.setTextFill(Color.web("#FFFFFF"));
         _lineChart.getStylesheets().add(
@@ -61,6 +64,7 @@ public class StatsPopup
 
     @FXML
     public void exit(ActionEvent event) {
+        isUp = false;
         Stage stage = (Stage) _exitButton.getScene().getWindow();
         stage.close();
     }

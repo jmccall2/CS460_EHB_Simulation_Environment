@@ -53,6 +53,7 @@ public class MyController implements Initializable
   String currGear = "D";
   double max_speed = 140;
   StatCollector _statCollector;
+  StatsPopup _statController;
   boolean invalidSpeed = false;
   
   @Override
@@ -74,7 +75,7 @@ public class MyController implements Initializable
     Engine.getMessagePump().sendMessage(new Message(SimGlobals.GEAR_CHANGE, GearTypes.DRIVE));
     statsButton.setDisable(true); // Stats are not available until the simulation starts.
     statsButton.setOnAction((event) ->{
-      _InvokeOtherStage();
+      if(!_statController.isUp) _InvokeOtherStage();
     });
     start_stop_sim.setOnAction((event) -> {
       if(stopped)_setInitSpeed();
@@ -365,11 +366,11 @@ public class MyController implements Initializable
       FXMLLoader fxmlLoader = new FXMLLoader(
               getClass().getResource("/simulation/simData.fxml"));
       Parent root = fxmlLoader.load();
-      StatsPopup statController = (StatsPopup) fxmlLoader.getController();
+      _statController = (StatsPopup) fxmlLoader.getController();
       Scene scene = new Scene(root);
       // Again needed for making the window
       // transparent.
-      statController.init(_statCollector);
+      _statController.init(_statCollector);
       scene.setFill(Color.TRANSPARENT);
       newStage.setScene(scene);
       newStage.show();
