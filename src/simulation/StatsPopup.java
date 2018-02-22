@@ -33,7 +33,7 @@ public class StatsPopup
     private LineChart<String, Number> _lineChart =
             new LineChart<String, Number>(_xAxis, _yAxis);
     private Map<Double, String> _timeIntervalLabels = new HashMap<>();
-    private int _nCharts = 8;
+    private int _nCharts = 4;
     private int _currentChart = 0;
     private StatCollector _stats;
 
@@ -66,10 +66,6 @@ public class StatsPopup
 
     private void updateButtonVisibility()
     {
-        System.out.println(_title.getText());
-        System.out.println(_title.getText().equals("Speed vs Time (1 Second Intervals)"));
-        System.out.println(_title.getText().equals("Pressure vs Time (60 Second Intervals)"));
-
         if (_title.getText().equals("Speed vs Time (1.0 Second Intervals)"))
         {
             _leftButton.setVisible(false);
@@ -77,7 +73,7 @@ public class StatsPopup
         {
             _leftButton.setVisible(true);
         }
-        if (_title.getText().equals("Pressure vs Time (60.0 Second Intervals)"))
+        if (_title.getText().equals("Pressure vs Time (10.0 Second Intervals)"))
         {
             _rightButton.setVisible(false);
         } else
@@ -99,14 +95,14 @@ public class StatsPopup
     private void displayNewGraph()
     {
         _lineChart.getData().clear();
-        int index = _currentChart <= 3 ? _currentChart : _currentChart - 4;
+        int index = _currentChart <= 1 ? _currentChart : _currentChart - 2;
         double deltaX = _stats.getDeltaXValues().get(index);
         String timeInterval =  _timeIntervalLabels.get(deltaX);
         _xAxis.setTickLabelsVisible(false); // The ticks on the X-Axis do not resize to real time updates well.. so disable their visibility.
         _xAxis.setOpacity(0);
-        _yAxis.setLabel(_currentChart <= 3 ? "Speed (MPH)" : "Pressure %");
-        _title.setText((_currentChart <= 3 ? "Speed vs " : "Pressure vs") + " Time " + timeInterval);
-        _lineChart.getData().setAll(_currentChart <= 3 ?
+        _yAxis.setLabel(_currentChart <= 1 ? "Speed (MPH)" : "Pressure %");
+        _title.setText((_currentChart <= 1 ? "Speed vs " : "Pressure vs") + " Time " + timeInterval);
+        _lineChart.getData().setAll(_currentChart <= 1 ?
                 _stats.mapToSeries(deltaX, GraphTypes.SPEED_VS_TIME) :
                 _stats.mapToSeries(deltaX, GraphTypes.PRESSURE_VS_TIME));
     }

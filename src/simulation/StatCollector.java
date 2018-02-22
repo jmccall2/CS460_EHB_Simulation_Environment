@@ -31,14 +31,11 @@ public class StatCollector {
         // Generate Pulsars to get data from the engine.
         new Pulsar(1.0, () -> _updateData(1.0)).start();
         new Pulsar(10.0, () -> _updateData(10.0)).start();
-        new Pulsar(30.0, () -> _updateData(30.0)).start();
-        new Pulsar(60.0, () -> _updateData(60.0)).start();
 
     }
 
     private void _updateData(double deltaX)
     {
-        System.out.println("Here: " + deltaX);
         if(_deltaXSpeedData.get(deltaX).size() >= 20) _deltaXSpeedData.get(deltaX).pop();
         if(_deltaXPressureData.get(deltaX).size() >= 20) _deltaXPressureData.get(deltaX).pop();
         _deltaXSpeedData.get(deltaX).add(SpeedInterface.getSpeed());
