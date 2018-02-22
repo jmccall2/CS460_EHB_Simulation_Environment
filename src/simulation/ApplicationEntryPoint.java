@@ -7,6 +7,10 @@ import interfaces.GearInterface;
 import interfaces.SpeedInterface;
 import simulation.engine.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * This is the only part of the application that the simulation.engine
@@ -27,6 +31,16 @@ public class ApplicationEntryPoint implements PulseEntity{
     boolean restart = false;
     boolean wasRestarted = false;
     Helper helper = new Helper();
+    private ArrayList<SingleFrameEntity> clouds = new ArrayList<>();
+    private List<Integer> cloudSpeeds;
+    private List<Integer> cloudYLocs;
+    private List<Integer> cloudXLocs;
+
+    {
+       cloudSpeeds = Arrays.asList(0, 8, 12, 20);
+       cloudYLocs = Arrays.asList(0, 5, 35, 0);
+       cloudXLocs = Arrays.asList(0, -400, 250, 100);
+    }
 
     public void init()
     {
@@ -70,20 +84,16 @@ public class ApplicationEntryPoint implements PulseEntity{
 
     private void _buildWorld()
     {
-        String cloud = "resources/img/world/cloud.png";
+        assert(cloudSpeeds.size() == cloudYLocs.size());
+        assert(cloudYLocs.size() == cloudXLocs.size());
+        String cloudPath = "resources/img/world/cloud.png";
        for(int i = 1; i <=6; i++)
        {
            BackgroundPanel bp = new BackgroundPanel("resources/img/world/background"+i+".jpeg",-1000 + (1000*(i-1)),-15,10,1000,700);
            bp.addToWorld();
            // There should probably be a better heuristic to decide where the clouds are placed.
-           SingleFrameEntity cloud1 = new SingleFrameEntity(cloud,0+ (1000*(i-1)),0,5,5,0,100,100);
-           SingleFrameEntity cloud2 = new SingleFrameEntity(cloud,-400+ (1000*(i-1)),10,5,8,0,100,100);
-           SingleFrameEntity cloud3 = new SingleFrameEntity(cloud,250+ (1000*(i-1)),35,5,12,0,100,100);
-           SingleFrameEntity cloud4 = new SingleFrameEntity(cloud,100+ (1000*(i-1)),0,5,20,0,100,100);
-           cloud1.addToWorld();
-           cloud2.addToWorld();
-           cloud3.addToWorld();
-           cloud4.addToWorld();
+           for(int j = 0; j < cloudSpeeds.size(); j++) clouds.add(new SingleFrameEntity(cloudPath,cloudXLocs.get(j)+(1000*(i-1)), cloudYLocs.get(j),5, cloudSpeeds.get(j),0,100,100));
+           for(SingleFrameEntity cloud : clouds) cloud.addToWorld();
        }
 
         Sun sun = new Sun();
@@ -122,13 +132,6 @@ public class ApplicationEntryPoint implements PulseEntity{
         if(_car.running()) _ehb.update();
         if(init)_gui.setInitColor();
         init = false;
-        /*
-        if (restart && !wasRestarted)
-        {
-            init();
-            wasRestarted = true;
-        }
-        */
     }
 
     class Helper implements MessageHandler

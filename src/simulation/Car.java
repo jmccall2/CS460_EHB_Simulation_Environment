@@ -184,7 +184,7 @@ public class Car extends RenderEntity
 
         // Used for animation: determine when control is lost
         if(_isActive) {
-            if (_applied_brake_force > _friction_threshold - 4000) _startTractionLossAnimation = true;
+            if (_applied_brake_force > _friction_threshold) _startTractionLossAnimation = true;
             else _startTractionLossAnimation = false;
         } else _startTractionLossAnimation = false;
 
