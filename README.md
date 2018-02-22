@@ -5,8 +5,11 @@ Simulation environment for the EHB software.
 
 ## EHB Package
 * All files created, and code written for the EHB software should be located in the ehb package.
-* You will be provided an empty shell class called EHB.java, inside said class there is a method called update. This method will be called at 60 times a second, and should not contain any loops as it will lock up the entire simulation.
+* You will be provided an empty shell class called EHB.java, inside said class there is a method called update. This method will be called at 60 times a second, and should not contain any infinite loops as it will lock up the entire simulation.
 
+## Main
+* The main method is located in src/simulation/engine/Engine.java - this will run as expected without modification and it will automatically call your code
+* You should not write your own static main method inside the ehb package and you should not modify Engine.main (or any other code inside of the simulation package)
 
 ## Interfaces
 * The only external package you have access to is the interfaces package which contains the interfaces/drivers and public data structures (enum).
